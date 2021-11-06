@@ -1,102 +1,102 @@
 .required_field {
-	color: red;
+    color: red;
 }
 
 .btn_back_list {
-	margin-right: 10px;
+    margin-right: 10px;
 }
 
 .btn_back_list:hover {
-	color: blue;
+    color: blue;
 }
 
 input[type=checkbox],
 input[type=radio] {
-	margin: 0px 10px !important;
+    margin: 0px 10px !important;
 }
 
 .label-radio-button {
-	margin-right: 10px !important;
+    margin-right: 10px !important;
 }
 
 .table-data__tool-left {
-	width: auto;
+    width: auto;
 }
 
 .table-data__tool .table-data__tool-left .first--select--filter {
-	min-width: 250px;
+    min-width: 250px;
 }
 
 .imagePreview {
-	width: 100%;
-	height: 180px;
-	background-position: center center;
-	background: url(http://cliquecities.com/assets/no-image-e3699ae23f866f6cbdf8ba2443ee5c4e.jpg);
-	background-color: #fff;
-	background-size: cover;
-	background-repeat: no-repeat;
-	display: inline-block;
-	box-shadow: 0px -3px 6px 2px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    height: 180px;
+    background-position: center center;
+    background: url(http://cliquecities.com/assets/no-image-e3699ae23f866f6cbdf8ba2443ee5c4e.jpg);
+    background-color: #fff;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: inline-block;
+    box-shadow: 0px -3px 6px 2px rgba(0, 0, 0, 0.2);
 }
 
 
 .img--avatar {
-	width: 100%;
-	height: 380px;
-	background-position: center center;
-	background: url(http://cliquecities.com/assets/no-image-e3699ae23f866f6cbdf8ba2443ee5c4e.jpg);
-	background-color: #fff;
-	background-size: cover;
-	background-repeat: no-repeat;
-	display: inline-block;
-	box-shadow: 0px -3px 6px 2px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    height: 380px;
+    background-position: center center;
+    background: url(http://cliquecities.com/assets/no-image-e3699ae23f866f6cbdf8ba2443ee5c4e.jpg);
+    background-color: #fff;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: inline-block;
+    box-shadow: 0px -3px 6px 2px rgba(0, 0, 0, 0.2);
 }
 
 .btn--upload-image {
-	display: block;
-	border-radius: 0px;
-	box-shadow: 0px 4px 6px 2px rgba(0, 0, 0, 0.2);
-	margin-top: -5px;
+    display: block;
+    border-radius: 0px;
+    box-shadow: 0px 4px 6px 2px rgba(0, 0, 0, 0.2);
+    margin-top: -5px;
 }
 
 .imgUp {
-	margin-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 .del {
-	position: absolute;
-	top: 0px;
-	right: 15px;
-	width: 30px;
-	height: 30px;
-	text-align: center;
-	line-height: 30px;
-	background-color: rgba(255, 255, 255, 0.6);
-	cursor: pointer;
+    position: absolute;
+    top: 0px;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    background-color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
 }
 
 .imgAdd {
-	width: 30px;
-	height: 30px;
-	border-radius: 50%;
-	background-color: #4bd7ef;
-	color: #fff;
-	box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.2);
-	text-align: center;
-	line-height: 30px;
-	margin-top: 0px;
-	cursor: pointer;
-	font-size: 15px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #4bd7ef;
+    color: #fff;
+    box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    line-height: 30px;
+    margin-top: 0px;
+    cursor: pointer;
+    font-size: 15px;
 }
 
-.button--slider-image-detail i{
-	font-size: 32px !important;
-	font-weight: bolder !important;
-	color: #007bff !important;
+.button--slider-image-detail i {
+    font-size: 32px !important;
+    font-weight: bolder !important;
+    color: #007bff !important;
 }
 
-#ol-img-slide li{
-	background-color: #007bff !important;
+#ol-img-slide li {
+    background-color: #007bff !important;
 }
 
 .alert {
@@ -114,14 +114,14 @@ input[type=radio] {
     z-index: 999;
 }
 
-    .alert.showAlert {
-        opacity: 1;
-        pointer-events: auto;
-    }
+.alert.showAlert {
+    opacity: 1;
+    pointer-events: auto;
+}
 
-    .alert.show {
-        animation: show_slide 1s ease forwards;
-    }
+.alert.show {
+    animation: show_slide 1s ease forwards;
+}
 
 @keyframes show_slide {
     0% {
@@ -188,13 +188,75 @@ input[type=radio] {
     cursor: pointer;
 }
 
-    .alert .close-btn-alert:hover {
-        background: #ffc766;
-    }
+.alert .close-btn-alert:hover {
+    background: #ffc766;
+}
 
-    .alert .close-btn-alert .fas {
-        color: #ce8500;
-        font-size: 22px;
-        line-height: 40px;
-    }
-    
+.alert .close-btn-alert .fas {
+    color: #ce8500;
+    font-size: 22px;
+    line-height: 40px;
+}
+
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked+.slider {
+    background-color: #2196F3;
+}
+
+input:focus+.slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
