@@ -299,7 +299,7 @@ public class CartController extends BaseController {
 				OrderDetail saleOrderProduct = new OrderDetail();
 				Product product = productService.getById(Integer.parseInt(arrStrIdProduct[0]));
 				saleOrderProduct.setProduct(product);
-				saleOrderProduct.setQuality(amount);
+				saleOrderProduct.setQuantity(amount);
 				/* saleOrderProduct.setPrice(product.getPrice()); */
 				saleOrderProduct.setSaleOrder(saleOrderDB);
 
@@ -336,7 +336,7 @@ public class CartController extends BaseController {
 				Product product = productService.getById(cartItem.getProductId());
 
 				saleOrderProduct.setProduct(product);
-				saleOrderProduct.setQuality(cartItem.getQuanlity());
+				saleOrderProduct.setQuantity(cartItem.getQuanlity());
 				/* saleOrderProduct.setPrice(product.getPrice()); */
 				saleOrderProduct.setSaleOrder(saleOrderDB);
 

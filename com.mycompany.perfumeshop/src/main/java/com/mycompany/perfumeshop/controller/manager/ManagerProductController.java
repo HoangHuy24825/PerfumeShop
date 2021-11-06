@@ -29,6 +29,8 @@ import com.mycompany.perfumeshop.service.CategoryService;
 import com.mycompany.perfumeshop.service.ProductImageService;
 import com.mycompany.perfumeshop.service.ProductService;
 import com.mycompany.perfumeshop.service.UserService;
+import com.mycompany.perfumeshop.utils.ConvertUtils;
+import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
 @Controller
 public class ManagerProductController extends BaseController {
@@ -57,57 +59,32 @@ public class ManagerProductController extends BaseController {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "/admin/all-product" }, method = RequestMethod.GET)
-	public ResponseEntity<Map<String, List<JSONObject>>> getAll(final Model model, final HttpServletRequest request,
+	public ResponseEntity<JSONObject> getAll(final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException {
 
-		Integer currentPage;
-		try {
-			currentPage = Integer.parseInt(request.getParameter("currentPage"));
-		} catch (Exception e) {
-			currentPage = 1;
-		}
+		Integer currentPage = ConvertUtils.convertStringToInt(request.getParameter("currentPage"), 1);
+		Integer idCategory = ConvertUtils.convertStringToInt(request.getParameter("idCategory"), 0);
+		Integer statusProduct = ConvertUtils.convertStringToInt(request.getParameter("idCategory"), null);
+		String keySearch = request.getParameter("keySearch");
 
-		Integer idCategory;
-		try {
-			idCategory = Integer.parseInt(request.getParameter("idCategory"));
-		} catch (Exception e) {
-			idCategory = 0;
-		}
-
-		Integer statusProduct;
-
-		try {
-			statusProduct = Integer.parseInt(request.getParameter("status"));
-		} catch (Exception e) {
-			statusProduct = null;
-		}
-
-		String keySearch;
-		keySearch = request.getParameter("keySearch");
-
-		List<Product> products = productService.getListProductByFilter(currentPage, pageSize, statusProduct, idCategory,
+		BaseVo<Product> baseVo = productService.getListProductByFilter(currentPage, pageSize, statusProduct, idCategory,
 				keySearch);
 
-		List<JSONObject> listProduct = new ArrayList<>();
-		for (Product product : products) {
-			listProduct.add(mappingModel.mappingModel(product));
+		if (baseVo != null) {
+			List<JSONObject> listProduct = new ArrayList<>();
+			if (baseVo.getListEntity() != null) {
+				List<Product> products = baseVo.getListEntity();
+				for (Product product : products) {
+					listProduct.add(mappingModel.mappingModel(product));
+				}
+			}
+			JSONObject result = new JSONObject();
+			result.put("products", listProduct);
+			result.put("currentPage", baseVo.getCurrentPage());
+			result.put("totalPage", baseVo.getTotalPage());
+			return ResponseEntity.ok(result);
 		}
-
-		Map<String, List<JSONObject>> result = new HashMap<>();
-
-		result.put("products", listProduct);
-
-		List<JSONObject> listPage = new ArrayList<>();
-		JSONObject pageJson = new JSONObject();
-		pageJson.put("currentPage", currentPage);
-
-		pageJson.put("totalPage",
-				productService.getTotalPageProductByFilter(pageSize, statusProduct, idCategory, keySearch));// pageSize
-		listPage.add(pageJson);
-
-		result.put("listPage", listPage);
-
-		return ResponseEntity.ok(result);
+		return null;
 	}
 
 	@RequestMapping(value = { "/admin/add-update-product" }, method = RequestMethod.POST)

@@ -19,13 +19,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RequestCancelOrder extends BaseEntity {
-	@Column(name = "first_name", length = 45, nullable = false)
-	private String firstName;
 
-	@Column(name = "last_name", length = 45, nullable = false)
-	private String lastName;
+	@Column(name = "customer_name", length = 45, nullable = false)
+	private String customerName;
 
-	@Column(name = "email", length = 45, nullable = false)
+	@Column(name = "customer_email", length = 45, nullable = false)
 	private String email;
 
 	@Column(name = "request_type", length = 45, nullable = false)

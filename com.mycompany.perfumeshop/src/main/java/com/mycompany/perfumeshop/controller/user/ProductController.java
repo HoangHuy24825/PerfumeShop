@@ -27,9 +27,12 @@ import com.mycompany.perfumeshop.entities.ProductImage;
 import com.mycompany.perfumeshop.service.CategoryService;
 import com.mycompany.perfumeshop.service.ProductImageService;
 import com.mycompany.perfumeshop.service.ProductService;
+import com.mycompany.perfumeshop.utils.ConvertUtils;
+import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
 @Controller
 public class ProductController extends BaseController {
+	
 	@Autowired
 	private ProductService productService;
 
@@ -55,7 +58,7 @@ public class ProductController extends BaseController {
 	@RequestMapping(value = { "/product-category/{seo}" }, method = RequestMethod.GET)
 	public String getProductByCategory(final Model model, final HttpServletRequest request,
 			final HttpServletResponse response, @ModelAttribute("seo") String seo) throws IOException {
-		
+
 		model.addAttribute("totalProduct", productService.findAllActive().size());
 		model.addAttribute("categories", categoryService.findAllActive());
 		model.addAttribute("searchKey", "");
@@ -72,39 +75,16 @@ public class ProductController extends BaseController {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "/all-product" }, method = RequestMethod.GET)
-	public ResponseEntity<Map<String, List<JSONObject>>> getAll(final Model model, final HttpServletRequest request,
+	public ResponseEntity<JSONObject> getAll(final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException {
 
-		Map<String, List<JSONObject>> result = new HashMap<String, List<JSONObject>>();
+		JSONObject result = null;
 
-		Integer currentPage;
-		Integer typeFilter;
-		Integer typeOrder;
-		Integer idCategory;
+		Integer currentPage = ConvertUtils.convertStringToInt(request.getParameter("page"), 1);
+		Integer typeFilter = ConvertUtils.convertStringToInt(request.getParameter("filterType"), 0);
+		Integer typeOrder = ConvertUtils.convertStringToInt(request.getParameter("typeOrder"), 0);
+		Integer idCategory = ConvertUtils.convertStringToInt(request.getParameter("id_category"), 0);
 		String searchStr = request.getParameter("searchStr");
-		try {
-			currentPage = Integer.parseInt(request.getParameter("page"));
-		} catch (Exception e) {
-			currentPage = 1;
-		}
-
-		try {
-			typeFilter = Integer.parseInt(request.getParameter("filterType"));
-		} catch (Exception e) {
-			typeFilter = 0;
-		}
-
-		try {
-			typeOrder = Integer.parseInt(request.getParameter("typeOrder"));
-		} catch (Exception e) {
-			typeOrder = 0;
-		}
-
-		try {
-			idCategory = Integer.parseInt(request.getParameter("id_category"));
-		} catch (Exception e) {
-			idCategory = 0;
-		}
 
 		UserSearchProduct userSearchProduct = new UserSearchProduct();
 		userSearchProduct.setIdCategory(idCategory);
@@ -112,24 +92,22 @@ public class ProductController extends BaseController {
 		userSearchProduct.setMaxMinPrice(typeFilter);
 		userSearchProduct.setTypeOrder(typeOrder);
 
-		List<Product> products = productService.getListProductByFilter(currentPage, PAGE_SIZE, userSearchProduct);
+		BaseVo<Product> baseVo = productService.getListProductByFilter(currentPage, PAGE_SIZE, userSearchProduct);
 
-		List<JSONObject> listProduct = new ArrayList<>();
-		for (Product product : products) {
-			listProduct.add(mappingModel.mappingModel(product));
+		if (baseVo != null) {
+			result = new JSONObject();
+
+			List<JSONObject> listProduct = new ArrayList<>();
+			if (baseVo.getListEntity() != null) {
+				List<Product> products = baseVo.getListEntity();
+				products.forEach(p -> listProduct.add(mappingModel.mappingModel(p)));
+			}
+
+			result.put("products", listProduct);
+			result.put("currentPage", baseVo.getCurrentPage());
+			result.put("totalPage", baseVo.getTotalPage());
+			model.addAttribute("searchKey", searchStr);
 		}
-
-		result.put("products", listProduct);
-
-		List<JSONObject> listPage = new ArrayList<>();
-		JSONObject pageJson = new JSONObject();
-		pageJson.put("currentPage", currentPage);
-		pageJson.put("totalPage", productService.getTotalPageProductByFilter(PAGE_SIZE, userSearchProduct));// pageSize
-		listPage.add(pageJson);
-
-		model.addAttribute("searchKey", searchStr);
-
-		result.put("listPage", listPage);
 		return ResponseEntity.ok(result);
 	}
 

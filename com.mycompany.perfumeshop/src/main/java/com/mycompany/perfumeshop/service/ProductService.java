@@ -24,6 +24,7 @@ import com.mycompany.perfumeshop.dto.UserSearchProduct;
 import com.mycompany.perfumeshop.entities.OrderDetail;
 import com.mycompany.perfumeshop.entities.Product;
 import com.mycompany.perfumeshop.entities.ProductImage;
+import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
 @Service
 public class ProductService extends BaseService<Product> implements Constant {
@@ -74,9 +75,7 @@ public class ProductService extends BaseService<Product> implements Constant {
 
 	@Transactional
 	public Product edit(Product product, MultipartFile avatar, MultipartFile[] images) throws Exception {
-
 		Product oldProduct = super.getById(product.getId());
-
 		if (!isEmptyUploadFile(avatar)) {
 			new File(UPLOAD_ROOT_PATH + oldProduct.getAvatar()).delete();
 			avatar.transferTo(new File(UPLOAD_ROOT_PATH + "product/avatar/" + avatar.getOriginalFilename()));
@@ -120,6 +119,14 @@ public class ProductService extends BaseService<Product> implements Constant {
 				.setMaxResults(8).getResultList();
 	}
 
+	/**
+	 * Get list product when customer chose category
+	 * 
+	 * @param page
+	 * @param pageSize
+	 * @param idCategory
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public List<Product> getListProductByCategory(Integer page, Integer pageSize, Integer idCategory) {
 		try {
@@ -137,37 +144,16 @@ public class ProductService extends BaseService<Product> implements Constant {
 
 	}
 
-	/*
-	 * @SuppressWarnings("unchecked") public List<Product>
-	 * getListProductByFilter(Integer page, Integer pageSize, UserSearchProduct
-	 * userSearch) { try { StringBuilder sql = new
-	 * StringBuilder("SELECT * FROM perfumeshop_db.tbl_products where status=1"); if
-	 * (userSearch.getKeySearch() != "" && userSearch.getKeySearch() != null) {
-	 * sql.append(" and ( title like '%" + userSearch.getKeySearch() + "%'");
-	 * sql.append(" or seo like '%" + userSearch.getKeySearch() + "%' )"); } if
-	 * (userSearch.getMaxPrice() != null) { sql.append(" and price < ");
-	 * sql.append(userSearch.getMaxPrice()); } if (userSearch.getMinPrice() != null)
-	 * { sql.append(" and price > "); sql.append(userSearch.getMinPrice()); }
+	/**
+	 * This method to find all product in client page
 	 * 
-	 * if (userSearch.getIdCategory() != 0) { sql.append(" and category_id=");
-	 * sql.append(userSearch.getIdCategory()); }
-	 * 
-	 * switch (userSearch.getTypeOrder()) { case 0: break; case 1:
-	 * sql.append(" order by price"); break; case 2:
-	 * sql.append(" order by price desc"); break; default: break; }
-	 * 
-	 * if (userSearch.getTypeOrder() == 0 && userSearch.getMaxPrice() == null &&
-	 * userSearch.getMinPrice() == null) {
-	 * sql.append(" ORDER BY updated_date DESC,created_date DESC"); }
-	 * 
-	 * Query query = entityManager.createNativeQuery(sql.toString(), Product.class);
-	 * query.setMaxResults(pageSize); query.setFirstResult((page - 1) * pageSize);
-	 * return query.getResultList(); } catch (Exception e) { e.printStackTrace();
-	 * return new ArrayList<Product>(); } }
+	 * @param page
+	 * @param pageSize
+	 * @param userSearch
+	 * @return
 	 */
-
 	@SuppressWarnings("unchecked")
-	public List<Product> getListProductByFilter(Integer page, Integer pageSize, UserSearchProduct userSearch) {
+	public BaseVo<Product> getListProductByFilter(Integer page, Integer pageSize, UserSearchProduct userSearch) {
 		try {
 			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 			CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
@@ -212,163 +198,74 @@ public class ProductService extends BaseService<Product> implements Constant {
 			}
 
 			Query query = entityManager.createQuery(criteriaQuery);
+
+			int totalRecs = query.getResultList().size();
+			int totalPage = totalRecs / pageSize;
+			totalPage = totalRecs % pageSize == 0 ? totalPage : totalPage + 1;
+
 			query.setMaxResults(pageSize);
 			query.setFirstResult((page - 1) * pageSize);
-			return query.getResultList();
+
+			BaseVo<Product> result = new BaseVo<Product>();
+			result.setListEntity(query.getResultList());
+			result.setCurrentPage(page);
+			result.setTotalPage(totalPage);
+			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ArrayList<Product>();
+			return null;
 		}
 	}
 
-	/*
-	 * public Integer getTotalPageProductByFilter(Integer pageSize,
-	 * UserSearchProduct userSearch) { try { StringBuilder sql = new
-	 * StringBuilder("SELECT * FROM perfumeshop_db.tbl_products where status=1"); if
-	 * (userSearch.getKeySearch() != "" && userSearch.getKeySearch() != null) {
-	 * sql.append(" and ( title like '%"); sql.append(userSearch.getKeySearch());
-	 * sql.append("%'"); sql.append(" or seo like '%");
-	 * sql.append(userSearch.getKeySearch()); sql.append("%' )"); } if
-	 * (userSearch.getMaxPrice() != null) { sql.append(" and price < ");
-	 * sql.append(userSearch.getMaxPrice()); } if (userSearch.getMinPrice() != null)
-	 * { sql.append(" and price > "); sql.append(userSearch.getMinPrice()); }
+	/**
+	 * This method to find all product in admin page
 	 * 
-	 * if (userSearch.getIdCategory() != 0) { sql.append(" and category_id= ");
-	 * sql.append(userSearch.getIdCategory()); }
-	 * 
-	 * switch (userSearch.getTypeOrder()) { case 0: break; case 1:
-	 * sql.append(" order by price"); break; case 2:
-	 * sql.append(" order by price desc"); break; default: break; }
-	 * 
-	 * if (userSearch.getTypeOrder() == 0 && userSearch.getMaxPrice() == null &&
-	 * userSearch.getMinPrice() != null) {
-	 * sql.append(" ORDER BY updated_date DESC,created_date DESC"); }
-	 * 
-	 * Query query = entityManager.createNativeQuery(sql.toString(), Product.class);
-	 * Integer totalRecord = query.getResultList().size(); return totalRecord %
-	 * pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1; } catch
-	 * (Exception e) { e.printStackTrace(); return 0; } }
+	 * @param page
+	 * @param pageSize
+	 * @param status
+	 * @param idCategory
+	 * @param keySearch
+	 * @return BaseVo<Product>
 	 */
-
-	public Long getTotalPageProductByFilter(Integer pageSize, UserSearchProduct userSearch) {
-		try {
-			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-			CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
-			Root<Product> root = criteriaQuery.from(Product.class);
-
-			criteriaQuery.select(criteriaBuilder.count(root));
-
-			List<Predicate> predicates = new ArrayList<>();
-
-			predicates.add(criteriaBuilder.equal(root.get("status"), true));
-
-			if (userSearch.getKeySearch() != "" && userSearch.getKeySearch() != null) {
-				predicates.add(criteriaBuilder.or(
-						criteriaBuilder.like(root.get("title"), "%" + userSearch.getKeySearch() + "%"),
-						criteriaBuilder.like(root.get("seo"), "%" + userSearch.getKeySearch() + "%")));
-			}
-
-			// Thuc hien sau
-
-			/*
-			 * if (userSearch.getMaxPrice() != null) { sql.append(" and price < ");
-			 * sql.append(userSearch.getMaxPrice()); } if (userSearch.getMinPrice() != null)
-			 * { sql.append(" and price > "); sql.append(userSearch.getMinPrice()); }
-			 */
-
-			if (userSearch.getIdCategory() != 0) {
-				predicates.add(criteriaBuilder.equal(root.get("category").get("id"), userSearch.getIdCategory()));
-			}
-
-			// Thuc hien sau
-			/*
-			 * switch (userSearch.getTypeOrder()) { case 0: break; case 1:
-			 * sql.append(" order by price");
-			 * criteriaQuery.orderBy(criteriaBuilder.desc(root.get)) break; case 2:
-			 * sql.append(" order by price desc"); break; default: break; }
-			 */
-
-			if (userSearch.getTypeOrder() == 0 && userSearch.getMaxPrice() == null
-					&& userSearch.getMinPrice() != null) {
-				criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdDate")),
-						criteriaBuilder.desc(root.get("updatedDate")));
-			}
-
-			Long totalRecord = entityManager.createQuery(criteriaQuery).getSingleResult();
-			return totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return (long) 0;
-		}
-	}
-
 	@SuppressWarnings("unchecked")
-	public List<Product> getListProductByFilter(Integer page, Integer pageSize, Integer status, Integer idCategory,
+	public BaseVo<Product> getListProductByFilter(Integer page, Integer pageSize, Integer status, Integer idCategory,
 			String keySearch) {
 		try {
 			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 			CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
 			Root<Product> root = criteriaQuery.from(Product.class);
-
 			criteriaQuery.select(root);
-
 			List<Predicate> predicates = new ArrayList<>();
-
 			if (status != null) {
 				predicates.add(criteriaBuilder.equal(root.get("status"), status));
 			}
-
 			if (keySearch != null && keySearch != "") {
 				predicates.add(criteriaBuilder.or(criteriaBuilder.like(root.get("title"), "%" + keySearch + "%"),
 						criteriaBuilder.like(root.get("seo"), "%" + keySearch + "%")));
 			}
-
 			if (idCategory != 0) {
 				predicates.add(criteriaBuilder.equal(root.get("category").get("id"), idCategory));
 			}
-
 			criteriaQuery.orderBy(criteriaBuilder.desc(root.get("updatedDate")),
 					criteriaBuilder.desc(root.get("createdDate")));
-
 			Query query = entityManager.createQuery(criteriaQuery);
+
+			int totalRecs = query.getResultList().size();
+			int numPage = totalRecs / pageSize;
+			numPage = totalRecs % pageSize == 0 ? numPage : numPage + 1;
+
 			query.setMaxResults(pageSize);
 			query.setFirstResult((page - 1) * pageSize);
 
-			return query.getResultList();
+			BaseVo<Product> result = new BaseVo<Product>();
+			result.setListEntity(query.getResultList());
+			result.setCurrentPage(page);
+			result.setTotalPage(numPage);
+
+			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ArrayList<Product>();
-		}
-	}
-
-	public Integer getTotalPageProductByFilter(Integer pageSize, Integer status, Integer idCategory, String keySearch) {
-		try {
-			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-			CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
-			Root<Product> root = criteriaQuery.from(Product.class);
-
-			criteriaQuery.select(root);
-
-			List<Predicate> predicates = new ArrayList<>();
-
-			if (status != null) {
-				predicates.add(criteriaBuilder.equal(root.get("status"), status));
-			}
-
-			if (keySearch != null && keySearch != "") {
-				predicates.add(criteriaBuilder.or(criteriaBuilder.like(root.get("title"), "%" + keySearch + "%"),
-						criteriaBuilder.like(root.get("seo"), "%" + keySearch + "%")));
-			}
-
-			if (idCategory != 0) {
-				predicates.add(criteriaBuilder.equal(root.get("category").get("id"), idCategory));
-			}
-
-			Integer totalRecord = entityManager.createQuery(criteriaQuery).getResultList().size();
-			return totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return 0;
+			return null;
 		}
 	}
 
@@ -402,5 +299,4 @@ public class ProductService extends BaseService<Product> implements Constant {
 		}
 		return false;
 	}
-
 }

@@ -29,7 +29,7 @@ public class RequestCancelOrderController extends BaseController {
 
 	@Autowired
 	private RequestCancelOrderService requestCancelOrderService;
-	
+
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "/request-cancel-order" }, method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> requestCancelOrder(final Model model, final HttpServletRequest request,
@@ -48,10 +48,7 @@ public class RequestCancelOrderController extends BaseController {
 
 		RequestCancelOrder requestCancelOrder = new RequestCancelOrder();
 		requestCancelOrder.setCreatedBy(saleOrder.getUserID());
-		requestCancelOrder
-				.setFirstName(saleOrder.getCustomerName().substring(0, saleOrder.getCustomerName().lastIndexOf(" ")));
-		requestCancelOrder
-				.setLastName(saleOrder.getCustomerName().split(" ")[saleOrder.getCustomerName().split(" ").length - 1]);
+		requestCancelOrder.setCustomerName(saleOrder.getCustomerName());
 		requestCancelOrder.setEmail(saleOrder.getCustomerEmail());
 		requestCancelOrder.setRequestType("hủy đơn hàng");
 		requestCancelOrder.setMessage("Khách hàng gửi yêu cầu hủy đơn hàng có mã " + saleOrder.getCode());
@@ -59,7 +56,7 @@ public class RequestCancelOrderController extends BaseController {
 		requestCancelOrder.setStatus(false);
 		requestCancelOrder.setSaleOrder(saleOrder);
 		requestCancelOrder.setReason(reason);
-		
+
 		requestCancelOrderService.saveOrUpdate(requestCancelOrder);
 		result.put("message", Boolean.TRUE);
 		return ResponseEntity.ok(result);

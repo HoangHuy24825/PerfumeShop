@@ -25,15 +25,14 @@ public class OrderDetail extends BaseEntity {
 	@JoinColumn(name = "product_id")
 	private Product product;
 
-	@Column(name = "quality")
-	private Integer quality;
+	@Column(name = "quantity")
+	private Integer quantity;
 
 	@Column(name = "price", precision = 13, scale = 2, nullable = false)
 	private BigDecimal price;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "saleorder_id")
+	@JoinColumn(name = "order_id")
 	private Order saleOrder;
-
 
 }

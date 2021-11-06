@@ -188,8 +188,7 @@ public class MappingModel {
 			requestJson.put("updatedDate", requestCancelOrder.getUpdatedDate());
 		}
 
-		requestJson.put("firstName", requestCancelOrder.getFirstName());
-		requestJson.put("lastName", requestCancelOrder.getLastName());
+		requestJson.put("customerName", requestCancelOrder.getCustomerName());
 		requestJson.put("email", requestCancelOrder.getEmail());
 
 		requestJson.put("requestType", requestCancelOrder.getRequestType());
@@ -313,7 +312,7 @@ public class MappingModel {
 
 		saleOrderProductJSON.put("avatar", saleOrderProduct.getProduct().getAvatar());
 		saleOrderProductJSON.put("productName", saleOrderProduct.getProduct().getTitle());
-		saleOrderProductJSON.put("quality", saleOrderProduct.getQuality());
+		saleOrderProductJSON.put("quality", saleOrderProduct.getQuantity());
 		saleOrderProductJSON.put("price", saleOrderProduct.getPrice());
 
 		saleOrderProductJSON.put("id", saleOrderProduct.getId());
