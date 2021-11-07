@@ -2,9 +2,8 @@ package com.mycompany.perfumeshop.controller.manager;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -73,7 +72,6 @@ public class ManagerCategoryController extends BaseController {
 	@RequestMapping(value = { "/admin/edit-category/{seo}" }, method = RequestMethod.GET)
 	public String edit(final Model model, final HttpServletRequest request, HttpServletResponse response,
 			@PathVariable("seo") String seo) throws IOException {
-
 		model.addAttribute("id_category", categoryService.getBySeo(seo).getId());
 		return "manager/category/createOrUpdate";
 	}
@@ -86,7 +84,7 @@ public class ManagerCategoryController extends BaseController {
 			if (isLogined()) {
 				category.setCreatedBy(getUserLogined().getId());
 			}
-			/* category.setUpdatedDate(Calendar.getInstance().getTime()); */
+			category.setStatus(true);
 			categoryService.save(category, categoryDTO.getAvatar());
 		} else {
 			if (isLogined()) {
@@ -95,6 +93,28 @@ public class ManagerCategoryController extends BaseController {
 			categoryService.edit(category, categoryDTO.getAvatar());
 		}
 		return ResponseEntity.ok(null);
+	}
+
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = { "/admin/change-status-category" }, method = RequestMethod.POST)
+	public ResponseEntity<JSONObject> changeStatus(final Model model, final HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		boolean status = request.getParameter("status").equals("1");
+		Integer id = ConvertUtils.convertStringToInt(request.getParameter("id"), null);
+		JSONObject result = new JSONObject();
+		if (id != null) {
+			Category category = categoryService.getById(id);
+			category.setStatus(status);
+			if (isLogined()) {
+				category.setUpdatedBy(getUserLogined().getId());
+			}
+			category.setUpdatedDate(Calendar.getInstance().getTime());
+			categoryService.saveOrUpdate(category);
+			result.put("message", true);
+		} else {
+			result.put("message", true);
+		}
+		return ResponseEntity.ok(result);
 	}
 
 	@RequestMapping(value = { "/admin/all-category-active" }, method = RequestMethod.GET)
@@ -135,20 +155,13 @@ public class ManagerCategoryController extends BaseController {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "/admin/detail-category" }, method = RequestMethod.GET)
-	public ResponseEntity<Map<String, List<JSONObject>>> detailCategory(final Model model,
-			final HttpServletRequest request, final HttpServletResponse response,
-			@RequestParam("idCategory") Integer idCategory) throws IOException {
-
-		Map<String, List<JSONObject>> result = new HashMap<>();
-
+	public ResponseEntity<JSONObject> detailCategory(final Model model, final HttpServletRequest request,
+			final HttpServletResponse response, @RequestParam("idCategory") Integer idCategory) throws IOException {
+		JSONObject result = new JSONObject();
 		Category category = categoryService.getById(idCategory);
-
-		List<JSONObject> categoryJson = new ArrayList<>();
-		categoryJson.add(mappingModel.mappingModel(category));
-
-		result.put("category", categoryJson);
-
+		result.put("category", mappingModel.mappingModel(category));
 		return ResponseEntity.ok(result);
 	}
 
@@ -166,7 +179,6 @@ public class ManagerCategoryController extends BaseController {
 				result.put("message", Boolean.FALSE);
 				return ResponseEntity.ok(result);
 			}
-
 		} catch (Exception e) {
 			return ResponseEntity.ok(null);
 		}

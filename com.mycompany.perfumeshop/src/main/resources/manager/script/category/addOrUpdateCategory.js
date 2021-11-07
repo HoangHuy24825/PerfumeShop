@@ -1,21 +1,37 @@
-$(document).ready(function() {
+$(document).ready(function () {
 	var id_category = $('#id').val();
-	console.log("ID category" + id_category);
+
 	if (id_category != null && id_category != "") {
 		loadDetailForEdit(id_category);
+		$("#title-page-update-add").text("Cập nhật danh mục");
 	}
+	setActiveMenu();
 });
 
+function setActiveMenu() {
+	console.log("call");
+	$(".navbar__list li").each(function () {
+		$(this).removeClass("active");
+	});
+	$(".list-unstyled li").each(function () {
+		$(this).removeClass("active");
+	});
+	$('.list-unstyled #menu--category').addClass("active");
+	$('.navbar__list #menu--category').addClass("active");
+}
+
 // function to add imput image product
-$(".imgAdd").click(function() {
+$(".imgAdd").click(function () {
 	$(this).closest(".row").find('.imgAdd').before('<div class="col-sm-2 imgUp"><div class="imagePreview image--product" data-id-image=""></div><label class="btn btn-primary btn--upload-image">Upload<input type="file" class="uploadFile img" name="images" accept="image/png, image/jpeg, image/jpg" style="width:0px;height:0px;overflow:hidden;"></label><i class="fa fa-times del"></i></div>');
 });
-$(document).on("click", "i.del", function() {
+
+$(document).on("click", "i.del", function () {
 	$(this).parent().remove();
 });
+
 //function to add preview image
-$(function() {
-	$(document).on("change", ".uploadFile", function() {
+$(function () {
+	$(document).on("change", ".uploadFile", function () {
 		var uploadFile = $(this);
 		var files = !!this.files ? this.files : [];
 		if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
@@ -24,8 +40,7 @@ $(function() {
 			var reader = new FileReader(); // instance of the FileReader
 			reader.readAsDataURL(files[0]); // read the local file
 
-			reader.onloadend = function() { // set image data as background of div
-				//alert(uploadFile.closest(".upimage").find('.imagePreview').length);
+			reader.onloadend = function () { // set image data as background of div
 				uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + this.result + ")");
 			}
 		}
@@ -33,18 +48,10 @@ $(function() {
 	});
 });
 
-//function to add new product
+//function to add new category
 function clickSaveCategory() {
 	var form = $('#form--upload')[0];
 	var data = new FormData(form);
-
-	// var listIdImage;
-	// $(".image--product").each(function () {
-	//     if ($(this).attr("data-id-image") != "" && $(this).attr("data-id-image") != null) {
-	//         listIdImage += $(this).attr("data-id-image") + ";";
-	//     }
-	// });
-
 	$.ajax({
 		type: "POST",
 		enctype: 'multipart/form-data',
@@ -54,11 +61,17 @@ function clickSaveCategory() {
 		contentType: false,
 		cache: false,
 		timeout: 600000,
-		success: function(data) {
-			alert("Thành công!");
-			$(location).attr('href', "/admin/category");
+		success: function (data) {
+			if ($("id") == null) {
+				showAlertMessage("Thêm mới danh mục thành công", true);
+			} else {
+				showAlertMessage("Cập nhật danh mục thành công", true);
+			}
+			setTimeout(function () {
+				$(location).attr('href', "/admin/category");
+			}, 1600);
 		},
-		error: function(e) {
+		error: function (e) {
 			console.log("ERROR : ", e);
 		}
 	});
@@ -69,26 +82,26 @@ function loadDetailForEdit(idCategory) {
 		url: "/admin/detail-category",
 		type: "get",
 		contentType: "application/json", //set data send to server is json
-		data: { idCategory: idCategory },
+		data: {
+			idCategory: idCategory
+		},
 		dataType: "json", //set data return is json
-		success: function(result) {
-			$('#id').val(result.category[0].id);
-			$('#name').val(result.category[0].name);
-			$('.img--avatar').css("background-image", "url(/upload/" + result.category[0].avatar + ")");
-			$('#seo').val(result.category[0].seo);
-			$('#description').val(result.category[0].description);
-			if (result.category[0].status == true) {
-				$('#status1').attr("checked", true);
-			} else {
-				$('#status2').attr("checked", true);
+		success: function (result) {
+			$('#id').val(result.category.id);
+			$('#name').val(result.category.name);
+			$('.img--avatar').css("background-image", "url(/upload/" + result.category.avatar + ")");
+			$('#seo').val(result.category.seo);
+			$('#description').val(result.category.description);
+			if (result.category.status == true) {
+				$('#status').attr("checked", true);
 			}
-			if (result.category[0].isHot == true) {
+			if (result.category.isHot == true) {
 				$('#isHot1').attr("checked", true);
 			} else {
 				$('#isHot2').attr("checked", true);
 			}
 		},
-		error: function(jqXhr, textStatus, errorMessage) {
+		error: function (jqXhr, textStatus, errorMessage) {
 			//show error
 		}
 	});

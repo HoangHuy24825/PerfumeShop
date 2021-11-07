@@ -2,9 +2,7 @@ package com.mycompany.perfumeshop.controller.manager;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -158,21 +156,9 @@ public class ManagerAccounController extends BaseController {
 	public ResponseEntity<JSONObject> chnageStatusAccount(final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException {
 		JSONObject result = new JSONObject();
-		Integer idAccount;
-		Boolean status;
-		try {
-			idAccount = Integer.parseInt(request.getParameter("idAccount"));
-		} catch (Exception e) {
-			result.put("message", Boolean.FALSE);
-			return ResponseEntity.ok(result);
-		}
-
-		try {
-			if (Integer.parseInt(request.getParameter("status")) == 1)
-				status = true;
-			else
-				status = false;
-		} catch (Exception e) {
+		Integer idAccount = ConvertUtils.convertStringToInt(request.getParameter("idAccount"), null);
+		Boolean status = request.getParameter("status").equals("1");
+		if (idAccount == null) {
 			result.put("message", Boolean.FALSE);
 			return ResponseEntity.ok(result);
 		}

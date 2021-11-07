@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
- 
+
 <!-- SPRING FORM -->
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 
@@ -54,7 +54,7 @@
                                     <div class="table-data__tool-left">
                                         <div class="rs-select2--light rs-select2--md first--select--filter">
                                             <select class="js-select2" name="property" id="select-category">
-                                                <%-- select category to filter --%>
+                                                <!-- select category to filter -->
                                             </select>
                                             <div class="dropDownSelect2"></div>
                                         </div>
@@ -118,41 +118,13 @@
     </div>
     <!-- END PAGE CONTAINER-->
 
-    <!-- START MODAL CONFIRM -->
-    <div class="modal fade" id="modalConfirmOder" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body " id="modalConfirmOderContent" style="font-size:22px ">
-                    <!--content-->
-                </div>
-                <div class="modal-footer mx-auto" style="border:unset">
-                    <button type="button" id="btn_close" onclick="" class="btn btn-secondary" data-dismiss="modal"
-                        aria-label="Close">
-                        Không
-                    </button>
-                    <button type="button" id="btn_save" onclick="" class="btn btn-primary">
-                        <!--Button Save-->
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- END MODAL CONFIRM -->
-
-    <!-- START MESSAGE -->
-    <div class="alert hide" id="alert_message">
-        <div id="icon-alert-message"><i class="fas fa-exclamation-circle"></i></div>
-        <span class="msg">Warning: This is a warning alert!</span>
-        <div class="close-btn-alert">
-            <span class="fas fa-times"></span>
-        </div>
-    </div>
-    <!-- END MESSAGE -->
-
     <!-- START NOTIFY MODAL -->
     <jsp:include page="/WEB-INF/views/manager/layout/notify.jsp"></jsp:include>
     <!-- START NOTIFI MODAL -->
+
+    <!-- START MESSAGE TO USER -->
+    <jsp:include page="/WEB-INF/views/manager/layout/message-to-user.jsp"></jsp:include>
+    <!-- START MESSAGE TO USER -->
 
     <!-- JS-->
     <jsp:include page="/WEB-INF/views/manager/layout/script.jsp"></jsp:include>

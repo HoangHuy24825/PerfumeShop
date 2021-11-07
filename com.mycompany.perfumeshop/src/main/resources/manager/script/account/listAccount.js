@@ -4,6 +4,27 @@
 $(document).ready(function () {
     setActiveMenu();
     loadStaff(1);
+
+    $("body").on("change", ".btnChangeStatus", function (e) {
+        e.preventDefault();
+        var status = $(this).prop("checked") == true ? 1 : 0;
+        var id = $(this).data("id-item");
+        $.post({
+            url: "/admin/change-status-account",
+            data: {
+                status: status,
+                id: id
+            },
+            dataType: "json",
+            success: function (response) {
+                if (response.message == true) {
+                    showAlertMessage("Cập nhật trạng thái thành công!", true);
+                } else {
+                    showAlertMessage("Cập nhật trạng thái thất bại!", false);
+                }
+            }
+        });
+    });
 });
 
 function setActiveMenu() {
@@ -32,53 +53,42 @@ function loadStaff(page) {
         success: function (result) {
             var html = '';
             $.each(result.users, function (i, item) {
-                html += '<tr class="tr-shadow">';
-                html += '    <td class="number_order">' + item.username + '</td>';
-                if (item.avatar != null) {
-                    html += '		<td class="block-image">';
-                    html += '			<img src="${base}/upload/' + item.avatar + '" alt="" />';
-                    html += '		</td>';
-                } else {
-                    html += '		<td class="block-image">';
-                    html += '			<img src="${base}/manager/images/noAvatar.png" alt="" />';
-                    html += '		</td>';
-                }
-                html += '    <td>';
-                html += '         <span>' + item.fullname + '</span>';
-                html += '    </td>';
-                html += '    <td>';
-                html += '         <span>' + item.email + '</span>';
-                html += '    </td>';
-                html += '     <td>';
-                html += '         <span>' + item.phone + '</span>';
-                html += '     </td>';
-                html += '     <td>';
-                html += '          <span>' + item.address + '</span>';
-                html += '     </td>';
-                html += '		<td>';
-                if (item.status) {
-                    html += '<span class="status--process">Hoạt động</span>';
-                } else {
-                    html += '<span class="status--denied">Vô hiệu hóa</span>';
-                }
-                html += '		</td>';
-                html += '		<td>';
-                html += '			<div class="table-data-feature">';
-                if (update_role == 'true') {
-                    html += '				<button class="item" title="Phân quyền" onclick="decentralization(' + item.id + ')">';
-                    html += '					<i class="fas fa-user-tag"></i>';
-                    html += ' 			</button>';
-                    html += '				<button class="item" title="Vô hiệu hóa" onclick="changeStatusActive(' + item.id + ',0,0)" >';
-                    html += '					<i class="fas fa-ban"></i>';
-                    html += '				</button>';
-                    html += '				<button class="item" title="Kích hoạt" onclick="changeStatusActive(' + item.id + ',1,0)" >';
-                    html += '					<i class="fas fa-check-circle"></i>';
-                    html += '				</button>';
-                    html += '			</div>';
-                    html += '		</td>'
-                }
-                html += '</tr>';
-                html += '<tr class="spacer"></tr>';
+                html += `   <tr class="tr-shadow">
+                                <td class="number_order">${ item.username }</td>
+                                <td class="block-image">
+                                    <img src="/upload/${item.avatar!=null ? item.avatar : "noAvatar.png" }" alt="" />
+                                </td>
+                                <td>
+                                    <span>${ item.fullname }</span>
+                                </td>
+                                <td>
+                                    <span>${ item.email }</span>
+                                </td>
+                                <td>
+                                    <span>${ item.phone }</span>
+                                </td>
+                                <td>
+                                    <span>${ item.address }</span>
+                                </td>
+                                <td>
+                                    <span>
+                                    <!-- Rounded switch -->
+                                        <label class="switch">
+                                            <input type="checkbox" data-id-item="${item.id}" class="btnChangeStatus" 
+                                            ${item.status==true? "checked" : ""} disabled="${update_role}">
+                                            <span class="slider round"></span>
+                                        </label>    
+                                    </span>
+               		            </td>
+                		        <td>
+                                    <div class="table-data-feature">
+                                        <button class="item" title="Phân quyền" onclick="decentralization(${ item.id })" hide="${update_role}">
+                                            <i class="fas fa-user-tag"></i>
+                                        </button>
+                                    </div>
+                    		    </td>'
+                            </tr>
+                            <tr class="spacer"></tr>`;
             });
 
             var totalPage = result.totalPage;
@@ -123,50 +133,35 @@ function loadCustomer(page) {
         success: function (result) {
             var html = '';
             $.each(result.users, function (i, item) {
-                html += '<tr class="tr-shadow">';
-                html += '    <td class="number_order">' + item.username + '</td>';
-                if (item.avatar != null) {
-                    html += '		<td class="block-image">';
-                    html += '			<img src="${base}/upload/' + item.avatar + '" alt="" />';
-                    html += '		</td>';
-                } else {
-                    html += '		<td class="block-image">';
-                    html += '			<img src="${base}/manager/images/noAvatar.png" alt="" />';
-                    html += '		</td>';
-                }
-                html += '    <td>';
-                html += '         <span>' + item.fullname + '</span>';
-                html += '    </td>';
-                html += '    <td>';
-                html += '         <span>' + item.email + '</span>';
-                html += '    </td>';
-                html += '     <td>';
-                html += '         <span>' + item.phone + '</span>';
-                html += '     </td>';
-                html += '     <td>';
-                html += '          <span>' + item.address + '</span>';
-                html += '     </td>';
-                html += '		<td>';
-                if (item.status) {
-                    html += '<span class="status--process">Hoạt động</span>';
-                } else {
-                    html += '<span class="status--denied">Vô hiệu hóa</span>';
-                }
-                html += '		</td>';
-                if (update_role == 'true') {
-                    html += '		<td>';
-                    html += '			<div class="table-data-feature">';
-                    html += '				<button class="item" title="Vô hiệu hóa" onclick="changeStatusActive(' + item.id + ',0,1)" >';
-                    html += '					<i class="fas fa-ban"></i>';
-                    html += '				</button>';
-                    html += '				<button class="item" title="Kích hoạt" onclick="changeStatusActive(' + item.id + ',1,1)" >';
-                    html += '					<i class="fas fa-check-circle"></i>';
-                    html += '				</button>';
-                    html += '			</div>';
-                    html += '		</td>';
-                }
-                html += '</tr>';
-                html += '<tr class="spacer"></tr>';
+                html += `   <tr class="tr-shadow">
+                                 <td class="number_order">${item.username}</td>
+                            <td class="block-image">
+                                <img src="/upload/${item.avatar!=null ? item.avatar : "noAvatar.png" }" alt="" />
+                            </td>
+                            <td>
+                                <span>${item.fullname}</span>
+                            </td>
+                            <td>
+                                <span>${ item.email }</span>
+                            </td>
+                            <td>
+                                <span>${ item.phone }</span>
+                            </td>
+                            <td>
+                                <span>${ item.address }</span>
+                            </td>
+                            <td>
+                                <span>
+                                <!-- Rounded switch -->
+                                    <label class="switch">
+                                        <input type="checkbox" data-id-item="${item.id}" disabled="${update_role}" class="btnChangeStatus" 
+                                        ${item.status==true? "checked" : ""}>
+                                        <span class="slider round"></span>
+                                    </label>    
+                                </span>
+               		        </td>
+                         </tr>
+                        <tr class="spacer"></tr>`;
             });
 
             var totalPage = result.totalPage;
@@ -208,113 +203,6 @@ $("body").on("click", "#paged--list--customer li a", function (event) {
     loadCustomer(currentPage);
 });
 
-function showAlertMessage(message, messageState) {
-    if (messageState) {
-        $('#alert_message').css({
-            "background": "#C5F3D7",
-            "border-left": "8px solid #2BD971"
-        });
-        $("#icon-alert-message").html('<i class="fas fa-check-circle"></i>');
-        $("#icon-alert-message").find('i').css({
-            "color": "#2BD971"
-        });
-        $(".msg").css({
-            "color": "#24AD5F"
-        });
-        $(".close-btn-alert").css({
-            "background": "#2BD971",
-            "color": "#24AD5F"
-        });
-        $(".close-btn-alert").find('.fas').css({
-            "color": "#24AD5F"
-        });
-        $(".close-btn-alert").hover(function (e) {
-            $(this).css("background-color", e.type === "mouseenter" ? "#38F5A3" : "#2BD971")
-        })
-    } else {
-        $('#alert_message').css({
-            "background": "#FFE1E3",
-            "border-left": "8px solid #FF4456"
-        });
-        $("#icon-alert-message").html('<i class="fas fa-exclamation-circle"></i>');
-        $("#icon-alert-message").find('i').css({
-            "color": "#FE4950"
-        });
-        $(".msg").css({
-            "color": "#F694A9"
-        });
-        $(".close-btn-alert").css({
-            "background": "#FF9CA4",
-            "color": "#FD4653"
-        });
-        $(".close-btn-alert").find('.fas').css({
-            "color": "#FD4653"
-        });
-        $(".close-btn-alert").hover(function (e) {
-            $(this).css("background-color", e.type === "mouseenter" ? "#FFBDC2" : "#FF9CA4")
-        })
-    }
-
-    $('.msg').text(message);
-    $('.alert').addClass("show");
-    $('.alert').removeClass("hide");
-    $('.alert').addClass("showAlert");
-    setTimeout(function () {
-        $('.alert').removeClass("show");
-        $('.alert').addClass("hide");
-    }, 3000);
-};
-
-
 function decentralization(idAccount) {
     window.location.href = '/admin/decentralization-account/' + idAccount;
 }
-
-function changeStatusActiveConfirmed(idAccount, status, typeAccount) {
-    console.log(status);
-    $('#modalConfirmOder').modal('hide');
-    $.ajax({
-        url: '/admin/change-status-account?idAccount=' + idAccount + "&&status=" + status,
-        type: "POST",
-        data: {},
-        dataType: "json",
-        contentType: "application/json",
-        success: function (result) {
-            if (result.message == true) {
-                showAlertMessage("Thay đổi trạng thái tài khoản thành công!", true);
-                if (typeAccount == 0) {
-                    loadStaff(1);
-                } else {
-                    loadCustomer(1);
-                }
-            } else {
-                showAlertMessage("Thay đổi trạng thái tài khoản thất bại!", false);
-            }
-        },
-        error: function (jqXhr, textStatus, errorMessage) { // error callback 
-            showAlertMessage("Thay đổi trạng thái tài khoản thất bại!", false);
-        }
-    });
-}
-
-function changeStatusActive(idAccount, status, typeAccount) {
-    $('#btn_save').attr("onclick", "changeStatusActiveConfirmed(" + idAccount + "," + status + "," + typeAccount + ")");
-    if (status == 0) {
-        $('#modalConfirmOderContent').text("Bạn chắc chắn muốn vô hiệu hóa tài khoản này?");
-    } else {
-        $('#modalConfirmOderContent').text("Bạn chắc chắn muốn kích hoạt lại tài khoản này?");
-    }
-    $('#btn_save').show();
-    $('#btn_save').text("Có");
-    $('#btn_close').css({
-        "background-color": "#007bff",
-        "border": "1px solid #007bff",
-        "width": "200px"
-    })
-    $('#btn_save').css({
-        "background-color": "rgb(255, 66, 78)",
-        "border": "1px solid rgb(255, 66, 78)",
-        "width": "200px"
-    });
-    $('#modalConfirmOder').modal('show');
-};

@@ -266,6 +266,10 @@
     <jsp:include page="/WEB-INF/views/manager/layout/notify.jsp"></jsp:include>
     <!-- START NOTIFI MODAL -->
 
+    <!-- START MESSAGE TO USER -->
+    <jsp:include page="/WEB-INF/views/manager/layout/message-to-user.jsp"></jsp:include>
+    <!-- START MESSAGE TO USER -->
+
     <!-- JS-->
     <jsp:include page="/WEB-INF/views/manager/layout/script.jsp"></jsp:include>
     <script type="text/javascript" src="${base }/manager/script/product/addOrUpdateProduct.js"></script>
