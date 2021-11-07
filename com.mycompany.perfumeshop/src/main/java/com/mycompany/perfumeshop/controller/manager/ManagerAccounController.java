@@ -27,6 +27,9 @@ import com.mycompany.perfumeshop.entities.User;
 import com.mycompany.perfumeshop.entities.UserRole;
 import com.mycompany.perfumeshop.service.UserRoleService;
 import com.mycompany.perfumeshop.service.UserService;
+import com.mycompany.perfumeshop.utils.Constants;
+import com.mycompany.perfumeshop.utils.ConvertUtils;
+import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
 @Controller
 public class ManagerAccounController extends BaseController {
@@ -118,39 +121,29 @@ public class ManagerAccounController extends BaseController {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "/admin/list-account" }, method = RequestMethod.GET)
-	public ResponseEntity<Map<String, List<JSONObject>>> findAll(final Model model, final HttpServletRequest request,
+	public ResponseEntity<JSONObject> findAll(final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException {
-		Map<String, List<JSONObject>> result = new HashMap<String, List<JSONObject>>();
 
-		Integer currentPage;
-		Integer typeAccount;
-		try {
-			currentPage = Integer.parseInt(request.getParameter("page"));
-		} catch (Exception e) {
-			currentPage = 1;
+		JSONObject result = new JSONObject();
+		Integer currentPage = ConvertUtils.convertStringToInt(request.getParameter("page"), Constants.INIT_PAGE);
+		Integer typeAccount = ConvertUtils.convertStringToInt(request.getParameter("type"), 0);
+
+		BaseVo<User> baseVo = userService.getListUserByRole(typeAccount, currentPage, PAGE_SIZE,
+				getUserLogined().getId());
+		if (baseVo != null) {
+			List<JSONObject> jsonUsers = new ArrayList<JSONObject>();
+			if (baseVo.getListEntity() != null && baseVo.getListEntity().size() > 0) {
+				List<User> users = baseVo.getListEntity();
+				for (User user : users) {
+					jsonUsers.add(mappingModel.mappingModel(user));
+				}
+			}
+			result.put("users", jsonUsers);
+			result.put("currentPage", currentPage);
+			result.put("totalPage", baseVo.getTotalPage());
+			return ResponseEntity.ok(result);
 		}
-
-		try {
-			typeAccount = Integer.parseInt(request.getParameter("type"));
-		} catch (Exception e) {
-			typeAccount = 0;
-		}
-
-		List<User> users = userService.getListUserByRole(typeAccount, currentPage, PAGE_SIZE, getUserLogined().getId());
-		List<JSONObject> jsonUsers = new ArrayList<JSONObject>();
-		for (User user : users) {
-			jsonUsers.add(mappingModel.mappingModel(user));
-		}
-		result.put("users", jsonUsers);
-
-		List<JSONObject> listPage = new ArrayList<>();
-		JSONObject pageJson = new JSONObject();
-		pageJson.put("currentPage", currentPage);
-		pageJson.put("totalPage", userService.getTotalPageUserByRole(typeAccount, PAGE_SIZE, getUserLogined().getId()));// pageSize
-		listPage.add(pageJson);
-		result.put("listPage", listPage);
-
-		return ResponseEntity.ok(result);
+		return null;
 	}
 
 	@RequestMapping(value = { "/admin/decentralization-account/{idAccount}" }, method = RequestMethod.GET)

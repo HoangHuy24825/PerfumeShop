@@ -35,7 +35,7 @@ public class MappingModel {
 		product.setStatus(productDTO.getStatus());
 		/* product.setCategory(categoryService.getById(productDTO.getId_category())); */
 		/* product.setAmount(productDTO.getAmount()); */
-		product.setGuarantee(productDTO.getGuarantee());
+		product.setManufactureYear(productDTO.getManufactureYear());
 		product.setOrigin(productDTO.getOrigin());
 		product.setCreatedBy(productDTO.getCreatedBy());
 		product.setUpdatedBy(productDTO.getUpdatedBy());
@@ -208,7 +208,7 @@ public class MappingModel {
 		productJson.put("avatar", product.getAvatar());
 		productJson.put("trademark", product.getTrademark());
 		productJson.put("origin", product.getOrigin());
-		productJson.put("guarantee", product.getGuarantee());
+		productJson.put("guarantee", product.getManufactureYear());
 		productJson.put("isHot", product.getIsHot());
 		productJson.put("id_category", product.getCategory().getId());
 		productJson.put("fragrant", product.getFragrant());

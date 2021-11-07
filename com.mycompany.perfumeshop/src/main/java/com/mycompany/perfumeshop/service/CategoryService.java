@@ -8,14 +8,19 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.deser.Deserializers.Base;
 import com.github.slugify.Slugify;
 import com.mycompany.perfumeshop.dto.Constant;
 import com.mycompany.perfumeshop.entities.Category;
+import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
 @Service
 public class CategoryService extends BaseService<Category> implements Constant {
@@ -62,8 +67,9 @@ public class CategoryService extends BaseService<Category> implements Constant {
 		return super.saveOrUpdate(category);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Category> getCategorySlider() {
-		return executeNativeSql("SELECT * FROM electronicdeviceshop.tbl_category WHERE is_hot=1  LIMIT 5");
+		return (List<Category>) entityManager.createQuery("FROM Category c WHERE c.isHot=1").setMaxResults(5);
 	}
 
 	@Transactional
@@ -83,42 +89,33 @@ public class CategoryService extends BaseService<Category> implements Constant {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Category> getListCategoryByFilter(Integer page, Integer pageSize, String keySearch) {
+	public BaseVo<Category> getListCategoryByFilter(Integer page, Integer pageSize, String keySearch) {
 		try {
-			String sql = "SELECT * FROM electronicdeviceshop.tbl_category where 1=1 ";
+			String keySearchStr = "%" + keySearch + "%";
+			CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+			CriteriaQuery<Category> criteriaQuery = builder.createQuery(Category.class);
+			Root<Category> root = criteriaQuery.from(Category.class);
+			criteriaQuery.select(root);
 
 			if (keySearch != "" && keySearch != null) {
-				sql += " and ( name like '%" + keySearch + "%'";
-				sql += " or seo like '%" + keySearch + "%' )";
+				criteriaQuery.where(builder.or(builder.like(root.get("seo"), keySearchStr),
+						builder.like(root.get("name"), keySearchStr)));
 			}
 
-			sql += " ORDER BY updated_date DESC,created_date DESC";
+			criteriaQuery.orderBy(builder.desc(root.get("createdDate")), builder.desc(root.get("updatedDate")));
+			Query query = entityManager.createQuery(criteriaQuery);
 
-			Query query = entityManager.createNativeQuery(sql, Category.class);
+			int totalRecs = query.getResultList().size();
+			int totalPage = totalRecs / pageSize;
+			totalPage = totalRecs % pageSize == 0 ? totalPage : totalPage + 1;
+
 			query.setMaxResults(pageSize);
 			query.setFirstResult((page - 1) * pageSize);
-			return query.getResultList();
+
+			return new BaseVo<Category>(query.getResultList(), page, totalPage);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ArrayList<Category>();
-		}
-	}
-
-	public Integer getTotalPageCategoryByFilter(Integer pageSize, String keySearch) {
-		try {
-			String sql = "SELECT * FROM electronicdeviceshop.tbl_category where 1=1 ";
-
-			if (keySearch != "" && keySearch != null) {
-				sql += " and ( name like '%" + keySearch + "%'";
-				sql += " or seo like '%" + keySearch + "%' )";
-			}
-
-			Query query = entityManager.createNativeQuery(sql, Category.class);
-			Integer totalRecord = query.getResultList().size();
-			return totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return 0;
+			return null;
 		}
 	}
 }

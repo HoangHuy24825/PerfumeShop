@@ -26,6 +26,9 @@ import com.mycompany.perfumeshop.dto.MappingModel;
 import com.mycompany.perfumeshop.entities.Category;
 import com.mycompany.perfumeshop.service.CategoryService;
 import com.mycompany.perfumeshop.service.UserService;
+import com.mycompany.perfumeshop.utils.Constants;
+import com.mycompany.perfumeshop.utils.ConvertUtils;
+import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
 @Controller
 public class ManagerCategoryController extends BaseController {
@@ -108,37 +111,28 @@ public class ManagerCategoryController extends BaseController {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "/admin/all-category" }, method = RequestMethod.GET)
-	public ResponseEntity<Map<String, List<JSONObject>>> getAll(final Model model, final HttpServletRequest request,
+	public ResponseEntity<JSONObject> getAll(final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException {
 
-		Integer currentPage;
-		try {
-			currentPage = Integer.parseInt(request.getParameter("currentPage"));
-		} catch (Exception e) {
-			currentPage = 1;
+		JSONObject result = new JSONObject();
+		Integer currentPage = ConvertUtils.convertStringToInt(request.getParameter("currentPage"), Constants.INIT_PAGE);
+		String keySearch = request.getParameter("keySearch");
+
+		BaseVo<Category> baseVo = categoryService.getListCategoryByFilter(currentPage, pageSize, keySearch);
+		if (baseVo != null) {
+			List<JSONObject> listCategory = new ArrayList<>();
+			List<Category> categories = baseVo.getListEntity();
+			if (categories != null && categories.size() > 0) {
+				for (Category category : categories) {
+					listCategory.add(mappingModel.mappingModel(category));
+				}
+			}
+			result.put("categories", listCategory);
+			result.put("currentPage", baseVo.getCurrentPage());
+			result.put("totalPage", baseVo.getTotalPage());
+			return ResponseEntity.ok(result);
 		}
-
-		String keySearch;
-		keySearch = request.getParameter("keySearch");
-
-		List<Category> categories = categoryService.getListCategoryByFilter(currentPage, pageSize, keySearch);
-		List<JSONObject> listCategory = new ArrayList<>();
-		for (Category category : categories) {
-			listCategory.add(mappingModel.mappingModel(category));
-		}
-
-		Map<String, List<JSONObject>> result = new HashMap<>();
-		result.put("categories", listCategory);
-
-		List<JSONObject> listPage = new ArrayList<>();
-		JSONObject pageJson = new JSONObject();
-		pageJson.put("currentPage", currentPage);
-		pageJson.put("totalPage", categoryService.getTotalPageCategoryByFilter(pageSize, keySearch));// pageSize
-		listPage.add(pageJson);
-
-		result.put("listPage", listPage);
-
-		return ResponseEntity.ok(result);
+		return null;
 	}
 
 	@RequestMapping(value = { "/admin/detail-category" }, method = RequestMethod.GET)

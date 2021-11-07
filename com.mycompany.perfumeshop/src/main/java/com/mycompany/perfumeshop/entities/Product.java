@@ -43,8 +43,8 @@ public class Product extends BaseEntity {
 	@Column(name = "origin", length = 200, nullable = false)
 	private String origin;
 
-	@Column(name = "guarantee", nullable = false)
-	private Integer guarantee;
+	@Column(name = "manufacture_year", nullable = false)
+	private Integer manufactureYear;
 
 	@Column(name = "seo", length = 10000, nullable = true)
 	private String seo;

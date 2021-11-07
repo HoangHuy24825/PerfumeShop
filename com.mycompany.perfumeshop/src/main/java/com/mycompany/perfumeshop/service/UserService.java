@@ -8,6 +8,11 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +24,7 @@ import com.mycompany.perfumeshop.dto.Constant;
 import com.mycompany.perfumeshop.entities.Role;
 import com.mycompany.perfumeshop.entities.User;
 import com.mycompany.perfumeshop.entities.UserRole;
+import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
 @Service
 public class UserService extends BaseService<User> implements Constant {
@@ -37,13 +43,12 @@ public class UserService extends BaseService<User> implements Constant {
 		return User.class;
 	}
 
+	@SuppressWarnings("unchecked")
 	public User getUserByUserName(String username) {
-		List<User> users = super.executeNativeSql(
-				"SELECT * FROM electronicdeviceshop.tbl_users where status=1 and username='" + username + "'");
-		if (users.size() == 0) {
-			return new User();
-		}
-		return users.get(0);
+		Query query = entityManager.createQuery("FROM User u WHERE u.username=:username");
+		query.setParameter("username", username);
+		List<User> users = query.getResultList();
+		return users.size() != 0 ? users.get(0) : new User();
 	}
 
 	private boolean isEmptyUploadFile(MultipartFile image) {
@@ -56,12 +61,12 @@ public class UserService extends BaseService<User> implements Constant {
 			avatar.transferTo(new File(UPLOAD_ROOT_PATH + "user/" + avatar.getOriginalFilename()));
 			user.setAvatar("user/" + avatar.getOriginalFilename());
 		}
-
 		user.setCreatedDate(Calendar.getInstance().getTime());
 		user.setStatus(true);
 		user.setPassword(new BCryptPasswordEncoder().encode((user.getPassword())));
 		User result = super.saveOrUpdate(user);
 		UserRole userRole = null;
+
 		if (typeAccount == 1) {
 			List<Role> roles = roleService.findAll();
 			for (Role role : roles) {
@@ -116,77 +121,56 @@ public class UserService extends BaseService<User> implements Constant {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<User> getListUserByRole(Integer role, Integer page, Integer pageSize, Integer currentID) {
+	public BaseVo<User> getListUserByRole(Integer role, Integer page, Integer pageSize, Integer currentID) {
 		try {
-			StringBuilder strQuery = new StringBuilder("");
-			if (role == 0) {
-				strQuery.append(
-						"SELECT u.id,u.username,u.password,u.email,u.created_date,u.updated_date,u.updated_by,u.created_by,u.status,u.full_name,u.address,u.phone,u.avatar");
-				strQuery.append("			FROM electronicdeviceshop.tbl_users u ");
-				strQuery.append(
-						"				INNER JOIN electronicdeviceshop.tbl_users_roles u_r ON u.id=u_r.user_id");
-				strQuery.append("				INNER JOIN electronicdeviceshop.tbl_roles r ON u_r.role_id=r.id");
-				strQuery.append("			WHERE r.code!='G' AND u.username!='admin' AND u.id!=" + currentID);
-				strQuery.append(
-						"			GROUP BY u.id,u.username,u.password,u.email,u.created_date,u.updated_date,u.updated_by,u.created_by,u.status,u.full_name,u.address,u.phone,u.avatar");
-				strQuery.append("			ORDER BY updated_date DESC,created_date DESC");
+			CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+			CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
+			Root<User> root = criteriaQuery.from(User.class);
+			Join<User, UserRole> fromUserRole = root.join("userRoles");
+			Join<UserRole, Role> fromRoleUserRole = fromUserRole.join("role");
 
+			criteriaQuery.select(root);
+
+			List<Predicate> predicates = new ArrayList<Predicate>();
+
+			predicates.add(builder.notEqual(root.get("id"), currentID));
+
+			if (role == 0) {
+				predicates.add(builder.notEqual(fromRoleUserRole.get("code"), "G"));
+				predicates.add(builder.notEqual(root.get("username"), "admin"));
 			} else {
-				strQuery.append(
-						"SELECT u.id,u.username,u.password,u.email,u.created_date,u.updated_date,u.updated_by,u.created_by,u.status,u.full_name,u.address,u.phone,u.avatar");
-				strQuery.append("			FROM electronicdeviceshop.tbl_users u ");
-				strQuery.append(
-						"				INNER JOIN electronicdeviceshop.tbl_users_roles u_r ON u.id=u_r.user_id");
-				strQuery.append("				INNER JOIN electronicdeviceshop.tbl_roles r ON u_r.role_id=r.id");
-				strQuery.append("			WHERE r.code='G' AND u.id!=" + currentID);
-				strQuery.append(
-						"			GROUP BY u.id,u.username,u.password,u.email,u.created_date,u.updated_date,u.updated_by,u.created_by,u.status,u.full_name,u.address,u.phone,u.avatar");
-				strQuery.append("			ORDER BY updated_date DESC,created_date DESC");
+				predicates.add(builder.equal(fromRoleUserRole.get("code"), "G"));
 			}
-			Query query = entityManager.createNativeQuery(strQuery.toString(), User.class);
+
+			criteriaQuery.where(predicates.toArray(new Predicate[] {}));
+			criteriaQuery.groupBy(fromUserRole.get("user"));
+			criteriaQuery.orderBy(builder.desc(root.get("createdDate")), builder.desc(root.get("updatedDate")));
+
+			Query query = entityManager.createQuery(criteriaQuery);
+
+			int totalRecs = query.getResultList().size();
+			int totalPage = totalRecs / pageSize;
+			totalPage = totalRecs % pageSize == 0 ? totalPage : totalPage + 1;
 			query.setFirstResult((page - 1) * pageSize);
 			query.setMaxResults(pageSize);
-			return query.getResultList();
+
+			BaseVo<User> baseVo = new BaseVo<User>();
+			baseVo.setListEntity(query.getResultList());
+			baseVo.setCurrentPage(page);
+			baseVo.setTotalPage(totalPage);
+
+			return baseVo;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
-		return new ArrayList<User>();
 	}
 
-	public Integer getTotalPageUserByRole(Integer role, Integer pageSize, Integer currentID) {
-		try {
-			StringBuilder strQuery = new StringBuilder("");
-			if (role == 0) {
-				strQuery.append(
-						"SELECT u.id,u.username,u.password,u.email,u.created_date,u.updated_date,u.updated_by,u.created_by,u.status,u.full_name,u.address,u.phone,u.avatar");
-				strQuery.append(" FROM electronicdeviceshop.tbl_users u ");
-				strQuery.append(" INNER JOIN electronicdeviceshop.tbl_users_roles u_r ON u.id=u_r.user_id");
-				strQuery.append(" INNER JOIN electronicdeviceshop.tbl_roles r ON u_r.role_id=r.id");
-				strQuery.append(" WHERE r.code!='G'AND u.username!='admin' AND u.id!=" + currentID);
-				strQuery.append(" ORDER BY updated_date DESC,created_date DESC");
-
-			} else {
-				strQuery.append(
-						"SELECT u.id,u.username,u.password,u.email,u.created_date,u.updated_date,u.updated_by,u.created_by,u.status,u.full_name,u.address,u.phone,u.avatar");
-				strQuery.append("			FROM electronicdeviceshop.tbl_users u ");
-				strQuery.append(
-						"				INNER JOIN electronicdeviceshop.tbl_users_roles u_r ON u.id=u_r.user_id");
-				strQuery.append("				INNER JOIN electronicdeviceshop.tbl_roles r ON u_r.role_id=r.id");
-				strQuery.append("			WHERE r.code='G' AND u.id!=" + currentID);
-				strQuery.append("			ORDER BY updated_date DESC,created_date DESC");
-			}
-			Integer totalRecord = entityManager.createNativeQuery(strQuery.toString(), User.class).getResultList()
-					.size();
-			return totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
-
+	@SuppressWarnings("unchecked")
 	public User getUserByEmail(String email) {
-		List<User> listUser = super.executeNativeSql(
-				"SELECT * FROM electronicdeviceshop.tbl_users where email='" + email + "'");
+		Query query = entityManager.createQuery("FROM User u where u.email=:email");
+		query.setParameter("email", email);
+		List<User> listUser = query.getResultList();
 		return listUser.size() != 0 ? listUser.get(0) : null;
 	}
 
