@@ -62,7 +62,7 @@
 												<i class="fas fa-plus"></i>Thêm mới nhân viên
 											</button>
 										</c:if>
-										<input id="update_role" value="${productRole.update}" type="text"
+										<input id="update_role" value="${accountRole.update}" type="text"
 											style="display: none" />
 									</div>
 								</div>

@@ -8,6 +8,8 @@ $(document).ready(function () {
     $("body").on("change", ".btnChangeStatus", function (e) {
         e.preventDefault();
         var status = $(this).prop("checked") == true ? 1 : 0;
+        console.log(status);
+        console.log("enter");
         var id = $(this).data("id-item");
         $.post({
             url: "/admin/change-status-account",
@@ -72,17 +74,17 @@ function loadStaff(page) {
                                 </td>
                                 <td>
                                     <span>
-                                    <!-- Rounded switch -->
+                                        <!-- Rounded switch -->
                                         <label class="switch">
-                                            <input type="checkbox" data-id-item="${item.id}" class="btnChangeStatus" 
-                                            ${item.status==true? "checked" : ""} disabled="${update_role}">
+                                            <input type="checkbox" data-id-item="${item.id}" ${update_role==true?"":"disabled"} class="btnChangeStatus" 
+                                            ${item.status==true? "checked" : ""} >
                                             <span class="slider round"></span>
                                         </label>    
                                     </span>
                		            </td>
                 		        <td>
                                     <div class="table-data-feature">
-                                        <button class="item" title="Phân quyền" onclick="decentralization(${ item.id })" hide="${update_role}">
+                                        <button class="item" title="Phân quyền" onclick="decentralization(${ item.id })" hide="${!update_role}">
                                             <i class="fas fa-user-tag"></i>
                                         </button>
                                     </div>
@@ -154,7 +156,7 @@ function loadCustomer(page) {
                                 <span>
                                 <!-- Rounded switch -->
                                     <label class="switch">
-                                        <input type="checkbox" data-id-item="${item.id}" disabled="${update_role}" class="btnChangeStatus" 
+                                        <input type="checkbox" data-id-item="${item.id}" ${update_role==true?"":"disabled"} class="btnChangeStatus" 
                                         ${item.status==true? "checked" : ""}>
                                         <span class="slider round"></span>
                                     </label>    

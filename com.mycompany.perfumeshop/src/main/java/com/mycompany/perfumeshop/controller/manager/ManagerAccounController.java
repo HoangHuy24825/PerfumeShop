@@ -156,7 +156,7 @@ public class ManagerAccounController extends BaseController {
 	public ResponseEntity<JSONObject> chnageStatusAccount(final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException {
 		JSONObject result = new JSONObject();
-		Integer idAccount = ConvertUtils.convertStringToInt(request.getParameter("idAccount"), null);
+		Integer idAccount = ConvertUtils.convertStringToInt(request.getParameter("id"), null);
 		Boolean status = request.getParameter("status").equals("1");
 		if (idAccount == null) {
 			result.put("message", Boolean.FALSE);

@@ -2,9 +2,7 @@ package com.mycompany.perfumeshop.controller.manager;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,9 +21,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.mycompany.perfumeshop.controller.BaseController;
 import com.mycompany.perfumeshop.dto.MappingModel;
 import com.mycompany.perfumeshop.dto.ProductDTO;
+import com.mycompany.perfumeshop.entities.AttributeProduct;
 import com.mycompany.perfumeshop.entities.Product;
 import com.mycompany.perfumeshop.entities.ProductImage;
 import com.mycompany.perfumeshop.service.CategoryService;
+import com.mycompany.perfumeshop.service.ProductAttributeService;
 import com.mycompany.perfumeshop.service.ProductImageService;
 import com.mycompany.perfumeshop.service.ProductService;
 import com.mycompany.perfumeshop.service.UserService;
@@ -43,6 +43,9 @@ public class ManagerProductController extends BaseController {
 
 	@Autowired
 	private ProductImageService productImageService;
+
+	@Autowired
+	private ProductAttributeService productAttrService;
 
 	@Autowired
 	private UserService userService;
@@ -139,30 +142,26 @@ public class ManagerProductController extends BaseController {
 		return "manager/product/createOrUpdate";
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "/admin/detail-product" }, method = RequestMethod.GET)
-	public ResponseEntity<Map<String, List<JSONObject>>> detailProduct(final Model model,
-			final HttpServletRequest request, final HttpServletResponse response,
-			@RequestParam("idProduct") Integer idProduct) throws IOException {
-
-		Map<String, List<JSONObject>> result = new HashMap<>();
-
+	public ResponseEntity<JSONObject> detailProduct(final Model model, final HttpServletRequest request,
+			final HttpServletResponse response, @RequestParam("idProduct") Integer idProduct) throws IOException {
+		JSONObject result = new JSONObject();
 		Product product = productService.getById(idProduct);
-
-		List<JSONObject> productJson = new ArrayList<>();
-		productJson.add(mappingModel.mappingModel(product));
-
 		List<JSONObject> productImagesJson = new ArrayList<>();
-		List<ProductImage> productImages = productImageService.getListByIdProduct(idProduct);
-
+		List<ProductImage> productImages = productImageService.getListByIdProduct(product.getId());
 		for (ProductImage productImage : productImages) {
 			productImagesJson.add(mappingModel.mappingModel(productImage));
 		}
-
-		List<JSONObject> categoryJsons = new ArrayList<>();
-		categoryJsons.add(mappingModel.mappingModel(product.getCategory()));
-		result.put("product", productJson);
+		List<AttributeProduct> attributeProducts = productAttrService.getListByIdProduct(product.getId());
+		List<JSONObject> productAttrJson = new ArrayList<>();
+		for (AttributeProduct attributeProduct : attributeProducts) {
+			productAttrJson.add(mappingModel.mappingModel(attributeProduct));
+		}
+		result.put("product", mappingModel.mappingModel(product));
 		result.put("productImages", productImagesJson);
-		result.put("category", categoryJsons);
+		result.put("productAttrs", productAttrJson);
+		result.put("category", mappingModel.mappingModel(product.getCategory()));
 		return ResponseEntity.ok(result);
 	}
 

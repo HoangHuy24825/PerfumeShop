@@ -69,6 +69,8 @@
                                                     <input name="id" id="id" type="number" hidden="true"
                                                         value="${id_product}" />
 
+                                                    <input name="status" id="status" type="checkbox" hidden="true" />
+
                                                     <div class="form-row">
                                                         <div class="form-group col-6">
                                                             <label for="category" class="font-weight-bold">Danh mục
@@ -193,10 +195,10 @@
                                                         </div>
 
                                                         <div class="form-group col">
-                                                            <label for="fragment" class="font-weight-bold">Mùi hương
+                                                            <label for="fragrant" class="font-weight-bold">Mùi hương
                                                                 <span class="required">*</span> </label>
                                                             <input type="text" autocomplete="off" class="form-control"
-                                                                id="fragment" name="fragment"
+                                                                id="fragrant" name="fragrant"
                                                                 placeholder="Mùi hương"></input>
                                                         </div>
                                                     </div>

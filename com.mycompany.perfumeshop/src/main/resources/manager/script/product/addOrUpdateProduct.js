@@ -1,5 +1,6 @@
 var editor = '';
 $(document).ready(function () {
+
 	editor = CKEDITOR.replace('detail', {
 		width: ['100%'],
 		height: ['400px']
@@ -162,33 +163,27 @@ function loadDetailForEdit(id_product) {
 		dataType: "json", //set data return is json
 		success: function (result) {
 
-			$('#id').val(result.product[0].id);
-			$('#title').val(result.product[0].title);
-			$('#select-category').val(result.product[0].id_category);
-			$('.img--avatar').css("background-image", "url(/upload/" + result.product[0].avatar +
-				")");
-			$('#price').val(result.product[0].price);
-			$('#priceSale').val(result.product[0].priceSale);
-			$('#seo').val(result.product[0].seo);
-			$('#description').val(result.product[0].description);
+			$('#id').val(result.product.id);
+			$('#title').val(result.product.title);
+			$('#select-category').val(result.product.id_category);
+			$('.img--avatar').css("background-image", "url(/upload/" + result.product.avatar + ")");
+			$('#description').val(result.product.description);
+			$("#trademark").val(result.product.trademark);
+			$('#manufactureYear').val(result.product.manufactureYear);
+			$('#origin').val(result.product.origin);
+			$('#fragrant').val(result.product.fragrant);
+			editor.setData(result.product.detail);
 
-			$('#model').val(result.product[0].model);
-			$('#origin').val(result.product[0].origin);
-			$('#guarantee').val(result.product[0].guarantee);
-			$('#amount').val(result.product[0].amount);
-
-			editor.setData(result.product[0].detail);
-
-			if (result.product[0].status == true) {
-				$('#status1').attr("checked", true);
-			} else {
-				$('#status2').attr("checked", true);
-			}
-
-			if (result.product[0].isHot == true) {
+			if (result.product.isHot == true) {
 				$('#isHot1').attr("checked", true);
 			} else {
 				$('#isHot2').attr("checked", true);
+			}
+
+			if (result.product.status == true) {
+				$("#status").attr("checked", true);
+			} else {
+				$("#status").attr("checked", false);
 			}
 
 			$('i.del').parent().remove();
@@ -201,6 +196,43 @@ function loadDetailForEdit(id_product) {
 					.path + value.title + ")");
 				$(".image--product").last().attr("data-id-image", value.id);
 			});
+
+			var html = '';
+			$.each(result.productAttrs, function (index, value) {
+				html += `<div class="item-attribute row col-12">
+                        <input name="idAttribute" id="idAttribute" type="number" hidden="true" value="${value.id}" />
+
+                        <div class="form-group col-3">
+                            <label for="capacity" class="font-weight-bold">Dung tích <span
+                                    class="required">*</span></label>
+                            <input type="number" autocomplete="off" class="form-control" id="capacity" name="capacity"
+                                placeholder="Dung tích" value="${value.capacity}"></input>
+                        </div>
+
+                        <div class="form-group col-3">
+                            <label for="price" class="font-weight-bold">Giá <span class="required">*</span></label>
+                            <input type="number" autocomplete="off" class="form-control" id="price" name="price"
+                                placeholder="Giá sản phẩm" required="required" value="${value.price}"></input>
+                        </div>
+
+                        <div class="form-group col-3">
+                            <label for="priceSale" class="font-weight-bold">Giảm giá <span
+                                    class="required">*</span></label>
+                            <input type="number" autocomplete="off" class="form-control" id="priceSale" name="priceSale"
+                                placeholder="Giảm giá" value="${value.priceSale}"></input>
+                        </div>
+
+                        <div class="form-group col-3">
+                            <label for="amount" class="font-weight-bold">Số lượng <span
+                                    class="required">*</span></label>
+                            <input type="number" autocomplete="off" class="form-control" id="amount" name="amount"
+                                placeholder="Số lượng" value="${value.amount}"></input>
+                        </div>
+
+                        <div class="btn-delete-attribute"><i class="fas fa-times"></i></div>
+                     </div>`;
+			});
+			$(".detail-attribute-card").html(html);
 		},
 		error: function (jqXhr, textStatus, errorMessage) {
 			//show error

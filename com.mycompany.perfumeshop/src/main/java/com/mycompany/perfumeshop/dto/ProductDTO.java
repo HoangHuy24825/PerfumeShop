@@ -1,6 +1,7 @@
 package com.mycompany.perfumeshop.dto;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,5 +28,8 @@ public class ProductDTO extends BaseDTO {
 	private String model;
 	private Integer amount;
 	private String origin;
+	private String trademark;
+	private String fragrant;
 	private Integer manufactureYear;
+	private List<AttributeProductDTO> attributeProductDTOs;
 }

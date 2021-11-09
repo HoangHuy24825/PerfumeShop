@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
- 
+
 <!-- SPRING FORM -->
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 
@@ -69,7 +69,7 @@
                                                 <td>Tên sản phẩm</td>
                                                 <td>${product.title}</td>
                                             </tr>
-                                            <tr>
+                                            <!-- <tr>
                                                 <td>Giá</td>
                                                 <td>
                                                     <fmt:setLocale value="vi_VN" />
@@ -83,7 +83,7 @@
                                                     <fmt:formatNumber value="${product.priceSale}" type="currency"
                                                         currencySymbol="VNĐ" minFractionDigits="0" />
                                                 </td>
-                                            </tr>
+                                            </tr> -->
                                             <tr>
                                                 <td>Ảnh đại diện sản phẩm</td>
                                                 <td> <img src="/upload/${product.avatar}" width="300" /></td>
@@ -123,20 +123,49 @@
                                                 <td> ${product.seo}</td>
                                             </tr>
                                             <tr>
-                                                <td>Số lượng</td>
-                                                <td> ${product.amount}</td>
+                                                <td>Thương hiệu</td>
+                                                <td> ${product.trademark}</td>
                                             </tr>
                                             <tr>
                                                 <td>Xuất xứ</td>
                                                 <td> ${product.origin}</td>
                                             </tr>
                                             <tr>
-                                                <td>Model</td>
-                                                <td> ${product.model}</td>
+                                                <td>Mùi hương</td>
+                                                <td> ${product.fragrant}</td>
                                             </tr>
                                             <tr>
-                                                <td>Bảo hành</td>
-                                                <td> ${product.guarantee} tháng</td>
+                                                <td>Năm phát hành</td>
+                                                <td> ${product.manufactureYear}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Các dung tích</td>
+                                                <td>
+                                                    <div class="row">
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">Dung tích</th>
+                                                                    <th scope="col">Giá</th>
+                                                                    <th scope="col">Giảm giá</th>
+                                                                    <th scope="col">Số lượng</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <c:forEach var="attr"
+                                                                    items="${product.attributeProducts}">
+                                                                    <tr>
+                                                                        <th>${attr.capacity}</th>
+                                                                        <td>${attr.price}</td>
+                                                                        <td>${attr.priceSale}</td>
+                                                                        <td>${attr.amount}</td>
+                                                                    </tr>
+                                                                </c:forEach>
+                                                            </tbody>
+                                                        </table>
+
+                                                    </div>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>Hot</td>
@@ -187,26 +216,14 @@
     <jsp:include page="/WEB-INF/views/manager/layout/notify.jsp"></jsp:include>
     <!-- START NOTIFI MODAL -->
 
+    <!-- START MESSAGE TO USER -->
+    <jsp:include page="/WEB-INF/views/manager/layout/message-to-user.jsp"></jsp:include>
+    <!-- START MESSAGE TO USER -->
+
     <!-- JS-->
     <jsp:include page="/WEB-INF/views/manager/layout/script.jsp"></jsp:include>
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            setActiveMenu();
-        });
-
-        function setActiveMenu() {
-            console.log("call");
-            $(".navbar__list li").each(function () {
-                $(this).removeClass("active");
-            });
-            $(".list-unstyled li").each(function () {
-                $(this).removeClass("active");
-            });
-            $('.list-unstyled #menu--product').addClass("active");
-            $('.navbar__list #menu--product').addClass("active");
-        }
-    </script>
+    <script src="${base }/manager/script/product/detail.js"></script>
 </body>
 
 </html>

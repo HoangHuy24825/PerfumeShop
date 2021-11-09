@@ -152,11 +152,11 @@ function loadCategory(keySearch, currentPage) {
 									<input type="hidden" id="view_${value.id}" name="custId" value="${value.seo}">
 									   <i class="fas fa-eye"></i>
 								   </button>
-								<button class="item update_category" title="Sửa" hide="${update_role}">
+								<button class="item update_category" title="Sửa" hide="${!update_role}">
 									<i class="fas fa-pencil-alt" onclick="edit(${value.id})"></i>
 									<input type="hidden" id="edit_${value.id}" name="custId" value="${value.seo}">
 								</button>
-								<button class="item delete_category" hide="${delete_role}" title="Xóa" onclick="deleteCategory(${value.id})">
+								<button class="item delete_category" hide="${!delete_role}" title="Xóa" onclick="deleteCategory(${value.id})">
 									<i class="fas fa-trash-alt"></i>
 								</button>
 							</div>

@@ -33,7 +33,7 @@
     <!-- breadcrumb start-->
      <section class="banner_part">
         <div class="container">
-            <div class="row align-items-center" style="margin-top: 210px; margin-bottom: 40px;">
+            <div class="row align-items-center" style="margin-top: 150px; margin-bottom: 40px;">
             
                 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                     <ol class="carousel-indicators">

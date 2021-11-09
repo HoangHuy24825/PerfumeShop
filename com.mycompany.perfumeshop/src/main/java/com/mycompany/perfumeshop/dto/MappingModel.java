@@ -1,18 +1,20 @@
 package com.mycompany.perfumeshop.dto;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import org.json.simple.JSONObject;
 
+import com.mycompany.perfumeshop.entities.AttributeProduct;
 import com.mycompany.perfumeshop.entities.Blog;
 import com.mycompany.perfumeshop.entities.Category;
 import com.mycompany.perfumeshop.entities.CategoryBlog;
 import com.mycompany.perfumeshop.entities.Introduce;
+import com.mycompany.perfumeshop.entities.Order;
+import com.mycompany.perfumeshop.entities.OrderDetail;
 import com.mycompany.perfumeshop.entities.Product;
 import com.mycompany.perfumeshop.entities.ProductImage;
 import com.mycompany.perfumeshop.entities.RequestCancelOrder;
-import com.mycompany.perfumeshop.entities.Order;
-import com.mycompany.perfumeshop.entities.OrderDetail;
 import com.mycompany.perfumeshop.entities.User;
 
 public class MappingModel {
@@ -25,23 +27,44 @@ public class MappingModel {
 			product.setId(productDTO.getId());
 		}
 		product.setTitle(productDTO.getTitle());
-		/*
-		 * product.setPrice(productDTO.getPrice());
-		 * product.setPriceSale(productDTO.getPriceSale());
-		 */ product.setDescription(productDTO.getDescription());
+		product.setDescription(productDTO.getDescription());
 		product.setDetail(productDTO.getDetail());
+		product.setTrademark(productDTO.getTrademark());
+		product.setOrigin(productDTO.getOrigin());
+		product.setManufactureYear(productDTO.getManufactureYear());
 		product.setSeo(productDTO.getSeo());
+		product.setFragrant(productDTO.getFragrant());
 		product.setIsHot(productDTO.getIsHot());
 		product.setStatus(productDTO.getStatus());
-		/* product.setCategory(categoryService.getById(productDTO.getId_category())); */
-		/* product.setAmount(productDTO.getAmount()); */
-		product.setManufactureYear(productDTO.getManufactureYear());
-		product.setOrigin(productDTO.getOrigin());
 		product.setCreatedBy(productDTO.getCreatedBy());
 		product.setUpdatedBy(productDTO.getUpdatedBy());
 		product.setCreatedDate(productDTO.getCreatedDate());
 		product.setUpdatedDate(productDTO.getUpdatedDate());
+
+		if (productDTO.getAttributeProductDTOs() != null && productDTO.getAttributeProductDTOs().size() > 0) {
+			List<AttributeProductDTO> attributeProductDTOs = productDTO.getAttributeProductDTOs();
+			for (AttributeProductDTO attributeProductDTO : attributeProductDTOs) {
+				product.addAttribute(mappingModel(attributeProductDTO));
+			}
+		}
 		return product;
+	}
+
+	public AttributeProduct mappingModel(AttributeProductDTO attributeProductDTO) {
+		AttributeProduct attributeProduct = new AttributeProduct();
+		if (attributeProductDTO.getId() != null) {
+			attributeProduct.setId(attributeProductDTO.getId());
+		}
+		attributeProduct.setCapacity(attributeProductDTO.getCapacity());
+		attributeProduct.setPrice(attributeProductDTO.getPrice());
+		attributeProduct.setPriceSale(attributeProductDTO.getPriceSale());
+		attributeProduct.setStatus(attributeProductDTO.getStatus());
+		attributeProduct.setCreatedBy(attributeProductDTO.getCreatedBy());
+		attributeProduct.setUpdatedBy(attributeProductDTO.getUpdatedBy());
+		attributeProduct.setCreatedDate(attributeProductDTO.getCreatedDate());
+		attributeProduct.setUpdatedDate(attributeProductDTO.getUpdatedDate());
+		attributeProduct.setAmount(attributeProductDTO.getAmount());
+		return attributeProduct;
 	}
 
 	public Category mappingModel(CategoryDTO categoryDTO) {
@@ -208,7 +231,7 @@ public class MappingModel {
 		productJson.put("avatar", product.getAvatar());
 		productJson.put("trademark", product.getTrademark());
 		productJson.put("origin", product.getOrigin());
-		productJson.put("guarantee", product.getManufactureYear());
+		productJson.put("manufactureYear", product.getManufactureYear());
 		productJson.put("isHot", product.getIsHot());
 		productJson.put("id_category", product.getCategory().getId());
 		productJson.put("fragrant", product.getFragrant());
@@ -235,6 +258,21 @@ public class MappingModel {
 		productJson.put("createdDate", productImage.getCreatedDate());
 		productJson.put("updatedDate", productImage.getUpdatedDate());
 		return productJson;
+	}
+
+	@SuppressWarnings("unchecked")
+	public JSONObject mappingModel(AttributeProduct attributeProduct) {
+		JSONObject productAttributeJson = new JSONObject();
+		productAttributeJson.put("id", attributeProduct.getId());
+		productAttributeJson.put("capacity", attributeProduct.getCapacity());
+		productAttributeJson.put("price", attributeProduct.getPrice());
+		productAttributeJson.put("priceSale", attributeProduct.getPriceSale());
+		productAttributeJson.put("amount", attributeProduct.getAmount());
+		productAttributeJson.put("createdBy", attributeProduct.getCreatedBy());
+		productAttributeJson.put("updatedBy", attributeProduct.getUpdatedBy());
+		productAttributeJson.put("createdDate", attributeProduct.getCreatedDate());
+		productAttributeJson.put("updatedDate", attributeProduct.getUpdatedDate());
+		return productAttributeJson;
 	}
 
 	@SuppressWarnings("unchecked")
