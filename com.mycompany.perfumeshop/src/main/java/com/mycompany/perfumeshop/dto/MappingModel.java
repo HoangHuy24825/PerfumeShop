@@ -1,6 +1,7 @@
 package com.mycompany.perfumeshop.dto;
 
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.List;
 
 import org.json.simple.JSONObject;
@@ -241,6 +242,12 @@ public class MappingModel {
 		productJson.put("createdDate", product.getCreatedDate());
 		productJson.put("updatedDate", product.getUpdatedDate());
 		productJson.put("seo", product.getSeo());
+		productJson.put("reviews", product.getReviews());
+		productJson.put("attrs", product.getAttributeProducts());
+		productJson.put("maxPrice",
+				product.getAttributeProducts().stream().max(Comparator.comparing(AttributeProduct::getPrice)));
+		productJson.put("maxPrice",
+				product.getAttributeProducts().stream().min(Comparator.comparing(AttributeProduct::getPrice)));
 		return productJson;
 	}
 

@@ -112,7 +112,7 @@ public class ManagerCategoryController extends BaseController {
 			categoryService.saveOrUpdate(category);
 			result.put("message", true);
 		} else {
-			result.put("message", true);
+			result.put("message", false);
 		}
 		return ResponseEntity.ok(result);
 	}

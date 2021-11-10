@@ -2,6 +2,7 @@ package com.mycompany.perfumeshop.controller.manager;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -67,7 +68,7 @@ public class ManagerProductController extends BaseController {
 
 		Integer currentPage = ConvertUtils.convertStringToInt(request.getParameter("currentPage"), 1);
 		Integer idCategory = ConvertUtils.convertStringToInt(request.getParameter("idCategory"), 0);
-		Integer statusProduct = ConvertUtils.convertStringToInt(request.getParameter("idCategory"), null);
+		Integer statusProduct = ConvertUtils.convertStringToInt(request.getParameter("status"), null);
 		String keySearch = request.getParameter("keySearch");
 
 		BaseVo<Product> baseVo = productService.getListProductByFilter(currentPage, pageSize, statusProduct, idCategory,
@@ -183,5 +184,34 @@ public class ManagerProductController extends BaseController {
 		} catch (Exception e) {
 			return ResponseEntity.ok(null);
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = { "/admin/change-detail-product" }, method = RequestMethod.POST)
+	public ResponseEntity<JSONObject> changeDetail(final Model model, final HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		Integer type = ConvertUtils.convertStringToInt(request.getParameter("type"), null);
+		Integer id = ConvertUtils.convertStringToInt(request.getParameter("id"), null);
+		JSONObject result = new JSONObject();
+		if (id != null) {
+			Product product = productService.getById(id);
+			if (type != null && type == 0) {
+				boolean status = request.getParameter("status").equals("1");
+				product.setStatus(status);
+			} else if (type != null && type == 1) {
+				boolean isHot = request.getParameter("isHot").equals("1");
+				product.setIsHot(isHot);
+			}
+			if (isLogined()) {
+				product.setUpdatedBy(getUserLogined().getId());
+			}
+			product.setUpdatedDate(Calendar.getInstance().getTime());
+			productService.saveOrUpdate(product);
+			result.put("message", true);
+
+		} else {
+			result.put("message", false);
+		}
+		return ResponseEntity.ok(result);
 	}
 }

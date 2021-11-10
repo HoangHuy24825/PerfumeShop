@@ -26,6 +26,80 @@ $(document).ready(function () {
     } else {
         loadData(null, 1, null, null, null);
     }
+
+    $("#orderBy").change(function () {
+        var txtSearch = $("#searchStr").val();
+        var orderType = $("#orderBy").val();
+        var filterType = $("#filterBy").val();
+        var id_category = $('.table-categoty').find('.chosed').attr('id');
+        if (orderType != 0) {
+            loadData(txtSearch, 1, id_category, orderType, filterType);
+        } else {
+            loadData(txtSearch, 1, id_category, null, filterType);
+        }
+    });
+
+    $("#filterBy").change(function () {
+        var txtSearch = $("#searchStr").val();
+        var orderType = $("#orderBy").val();
+        var filterType = $("#filterBy").val();
+        var id_category = $('.table-categoty').find('.chosed').attr('id');
+        if (filterType != 0) {
+            loadData(txtSearch, 1, id_category, orderType, filterType);
+        } else {
+            loadData(txtSearch, 1, id_category, orderType, null);
+        }
+    });
+
+    $('.row-left-sidebar').click(function () {
+        $("#orderBy").val("0");
+        $("#filterBy").val("0");
+        $('#searchStr').val("");
+
+        $('.table-categoty').find('.selected-category').removeClass('selected-category');
+        $('.table-categoty').find('.chosed').removeClass('chosed');
+
+        var id_category = $(this).attr('id');
+        loadData(null, 1, id_category, null, null);
+        $(this).addClass('chosed');
+        $(this).addClass('selected-category');
+        var title = $(this).children('td:nth-child(2)').text();
+        $('#title-banner').find('h2').html("Danh mục sản phẩm");
+        $('#title-banner').find('p').html("Trang chủ > " + title);
+    });
+
+    $("body").on("click", ".pagination li a", function (event) {
+        event.preventDefault();
+        var page = $(this).attr('data-page');
+        var id_category = $('.table-categoty').find('.chosed').attr('id');
+
+        var txtSearch = $("#searchStr").val();
+        if (txtSearch != "") {
+            loadData(txtSearch, page, id_category, $("#orderBy").val(), $("#filterBy").val());
+        } else {
+            loadData(null, page, id_category, $("#orderBy").val(), $("#filterBy").val());
+        }
+
+    });
+
+    $("#search").click(function () {
+        $("#orderBy").val("0");
+        $("#filterBy").val("0");
+        $('.table-categoty').find('.selected-category').removeClass('selected-category');
+        var txtSearch = $("#searchStr").val();
+        if (txtSearch != "") {
+            loadData(txtSearch, 1, null, null, null);
+        } else {
+            loadData(null, 1, null, null, null);
+        }
+    });
+
+    $("#searchStr").keyup(function (event) {
+        $("#orderBy").val("0");
+        $("#filterBy").val("0");
+        $('#search').click();
+    });
+
 });
 
 function setMenuBanner() {
@@ -137,63 +211,6 @@ function loadData(searchStr, page, id_category, typeOrder, filterType) {
     });
 }
 
-function showAlertMessage(message, messageState) {
-    if (messageState) {
-        $('#alert_message').css({
-            "background": "#C5F3D7",
-            "border-left": "8px solid #2BD971"
-        });
-        $("#icon-alert-message").html('<i class="fas fa-check-circle"></i>');
-        $("#icon-alert-message").find('i').css({
-            "color": "#2BD971"
-        });
-        $(".msg").css({
-            "color": "#24AD5F"
-        });
-        $(".close-btn-alert").css({
-            "background": "#2BD971",
-            "color": "#24AD5F"
-        });
-        $(".close-btn-alert").find('.fas').css({
-            "color": "#24AD5F"
-        });
-        $(".close-btn-alert").hover(function (e) {
-            $(this).css("background-color", e.type === "mouseenter" ? "#38F5A3" : "#2BD971")
-        })
-    } else {
-        $('#alert_message').css({
-            "background": "#FFE1E3",
-            "border-left": "8px solid #FF4456"
-        });
-        $("#icon-alert-message").html('<i class="fas fa-exclamation-circle"></i>');
-        $("#icon-alert-message").find('i').css({
-            "color": "#FE4950"
-        });
-        $(".msg").css({
-            "color": "#F694A9"
-        });
-        $(".close-btn-alert").css({
-            "background": "#FF9CA4",
-            "color": "#FD4653"
-        });
-        $(".close-btn-alert").find('.fas').css({
-            "color": "#FD4653"
-        });
-        $(".close-btn-alert").hover(function (e) {
-            $(this).css("background-color", e.type === "mouseenter" ? "#FFBDC2" : "#FF9CA4")
-        })
-    }
-
-    $('.msg').text(message);
-    $('.alert').addClass("show");
-    $('.alert').removeClass("hide");
-    $('.alert').addClass("showAlert");
-    setTimeout(function () {
-        $('.alert').removeClass("show");
-        $('.alert').addClass("hide");
-    }, 3000);
-};
-
 function detail(id_product) {
     window.location.href = '/detail-product/' + $('#view_' + id_product).val();
 };
@@ -219,81 +236,8 @@ function addProductToCart(id_product) {
     });
 }
 
-$("#orderBy").change(function () {
-    var txtSearch = $("#searchStr").val();
-    var orderType = $("#orderBy").val();
-    var filterType = $("#filterBy").val();
-    var id_category = $('.table-categoty').find('.chosed').attr('id');
-    if (orderType != 0) {
-        loadData(txtSearch, 1, id_category, orderType, filterType);
-    } else {
-        loadData(txtSearch, 1, id_category, null, filterType);
-    }
-});
-
-$("#filterBy").change(function () {
-    var txtSearch = $("#searchStr").val();
-    var orderType = $("#orderBy").val();
-    var filterType = $("#filterBy").val();
-    var id_category = $('.table-categoty').find('.chosed').attr('id');
-    if (filterType != 0) {
-        loadData(txtSearch, 1, id_category, orderType, filterType);
-    } else {
-        loadData(txtSearch, 1, id_category, orderType, null);
-    }
-});
-
-$('.row-left-sidebar').click(function () {
-    $("#orderBy").val("0");
-    $("#filterBy").val("0");
-    $('#searchStr').val("");
-
-    $('.table-categoty').find('.selected-category').removeClass('selected-category');
-    $('.table-categoty').find('.chosed').removeClass('chosed');
-
-    var id_category = $(this).attr('id');
-    loadData(null, 1, id_category, null, null);
-    $(this).addClass('chosed');
-    $(this).addClass('selected-category');
-    var title = $(this).children('td:nth-child(2)').text();
-    $('#title-banner').find('h2').html("Danh mục sản phẩm");
-    $('#title-banner').find('p').html("Trang chủ > " + title);
-});
-
-$("body").on("click", ".pagination li a", function (event) {
-    event.preventDefault();
-    var page = $(this).attr('data-page');
-    var id_category = $('.table-categoty').find('.chosed').attr('id');
-
-    var txtSearch = $("#searchStr").val();
-    if (txtSearch != "") {
-        loadData(txtSearch, page, id_category, $("#orderBy").val(), $("#filterBy").val());
-    } else {
-        loadData(null, page, id_category, $("#orderBy").val(), $("#filterBy").val());
-    }
-
-});
-
-$("#search").click(function () {
-    $("#orderBy").val("0");
-    $("#filterBy").val("0");
-    $('.table-categoty').find('.selected-category').removeClass('selected-category');
-    var txtSearch = $("#searchStr").val();
-    if (txtSearch != "") {
-        loadData(txtSearch, 1, null, null, null);
-    } else {
-        loadData(null, 1, null, null, null);
-    }
-});
-
-$("#searchStr").keyup(function (event) {
-    $("#orderBy").val("0");
-    $("#filterBy").val("0");
-    $('#search').click();
-});
 
 function loadNewProduct() {
-    console.log("load new product");
     $.ajax({
         url: "/new-product",
         type: "GET",

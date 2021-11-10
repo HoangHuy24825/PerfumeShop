@@ -1,7 +1,6 @@
 package com.mycompany.perfumeshop.service;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -16,7 +15,6 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.databind.deser.Deserializers.Base;
 import com.github.slugify.Slugify;
 import com.mycompany.perfumeshop.dto.Constant;
 import com.mycompany.perfumeshop.entities.Category;

@@ -2,13 +2,117 @@ $(document).ready(function () {
     loadProduct(null, 1); //load page 1
     loadCategory(); //load category to filter
     setActiveMenu();
-});
+
+    $("body").on("change", ".btnChangeStatus", function (e) {
+        e.preventDefault();
+        var status = $(this).prop("checked") == true ? 1 : 0;
+        var type = 0;
+        var id = $(this).data("id-item");
+        $.post({
+            url: "/admin/change-detail-product",
+            data: {
+                status: status,
+                id: id,
+                type: type
+            },
+            dataType: "json",
+            success: function (response) {
+                if (response.message == true) {
+                    showAlertMessage("Cập nhật trạng thái thành công!", true);
+                } else {
+                    showAlertMessage("Cập nhật trạng thái thất bại!", false);
+                }
+            }
+        });
+    });
+
+    $("body").on("change", ".btnChangeHot", function (e) {
+        e.preventDefault();
+        var isHot = $(this).prop("checked") == true ? 1 : 0;
+        var id = $(this).data("id-item");
+        var type = 1;
+        $.post({
+            url: "/admin/change-detail-product",
+            data: {
+                isHot: isHot,
+                id: id,
+                type: type
+            },
+            dataType: "json",
+            success: function (response) {
+                if (response.message == true) {
+                    showAlertMessage("Cập nhật sản phẩm thành công!", true);
+                } else {
+                    showAlertMessage("Cập nhật sản phẩm thất bại!", false);
+                }
+            }
+        });
+    });
+
+    $("body").on("click", "#btn_search_header", function () {
+        $("#filter-status").val("0");
+        $("#select-category").val("0");
+        var txtSearch = $("#input-search-header").val();
+        if (txtSearch != "") {
+            loadProduct(txtSearch, 1, null, null);
+        } else {
+            loadProduct(null, 1, null, null);
+        }
+    });
+
+    /*  $("#input-search-header").keyup(function(event) {
+         $("#filter-status").val("0");
+         $("#select-category").val("0");
+         $('#btn_search_header').click();
+     }); */
+    /* SEARCH HEADER END */
+
+    $("body").on("change", "#select-category", function () {
+        var filterType = $("#filter-status").val();
+        var id_category = $("#select-category").val();
+        if (filterType != 0) {
+            loadProduct(null, 1, id_category, filterType);
+        } else {
+            loadProduct(null, 1, id_category, null);
+        }
+    });
+    /* SELECT CATEGORY END */
+
+    /* SELECT STATUS START */
+    $("body").on("change", "#filter-status", function () {
+        var txtSearch = $("#input-search-header").val();
+        var filterType = $("#filter-status").val();
+        var id_category = $("#select-category").val();
+        if (filterType != 0) {
+            loadProduct(txtSearch, 1, id_category, filterType);
+        } else {
+            loadProduct(txtSearch, 1, id_category, null);
+        }
+    });
+    /* SELECT STATUS END */
+
+    /* PAGING CLICK START */
+    $("body").on("click", ".pagination li a", function (event) {
+        event.preventDefault();
+        var currentPage = $(this).attr('data-page');
+        var txtSearch = $("#input-search-header").val();
+        var filterType = $("#filter-status").val();
+        var id_category = $("#select-category").val();
+        console.log(txtSearch);
+        console.log(filterType);
+        console.log(id_category);
+        //load event pagination
+        loadProduct(txtSearch, currentPage, id_category, filterType);
+    });
+    /* PAGING CLICK END */
+    
+    $("body").on("keydown","#input-search-header", function (e) {
+        if (e.keyCode == 13) {
+            $('#btn_search_header').click();
+        }
+    });
 
 
-$('#input-search-header').on('keydown', function (e) {
-    if (e.keyCode == 13) {
-        $('#btn_search_header').click();
-    }
 });
 
 function loadCategory() {
@@ -67,7 +171,7 @@ function loadProduct(keySearch, currentPage, idCategory, status) {
                                 <span>
                                     <!-- Rounded switch -->
                                     <label class="switch">
-                                        <input type="checkbox" id="btnChangeStatus" ${value.status==true? "checked" : ""}>
+                                        <input type="checkbox" class="btnChangeStatus" data-id-item="${value.id}" ${value.status==true? "checked" : ""}>
                                         <span class="slider round"></span>
                                     </label>    
                                 </span>
@@ -76,7 +180,7 @@ function loadProduct(keySearch, currentPage, idCategory, status) {
                                 <span>
                                     <!-- Rounded switch -->
                                     <label class="switch">
-                                        <input type="checkbox" id="btnChangeHot" ${value.isHot==true? "checked" : ""}>
+                                        <input type="checkbox" class="btnChangeHot" data-id-item="${value.id}" ${value.isHot==true? "checked" : ""}>
                                         <span class="slider round"></span>
                                     </label>    
                                 </span>
@@ -143,66 +247,6 @@ function loadProduct(keySearch, currentPage, idCategory, status) {
 
 /* LOAD PRODUCT END */
 
-/* SEARCH HEADER START */
-$("#btn_search_header").click(function () {
-    $("#filter-status").val("0");
-    $("#select-category").val("0");
-    var txtSearch = $("#input-search-header").val();
-    if (txtSearch != "") {
-        loadProduct(txtSearch, 1, null, null);
-    } else {
-        loadProduct(null, 1, null, null);
-    }
-});
-
-
-
-/*  $("#input-search-header").keyup(function(event) {
-     $("#filter-status").val("0");
-     $("#select-category").val("0");
-     $('#btn_search_header').click();
- }); */
-/* SEARCH HEADER END */
-
-/* SELECT CATEGORY START */
-$("#select-category").change(function () {
-    var filterType = $("#filter-status").val();
-    var id_category = $("#select-category").val();
-    if (filterType != 0) {
-        loadProduct(null, 1, id_category, filterType);
-    } else {
-        loadProduct(null, 1, id_category, null);
-    }
-});
-/* SELECT CATEGORY END */
-
-/* SELECT STATUS START */
-$("#filter-status").change(function () {
-    var txtSearch = $("#input-search-header").val();
-    var filterType = $("#filter-status").val();
-    var id_category = $("#select-category").val();
-    if (filterType != 0) {
-        loadProduct(txtSearch, 1, id_category, filterType);
-    } else {
-        loadProduct(txtSearch, 1, id_category, null);
-    }
-});
-/* SELECT STATUS END */
-
-/* PAGING CLICK START */
-$("body").on("click", ".pagination li a", function (event) {
-    event.preventDefault();
-    var currentPage = $(this).attr('data-page');
-    var txtSearch = $("#input-search-header").val();
-    var filterType = $("#filter-status").val();
-    var id_category = $("#select-category").val();
-    console.log(txtSearch);
-    console.log(filterType);
-    console.log(id_category);
-    //load event pagination
-    loadProduct(txtSearch, currentPage, id_category, filterType);
-});
-/* PAGING CLICK END */
 
 function detail(id) {
     window.location.href = '/admin/product-detail/' + $('#view_' + id).val();
@@ -223,83 +267,13 @@ function setActiveMenu() {
     $('.navbar__list #menu--product').addClass("active");
 }
 
-function showAlertMessage(message, messageState) {
-    if (messageState) {
-        $('#alert_message').css({
-            "background": "#C5F3D7",
-            "border-left": "8px solid #2BD971"
-        });
-        $("#icon-alert-message").html('<i class="fas fa-check-circle"></i>');
-        $("#icon-alert-message").find('i').css({
-            "color": "#2BD971"
-        });
-        $(".msg").css({
-            "color": "#24AD5F"
-        });
-        $(".close-btn-alert").css({
-            "background": "#2BD971",
-            "color": "#24AD5F"
-        });
-        $(".close-btn-alert").find('.fas').css({
-            "color": "#24AD5F"
-        });
-        $(".close-btn-alert").hover(function (e) {
-            $(this).css("background-color", e.type === "mouseenter" ? "#38F5A3" : "#2BD971")
-        })
-    } else {
-        $('#alert_message').css({
-            "background": "#FFE1E3",
-            "border-left": "8px solid #FF4456"
-        });
-        $("#icon-alert-message").html('<i class="fas fa-exclamation-circle"></i>');
-        $("#icon-alert-message").find('i').css({
-            "color": "#FE4950"
-        });
-        $(".msg").css({
-            "color": "#F694A9"
-        });
-        $(".close-btn-alert").css({
-            "background": "#FF9CA4",
-            "color": "#FD4653"
-        });
-        $(".close-btn-alert").find('.fas').css({
-            "color": "#FD4653"
-        });
-        $(".close-btn-alert").hover(function (e) {
-            $(this).css("background-color", e.type === "mouseenter" ? "#FFBDC2" : "#FF9CA4")
-        })
-    }
-
-    $('.msg').text(message);
-    $('.alert').addClass("show");
-    $('.alert').removeClass("hide");
-    $('.alert').addClass("showAlert");
-    setTimeout(function () {
-        $('.alert').removeClass("show");
-        $('.alert').addClass("hide");
-    }, 3000);
-};
-
 function deleteProduct(idProduct) {
-    $('#btn_save').attr("onclick", "deleteConfirmed(" + idProduct + ")");
-    $('#modalConfirmOderContent').text("Bạn chắc chắn muốn xóa sản phẩm này ?");
-    $('#btn_save').show();
-    $('#btn_save').text("Có");
-    $('#btn_close').css({
-        "background-color": "#007bff",
-        "border": "1px solid #007bff",
-        "width": "200px"
-    })
-    $('#btn_save').css({
-        "background-color": "rgb(255, 66, 78)",
-        "border": "1px solid rgb(255, 66, 78)",
-        "width": "200px"
-    });
-    $('#modalConfirmOder').modal('show');
+    $('#btnAgree').attr("onclick", "deleteConfirmed(" + idProduct + ")");
+    showConfirm("Bạn có chắc chắn muốn xóa sản phẩm này?", "Có", "Không", true);
 };
 
 function deleteConfirmed(idProduct) {
-    $('#modalConfirmOder').modal('hide');
+    $('#modalCustomerConfirm').modal('hide');
     $.ajax({
         url: '/admin/delete-product?idProduct=' + idProduct,
         type: "POST",

@@ -25,14 +25,16 @@ import com.mycompany.perfumeshop.dto.UserSearchProduct;
 import com.mycompany.perfumeshop.entities.Product;
 import com.mycompany.perfumeshop.entities.ProductImage;
 import com.mycompany.perfumeshop.service.CategoryService;
+import com.mycompany.perfumeshop.service.ProductAttributeService;
 import com.mycompany.perfumeshop.service.ProductImageService;
 import com.mycompany.perfumeshop.service.ProductService;
+import com.mycompany.perfumeshop.service.ReviewService;
 import com.mycompany.perfumeshop.utils.ConvertUtils;
 import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
 @Controller
 public class ProductController extends BaseController {
-	
+
 	@Autowired
 	private ProductService productService;
 
@@ -41,6 +43,12 @@ public class ProductController extends BaseController {
 
 	@Autowired
 	private CategoryService categoryService;
+
+	@Autowired
+	private ProductAttributeService attributeService;
+
+	@Autowired
+	private ReviewService reviewService;
 
 	private static final Integer PAGE_SIZE = 9;
 
@@ -100,9 +108,13 @@ public class ProductController extends BaseController {
 			List<JSONObject> listProduct = new ArrayList<>();
 			if (baseVo.getListEntity() != null) {
 				List<Product> products = baseVo.getListEntity();
-				products.forEach(p -> listProduct.add(mappingModel.mappingModel(p)));
-			}
+				for (Product product : products) {
+					product.setAttributeProducts(attributeService.getListByIdProduct(product.getId()));
+					product.setReviews(reviewService.findAllByIdProduct(product.getId()));
+					listProduct.add(mappingModel.mappingModel(product));
+				}
 
+			}
 			result.put("products", listProduct);
 			result.put("currentPage", baseVo.getCurrentPage());
 			result.put("totalPage", baseVo.getTotalPage());
@@ -111,27 +123,17 @@ public class ProductController extends BaseController {
 		return ResponseEntity.ok(result);
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "/detail-product-loading" }, method = RequestMethod.GET)
-	public ResponseEntity<Map<String, List<JSONObject>>> getProductDetail(final Model model,
-			final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+	public ResponseEntity<JSONObject> getProductDetail(final Model model, final HttpServletRequest request,
+			final HttpServletResponse response) throws IOException {
 		try {
-			Map<String, List<JSONObject>> result = new HashMap<String, List<JSONObject>>();
+			JSONObject result = new JSONObject();
 			Integer idProduct = Integer.parseInt(request.getParameter("id_product"));
-
-			List<JSONObject> product = new ArrayList<JSONObject>();
-			product.add(mappingModel.mappingModel(productService.getById(idProduct)));
-
-			List<ProductImage> images = productImageService.getListByIdProduct(idProduct);
-			if (images.size() > 0) {
-				List<JSONObject> imagesJSON = new ArrayList<JSONObject>();
-				for (ProductImage image : images) {
-					imagesJSON.add(mappingModel.mappingModel(image));
-				}
-				result.put("images", imagesJSON);
-			} else {
-				result.put("images", null);
-			}
-
+			Product product = productService.getById(idProduct);
+			product.setAttributeProducts(attributeService.getListByIdProduct(product.getId()));
+			product.setReviews(reviewService.findAllByIdProduct(product.getId()));
+			product.setProductImages(productImageService.getListByIdProduct(product.getId()));
 			result.put("product", product);
 			return ResponseEntity.ok(result);
 		} catch (Exception e) {
@@ -139,15 +141,17 @@ public class ProductController extends BaseController {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "/new-product" }, method = RequestMethod.GET)
-	public ResponseEntity<List<JSONObject>> getNewProduct(final Model model, final HttpServletRequest request,
+	public ResponseEntity<JSONObject> getNewProduct(final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException {
-
+		JSONObject result = new JSONObject();
 		List<Product> products = productService.getNewProduct();
-		List<JSONObject> listProduct = new ArrayList<>();
 		for (Product product : products) {
-			listProduct.add(mappingModel.mappingModel(product));
+			product.setAttributeProducts(attributeService.getListByIdProduct(product.getId()));
+			product.setReviews(reviewService.findAllByIdProduct(product.getId()));
 		}
-		return ResponseEntity.ok(listProduct);
+		result.put("products", products);
+		return ResponseEntity.ok(result);
 	}
 }

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
+
 
 <!-- SPRING FORM -->
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
@@ -139,15 +139,9 @@
 	<jsp:include page="/WEB-INF/views/user/layout/footer.jsp"></jsp:include>
 	<!--::footer_part end::-->
 
-	<!--::message_part start::-->
-	<div class="alert hide" id="alert_message">
-		<div id="icon-alert-message"><i class="fas fa-exclamation-circle"></i></div>
-		<span class="msg">Warning: This is a warning alert!</span>
-		<div class="close-btn-alert">
-			<span class="fas fa-times"></span>
-		</div>
-	</div>
-	<!--::message_part end::-->
+	<!--::message to client part start::-->
+	<jsp:include page="/WEB-INF/views/user/layout/message-to-user.jsp"></jsp:include>
+	<!-- Message to client part end-->
 
 	<!-- jquery plugins here-->
 	<jsp:include page="/WEB-INF/views/user/layout/script.jsp"></jsp:include>

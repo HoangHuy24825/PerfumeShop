@@ -85,7 +85,7 @@ function deleteCategory(idCategory) {
 };
 
 function deleteConfirmed(idCategory) {
-	$('#modalConfirmOder').modal('hide');
+	$('#modalCustomerConfirm').modal('hide');
 	$.ajax({
 		url: '/admin/delete-category?idCategory=' + idCategory,
 		type: "POST",

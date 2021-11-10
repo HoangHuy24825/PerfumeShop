@@ -3,9 +3,7 @@ package com.mycompany.perfumeshop.service;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -76,6 +74,7 @@ public class ProductService extends BaseService<Product> implements Constant {
 		}
 		product.setSeo(new Slugify().slugify(product.getTitle()));
 		product.setCreatedDate(Calendar.getInstance().getTime());
+		product.setStatus(true);
 		return super.saveOrUpdate(product);
 	}
 
@@ -268,6 +267,7 @@ public class ProductService extends BaseService<Product> implements Constant {
 			if (idCategory != 0) {
 				predicates.add(criteriaBuilder.equal(root.get("category").get("id"), idCategory));
 			}
+			criteriaQuery.where(predicates.toArray(new Predicate[] {}));
 			criteriaQuery.orderBy(criteriaBuilder.desc(root.get("updatedDate")),
 					criteriaBuilder.desc(root.get("createdDate")));
 			Query query = entityManager.createQuery(criteriaQuery);
