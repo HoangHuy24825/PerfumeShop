@@ -3,7 +3,9 @@ package com.mycompany.perfumeshop.service;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.github.slugify.Slugify;
 import com.mycompany.perfumeshop.dto.Constant;
 import com.mycompany.perfumeshop.dto.UserSearchProduct;
+import com.mycompany.perfumeshop.entities.AttributeProduct;
 import com.mycompany.perfumeshop.entities.OrderDetail;
 import com.mycompany.perfumeshop.entities.Product;
 import com.mycompany.perfumeshop.entities.ProductImage;
@@ -31,6 +34,9 @@ public class ProductService extends BaseService<Product> implements Constant {
 
 	@Autowired
 	ProductImageService imageService;
+
+	@Autowired
+	ProductAttributeService attributeService;
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -106,7 +112,23 @@ public class ProductService extends BaseService<Product> implements Constant {
 		product.setUpdatedDate(Calendar.getInstance().getTime());
 		product.setCreatedDate(oldProduct.getCreatedDate());
 		product.setCreatedBy(oldProduct.getCreatedBy());
+		List<AttributeProduct> attributeProducts = attributeService.getListByIdProduct(oldProduct.getId());
+		List<AttributeProduct> newAttributeProducts = product.getAttributeProducts();
+		for (AttributeProduct attributeProduct : attributeProducts) {
+			if (!checkExistsAttr(newAttributeProducts, attributeProduct)) {
+				attributeService.delete(attributeProduct);
+			}
+		}
 		return super.saveOrUpdate(product);
+	}
+
+	private boolean checkExistsAttr(List<AttributeProduct> attributeProducts, AttributeProduct attributeProduct) {
+		for (AttributeProduct attr : attributeProducts) {
+			if (attributeProduct.getId() == attr.getId()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public List<Product> getNewProduct() {

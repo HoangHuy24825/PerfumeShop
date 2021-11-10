@@ -69,21 +69,7 @@
                                                 <td>Tên sản phẩm</td>
                                                 <td>${product.title}</td>
                                             </tr>
-                                            <!-- <tr>
-                                                <td>Giá</td>
-                                                <td>
-                                                    <fmt:setLocale value="vi_VN" />
-                                                    <fmt:formatNumber value="${product.price}" type="currency"
-                                                        currencySymbol="VNĐ" minFractionDigits="0" />
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Giảm giá</td>
-                                                <td>
-                                                    <fmt:formatNumber value="${product.priceSale}" type="currency"
-                                                        currencySymbol="VNĐ" minFractionDigits="0" />
-                                                </td>
-                                            </tr> -->
+                                           
                                             <tr>
                                                 <td>Ảnh đại diện sản phẩm</td>
                                                 <td> <img src="/upload/${product.avatar}" width="300" /></td>

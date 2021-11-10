@@ -16,4 +16,14 @@ public class AttributeProductDTO extends BaseDTO {
 	private BigDecimal price;
 	private BigDecimal priceSale;
 	private Integer amount;
+
+	public AttributeProductDTO(Integer id, BigDecimal capacity, BigDecimal price, BigDecimal priceSale,
+			Integer amount) {
+		super(id);
+		this.capacity = capacity;
+		this.price = price;
+		this.priceSale = priceSale;
+		this.amount = amount;
+	}
+
 }

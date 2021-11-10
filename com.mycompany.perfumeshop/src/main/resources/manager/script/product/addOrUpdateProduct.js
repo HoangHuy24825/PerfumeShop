@@ -18,32 +18,32 @@ $(document).ready(function () {
 	$("body").on("click", ".btn-add-attribute", function (e) {
 		e.preventDefault();
 		var html = `<div class="item-attribute row col-12">
-                        <input name="idAttribute" id="idAttribute" type="number" hidden="true" value="" />
+                        <input name="idAttribute" class="idAttribute" type="number" hidden="true" value="" />
 
                         <div class="form-group col-3">
                             <label for="capacity" class="font-weight-bold">Dung tích <span
                                     class="required">*</span></label>
-                            <input type="number" autocomplete="off" class="form-control" id="capacity" name="capacity"
+                            <input type="number" autocomplete="off" class="form-control capacity" name="capacity"
                                 placeholder="Dung tích"></input>
                         </div>
 
                         <div class="form-group col-3">
                             <label for="price" class="font-weight-bold">Giá <span class="required">*</span></label>
-                            <input type="number" autocomplete="off" class="form-control" id="price" name="price"
+                            <input type="number" autocomplete="off" class="form-control price" name="price"
                                 placeholder="Giá sản phẩm" required="required"></input>
                         </div>
 
                         <div class="form-group col-3">
                             <label for="priceSale" class="font-weight-bold">Giảm giá <span
                                     class="required">*</span></label>
-                            <input type="number" autocomplete="off" class="form-control" id="priceSale" name="priceSale"
+                            <input type="number" autocomplete="off" class="form-control priceSale" name="priceSale"
                                 placeholder="Giảm giá"></input>
                         </div>
 
                         <div class="form-group col-3">
                             <label for="amount" class="font-weight-bold">Số lượng <span
                                     class="required">*</span></label>
-                            <input type="number" autocomplete="off" class="form-control" id="amount" name="amount"
+                            <input type="number" autocomplete="off" class="form-control amount" name="amount"
                                 placeholder="Số lượng"></input>
                         </div>
 
@@ -111,7 +111,6 @@ function saveOrUpdate() {
 	var data = new FormData(form);
 	var detailCkEditor = editor.getData();
 	data.append('detail', detailCkEditor);
-
 	$.ajax({
 		type: "POST",
 		enctype: 'multipart/form-data',
@@ -122,7 +121,11 @@ function saveOrUpdate() {
 		cache: false,
 		timeout: 600000,
 		success: function (data) {
-			alert("Thành công!");
+			if ($("#id").val() != null && $("#id").val() != "") {
+				showAlertMessage("Cập nhật sản phẩm thành công!", true);
+			} else {
+				showAlertMessage("Thêm mới sản phẩm thành công!", true);
+			}
 			$(location).attr('href', "/admin/product");
 		},
 		error: function (e) {
@@ -200,32 +203,32 @@ function loadDetailForEdit(id_product) {
 			var html = '';
 			$.each(result.productAttrs, function (index, value) {
 				html += `<div class="item-attribute row col-12">
-                        <input name="idAttribute" id="idAttribute" type="number" hidden="true" value="${value.id}" />
+                        <input name="idAttribute" class="idAttribute" type="number" hidden="true" value="${value.id}" />
 
                         <div class="form-group col-3">
                             <label for="capacity" class="font-weight-bold">Dung tích <span
                                     class="required">*</span></label>
-                            <input type="number" autocomplete="off" class="form-control" id="capacity" name="capacity"
+                            <input type="number" autocomplete="off" class="form-control capacity" name="capacity"
                                 placeholder="Dung tích" value="${value.capacity}"></input>
                         </div>
 
                         <div class="form-group col-3">
                             <label for="price" class="font-weight-bold">Giá <span class="required">*</span></label>
-                            <input type="number" autocomplete="off" class="form-control" id="price" name="price"
+                            <input type="number" autocomplete="off" class="form-control price" name="price"
                                 placeholder="Giá sản phẩm" required="required" value="${value.price}"></input>
                         </div>
 
                         <div class="form-group col-3">
                             <label for="priceSale" class="font-weight-bold">Giảm giá <span
                                     class="required">*</span></label>
-                            <input type="number" autocomplete="off" class="form-control" id="priceSale" name="priceSale"
+                            <input type="number" autocomplete="off" class="form-control priceSale" name="priceSale"
                                 placeholder="Giảm giá" value="${value.priceSale}"></input>
                         </div>
 
                         <div class="form-group col-3">
                             <label for="amount" class="font-weight-bold">Số lượng <span
                                     class="required">*</span></label>
-                            <input type="number" autocomplete="off" class="form-control" id="amount" name="amount"
+                            <input type="number" autocomplete="off" class="form-control amount" name="amount"
                                 placeholder="Số lượng" value="${value.amount}"></input>
                         </div>
 

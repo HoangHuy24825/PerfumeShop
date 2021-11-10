@@ -41,11 +41,9 @@ public class MappingModel {
 		product.setCreatedDate(productDTO.getCreatedDate());
 		product.setUpdatedDate(productDTO.getUpdatedDate());
 
-		if (productDTO.getAttributeProductDTOs() != null && productDTO.getAttributeProductDTOs().size() > 0) {
-			List<AttributeProductDTO> attributeProductDTOs = productDTO.getAttributeProductDTOs();
-			for (AttributeProductDTO attributeProductDTO : attributeProductDTOs) {
-				product.addAttribute(mappingModel(attributeProductDTO));
-			}
+		List<AttributeProductDTO> attributeProductDTOs = productDTO.getListAttibute();
+		for (AttributeProductDTO attributeProductDTO : attributeProductDTOs) {
+			product.addAttribute(mappingModel(attributeProductDTO));
 		}
 		return product;
 	}

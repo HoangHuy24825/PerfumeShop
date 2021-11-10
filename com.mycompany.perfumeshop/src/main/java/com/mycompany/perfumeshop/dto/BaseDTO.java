@@ -18,4 +18,10 @@ public abstract class BaseDTO {
 	private Integer createdBy;
 	private Date updatedDate;
 	private Integer updatedBy;
+
+	public BaseDTO(Integer id) {
+		super();
+		this.id = id;
+	}
+
 }

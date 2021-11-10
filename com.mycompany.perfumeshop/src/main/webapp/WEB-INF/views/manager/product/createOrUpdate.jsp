@@ -114,8 +114,8 @@
 
                                                             <div class="card-body row detail-attribute-card">
                                                                 <div class="item-attribute row col-12">
-                                                                    <input name="idAttribute" id="idAttribute"
-                                                                        type="number" hidden="true"
+                                                                    <input name="idAttribute" class="idAttribute"
+                                                                        type="number" hidden="true" 
                                                                         value="${id_product}" />
 
                                                                     <div class="form-group col-3">
@@ -123,7 +123,7 @@
                                                                             class="font-weight-bold">Dung tích <span
                                                                                 class="required">*</span></label>
                                                                         <input type="number" autocomplete="off"
-                                                                            class="form-control" id="capacity"
+                                                                            class="form-control capacity"
                                                                             name="capacity"
                                                                             placeholder="Dung tích"></input>
                                                                     </div>
@@ -132,7 +132,7 @@
                                                                         <label for="price" class="font-weight-bold">Giá
                                                                             <span class="required">*</span></label>
                                                                         <input type="number" autocomplete="off"
-                                                                            class="form-control" id="price" name="price"
+                                                                            class="form-control price" name="price"
                                                                             placeholder="Giá sản phẩm"
                                                                             required="required"></input>
                                                                     </div>
@@ -142,7 +142,7 @@
                                                                             class="font-weight-bold">Giảm giá <span
                                                                                 class="required">*</span></label>
                                                                         <input type="number" autocomplete="off"
-                                                                            class="form-control" id="priceSale"
+                                                                            class="form-control priceSale"
                                                                             name="priceSale"
                                                                             placeholder="Giảm giá"></input>
                                                                     </div>
@@ -152,7 +152,7 @@
                                                                             lượng <span
                                                                                 class="required">*</span></label>
                                                                         <input type="number" autocomplete="off"
-                                                                            class="form-control" id="amount"
+                                                                            class="form-control amount"
                                                                             name="amount"
                                                                             placeholder="Số lượng"></input>
                                                                     </div>
