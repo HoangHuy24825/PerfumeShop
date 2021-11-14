@@ -22,6 +22,7 @@
 	<!--::style part start::-->
 	<jsp:include page="/WEB-INF/views/user/layout/style.jsp"></jsp:include>
 	<!--::style part end::-->
+
 </head>
 
 <body>
@@ -112,7 +113,6 @@
 							</div>
 						</div>
 					</div>
-
 					<div class="row align-items-center latest_product_inner" id="product-container">
 
 						<!-- product list -->
@@ -147,6 +147,7 @@
 	<jsp:include page="/WEB-INF/views/user/layout/script.jsp"></jsp:include>
 	<script src="${base }/user/script/product/listProduct.js"></script>
 	<!--::footer_part end::-->
+	<script src="${base }/user/script/baseScript/rating-script.js"></script>
 </body>
 
 </html>

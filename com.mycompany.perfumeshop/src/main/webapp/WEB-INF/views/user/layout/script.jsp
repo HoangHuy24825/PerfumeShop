@@ -2,7 +2,8 @@
     pageEncoding="UTF-8"%>
 
 <!-- jquery plugins here-->
-<script src="${base }/user/js/jquery-1.12.1.min.js"></script>
+<!-- <script src="${base }/user/js/jquery-1.12.1.min.js"></script> -->
+<script src="${base }/user/js/jquery-3.6.0.js"></script>
 <!-- popper js -->
 <script src="${base }/user/js/popper.min.js"></script>
 <!-- bootstrap js -->
@@ -23,7 +24,6 @@
 <!-- slick js -->
 <script src="${base }/user/js/slick.min.js"></script>
 <script src="${base }/user/js/jquery.counterup.min.js"></script>
-<script src="${base }/user/js/waypoints.min.js"></script>
 <script src="${base }/user/js/contact.js"></script>
 <script src="${base }/user/js/jquery.ajaxchimp.min.js"></script>
 <script src="${base }/user/js/jquery.form.js"></script>

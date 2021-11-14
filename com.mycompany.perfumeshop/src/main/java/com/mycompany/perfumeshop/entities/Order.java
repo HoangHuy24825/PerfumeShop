@@ -51,20 +51,20 @@ public class Order extends BaseEntity {
 	@Column(name = "user_id")
 	private Integer userID;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "saleOrder", fetch = FetchType.EAGER)
-	private List<OrderDetail> saleOrderProducts = new ArrayList<OrderDetail>();
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "order", fetch = FetchType.EAGER)
+	private List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
 
 	public void addSaleOrderProducts(OrderDetail _saleOrderProducts) {
-		_saleOrderProducts.setSaleOrder(this);
-		saleOrderProducts.add(_saleOrderProducts);
+		_saleOrderProducts.setOrder(this);
+		orderDetails.add(_saleOrderProducts);
 	}
 
 	public void removeSaleOrderProducts(OrderDetail _saleOrderProducts) {
-		_saleOrderProducts.setSaleOrder(null);
-		saleOrderProducts.remove(_saleOrderProducts);
+		_saleOrderProducts.setOrder(null);
+		orderDetails.remove(_saleOrderProducts);
 	}
 
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "saleOrder", fetch = FetchType.EAGER)
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "order", fetch = FetchType.EAGER)
 	private RequestCancelOrder requestCancelOrder;
 
 }

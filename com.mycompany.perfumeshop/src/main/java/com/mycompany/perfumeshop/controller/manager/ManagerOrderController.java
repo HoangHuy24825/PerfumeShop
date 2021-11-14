@@ -3,9 +3,7 @@ package com.mycompany.perfumeshop.controller.manager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -24,12 +22,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.mycompany.perfumeshop.controller.BaseController;
 import com.mycompany.perfumeshop.dto.MappingModel;
-import com.mycompany.perfumeshop.entities.Product;
+import com.mycompany.perfumeshop.entities.AttributeProduct;
 import com.mycompany.perfumeshop.entities.Order;
 import com.mycompany.perfumeshop.entities.OrderDetail;
-import com.mycompany.perfumeshop.service.ProductService;
-import com.mycompany.perfumeshop.service.SaleOrderProductService;
-import com.mycompany.perfumeshop.service.SaleOrderService;
+import com.mycompany.perfumeshop.service.DetailOrderService;
+import com.mycompany.perfumeshop.service.OrderService;
+import com.mycompany.perfumeshop.service.ProductAttributeService;
+import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
 @Controller
 public class ManagerOrderController extends BaseController {
@@ -38,13 +37,13 @@ public class ManagerOrderController extends BaseController {
 	private JavaMailSender emailSender;
 
 	@Autowired
-	private SaleOrderService saleOrderService;
+	private OrderService orderService;
 
 	@Autowired
-	private SaleOrderProductService saleOrderProductService;
+	private DetailOrderService detailOrderService;
 
 	@Autowired
-	private ProductService productService;
+	private ProductAttributeService attrService;
 
 	private MappingModel mappingModel = new MappingModel();
 
@@ -58,10 +57,9 @@ public class ManagerOrderController extends BaseController {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "/admin/list-order" }, method = RequestMethod.GET)
-	public ResponseEntity<Map<String, List<JSONObject>>> getNewOrder(final Model model,
-			final HttpServletRequest request, final HttpServletResponse response) throws IOException {
-		Map<String, List<JSONObject>> result = new HashMap<String, List<JSONObject>>();
-
+	public ResponseEntity<JSONObject> getNewOrder(final Model model, final HttpServletRequest request,
+			final HttpServletResponse response) throws IOException {
+		JSONObject result = new JSONObject();
 		Integer status;
 		Integer page;
 		try {
@@ -72,30 +70,23 @@ public class ManagerOrderController extends BaseController {
 			status = 0;
 		}
 
-		List<Order> saleOrdersDB = saleOrderService.getListOrderByMutilStatus(status, page, PAGE_SIZE);
-		List<JSONObject> saleOrdersJSON = new ArrayList<JSONObject>();
-
-		for (Order item : saleOrdersDB) {
-			saleOrdersJSON.add(mappingModel.mappingModel(item));
+		BaseVo<Order> baseVo = orderService.getListOrderByMutilStatus(status, page, PAGE_SIZE);
+		List<Order> ordersFromDb = baseVo.getListEntity();
+		List<JSONObject> ordersJSON = new ArrayList<JSONObject>();
+		for (Order item : ordersFromDb) {
+			ordersJSON.add(mappingModel.mappingModel(item));
 		}
-
-		List<JSONObject> listPage = new ArrayList<JSONObject>();
-		JSONObject pageJSON = new JSONObject();
-		pageJSON.put("currentPage", page);
-		pageJSON.put("totalPage", saleOrderService.getTotalPageOrderByStatus(status, PAGE_SIZE));
-
-		listPage.add(pageJSON);
-
-		result.put("listOrder", saleOrdersJSON);
-		result.put("listPage", listPage);
-
+		result.put("currentPage", baseVo.getCurrentPage());
+		result.put("totalPage", baseVo.getTotalPage());
+		result.put("listOrder", ordersJSON);
 		return ResponseEntity.ok(result);
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "/admin/detail-order" }, method = RequestMethod.GET)
-	public ResponseEntity<Map<String, List<JSONObject>>> getDetailOrder(final Model model,
-			final HttpServletRequest request, final HttpServletResponse response) throws IOException {
-		Map<String, List<JSONObject>> result = new HashMap<String, List<JSONObject>>();
+	public ResponseEntity<JSONObject> getDetailOrder(final Model model, final HttpServletRequest request,
+			final HttpServletResponse response) throws IOException {
+		JSONObject result = new JSONObject();
 		Integer idOrder;
 		try {
 			idOrder = Integer.parseInt(request.getParameter("idOrder"));
@@ -103,20 +94,18 @@ public class ManagerOrderController extends BaseController {
 			return ResponseEntity.ok(null);
 		}
 
-		Order saleOrder = saleOrderService.getById(idOrder);
-		List<JSONObject> saleOrderJSONs = new ArrayList<JSONObject>();
-		JSONObject saleOrderJson = mappingModel.mappingModel(saleOrder);
-		saleOrderJSONs.add(saleOrderJson);
+		Order order = orderService.getById(idOrder);
+		JSONObject orderJson = mappingModel.mappingModel(order);
 
-		List<OrderDetail> saleOrderProducts = saleOrderProductService.getListProductOrderByIdOrder(idOrder);
-		List<JSONObject> saleOrderProductJSONs = new ArrayList<JSONObject>();
+		List<OrderDetail> orderDetails = detailOrderService.getListProductOrderByIdOrder(idOrder);
+		List<JSONObject> orderDetailsJSON = new ArrayList<JSONObject>();
 
-		for (OrderDetail saleOrderProduct : saleOrderProducts) {
-			saleOrderProductJSONs.add(mappingModel.mappingModel(saleOrderProduct));
+		for (OrderDetail saleOrderProduct : orderDetails) {
+			orderDetailsJSON.add(mappingModel.mappingModel(saleOrderProduct));
 		}
 
-		result.put("saleOrder", saleOrderJSONs);
-		result.put("saleOrderProduct", saleOrderProductJSONs);
+		result.put("order", orderJson);
+		result.put("orderDetails", orderDetailsJSON);
 		return ResponseEntity.ok(result);
 	}
 
@@ -135,36 +124,36 @@ public class ManagerOrderController extends BaseController {
 			return ResponseEntity.ok(null);
 		}
 
-		Order saleOrder = saleOrderService.getById(idOrder);
+		Order order = orderService.getById(idOrder);
 
 		if (isLogined()) {
-			saleOrder.setUpdatedBy(getUserLogined().getId());
+			order.setUpdatedBy(getUserLogined().getId());
 		}
 
-		saleOrder.setUpdatedDate(Calendar.getInstance().getTime());
+		order.setUpdatedDate(Calendar.getInstance().getTime());
 
 		if (status == 4) {
-			List<OrderDetail> saleOrderProducts = saleOrder.getSaleOrderProducts();
-			for (OrderDetail saleOrderProduct : saleOrderProducts) {
-				Product product = saleOrderProduct.getProduct();
-				/* product.setAmount(product.getAmount() + saleOrderProduct.getQuality()); */
-				productService.saveOrUpdate(product);
+			List<OrderDetail> orderDetails = order.getOrderDetails();
+			for (OrderDetail orderDetail : orderDetails) {
+				AttributeProduct attributeProduct = orderDetail.getAttributeProduct();
+				attributeProduct.setAmount(attributeProduct.getAmount() + orderDetail.getQuantity());
+				attrService.saveOrUpdate(attributeProduct);
 			}
-			saleOrder.setProcessingStatus(4);
-			saleOrderService.saveOrUpdate(saleOrder);
+			order.setProcessingStatus(4);
+			orderService.saveOrUpdate(order);
 		} else if (status == 0) {
-			List<OrderDetail> saleOrderProducts = saleOrder.getSaleOrderProducts();
-			for (OrderDetail saleOrderProduct : saleOrderProducts) {
-				Product product = saleOrderProduct.getProduct();
-				/* product.setAmount(product.getAmount() - saleOrderProduct.getQuality()); */
-				productService.saveOrUpdate(product);
+			List<OrderDetail> orderDetails = order.getOrderDetails();
+			for (OrderDetail orderDetail : orderDetails) {
+				AttributeProduct attributeProduct = orderDetail.getAttributeProduct();
+				attributeProduct.setAmount(attributeProduct.getAmount() + orderDetail.getQuantity());
+				attrService.saveOrUpdate(attributeProduct);
 			}
-			saleOrder.setProcessingStatus(0);
-			saleOrderService.saveOrUpdate(saleOrder);
+			order.setProcessingStatus(0);
+			orderService.saveOrUpdate(order);
 		} else {
-			saleOrder.setUpdatedDate(Calendar.getInstance().getTime());
-			saleOrder.setProcessingStatus(status);
-			saleOrderService.saveOrUpdate(saleOrder);
+			order.setUpdatedDate(Calendar.getInstance().getTime());
+			order.setProcessingStatus(status);
+			orderService.saveOrUpdate(order);
 		}
 
 		result.put("message", "Thành công!");
@@ -184,7 +173,7 @@ public class ManagerOrderController extends BaseController {
 			return ResponseEntity.ok(null);
 		}
 
-		Order saleOrder = saleOrderService.getById(idOrder);
+		Order saleOrder = orderService.getById(idOrder);
 
 		if (isLogined()) {
 			saleOrder.setUpdatedBy(getUserLogined().getId());
@@ -192,14 +181,14 @@ public class ManagerOrderController extends BaseController {
 
 		saleOrder.setUpdatedDate(Calendar.getInstance().getTime());
 
-		List<OrderDetail> saleOrderProducts = saleOrder.getSaleOrderProducts();
-		for (OrderDetail saleOrderProduct : saleOrderProducts) {
-			Product product = saleOrderProduct.getProduct();
-			/* product.setAmount(product.getAmount() + saleOrderProduct.getQuality()); */
-			productService.saveOrUpdate(product);
+		List<OrderDetail> orderDetails = saleOrder.getOrderDetails();
+		for (OrderDetail orderDetail : orderDetails) {
+			AttributeProduct attributeProduct = orderDetail.getAttributeProduct();
+			attributeProduct.setAmount(attributeProduct.getAmount() + orderDetail.getQuantity());
+			attrService.saveOrUpdate(attributeProduct);
 		}
 		saleOrder.setProcessingStatus(4);
-		saleOrderService.saveOrUpdate(saleOrder);
+		orderService.saveOrUpdate(saleOrder);
 
 		result.put("message", "Thành công!");
 		return ResponseEntity.ok(result);
@@ -217,7 +206,7 @@ public class ManagerOrderController extends BaseController {
 		} catch (Exception e) {
 			return ResponseEntity.ok(null);
 		}
-		
+
 		Integer status;
 		try {
 			status = Integer.parseInt(request.getParameter("status"));
@@ -225,8 +214,8 @@ public class ManagerOrderController extends BaseController {
 			return ResponseEntity.ok(null);
 		}
 
-		if (status==1) {
-			Order saleOrder = saleOrderService.getById(idOrder);
+		if (status == 1) {
+			Order saleOrder = orderService.getById(idOrder);
 			/* send email to customer */
 
 			String emailReceiver = saleOrder.getCustomerEmail();
@@ -247,21 +236,22 @@ public class ManagerOrderController extends BaseController {
 			helper.setSubject("[Electronic Device Shop] Hủy đơn hàng.");
 
 			emailSender.send(message);
-		}else {
-			Order saleOrder = saleOrderService.getById(idOrder);
+		} else {
+			Order saleOrder = orderService.getById(idOrder);
 			/* send email to customer */
 
 			String emailReceiver = saleOrder.getCustomerEmail();
 			String fullname = saleOrder.getCustomerName();
-			String reason=request.getParameter("content").trim();
-			
+			String reason = request.getParameter("content").trim();
+
 			MimeMessage message = emailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
 			String htmlMsg = "<div>Dear " + fullname + " !</div> <br/><br/>";
 			htmlMsg += "<div>Cảm ơn bạn thực hiện giao dịch trên <b>Electronic Device Shop</b>!</div> <br/>";
-			htmlMsg += "<div>Yêu cầu hủy đơn hàng mã: <b>" + saleOrder.getCode() + "</b> không được phê duyệt!</div><br/>";
-			htmlMsg += "<div>Lý do: "+reason+"</div><br/>";
+			htmlMsg += "<div>Yêu cầu hủy đơn hàng mã: <b>" + saleOrder.getCode()
+					+ "</b> không được phê duyệt!</div><br/>";
+			htmlMsg += "<div>Lý do: " + reason + "</div><br/>";
 			htmlMsg += "<div>Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi!</div><br/>";
 			htmlMsg += "<div>Thanks & regards,</div><br/>";
 			htmlMsg += "<div style=\"color: chartreuse;\"><b>Electronic Device</b></div><br/>";
@@ -271,7 +261,7 @@ public class ManagerOrderController extends BaseController {
 			helper.setSubject("[Electronic Device Shop] Hủy đơn hàng.");
 			emailSender.send(message);
 		}
-		
+
 		result.put("message", "Thành công!");
 		return ResponseEntity.ok(result);
 	}

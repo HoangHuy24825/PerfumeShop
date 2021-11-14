@@ -3,12 +3,12 @@
 
 
 <!-- SPRING FORM -->
-<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
+<button%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 
 <!-- JSTL -->
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<div%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<div%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<div%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <!doctype html>
 <html lang="zxx">
@@ -39,7 +39,7 @@
 	<div class="product_image_area mt-3">
 		<div class="container bg-white p-4">
 			<div class="row s_product_inner justify-content-between">
-				<div class="col-lg-7 col-xl-7">
+				<div class="col-7 col-xl-7">
 					<div class="product_slider_img" id="img--product">
 						<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
 							<ol class="carousel-indicators" id="ol-img-slide">
@@ -77,31 +77,26 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-5 col-xl-4">
+				<div class="col-5 col-xl-5">
 					<div class="s_product_text">
 						<h3 id="name-product">
 
 							<!-- product name -->
 
 						</h3>
-						<input type="hidden" id="id_detail_product" name="custId" value="${id_product}">
-						<h2 id="price-product">
-
-							<!-- product price -->
-
-						</h2>
+						<input type="hidden" id="id_detail_product" value="${id_product}">
 						<table id="table-product-detail">
 							<tr>
-								<td>Model:</td>
-								<td id="model-product">
+								<td>Thương hiệu:</td>
+								<td id="trademark-product">
 
 									<!-- product model -->
 
 								</td>
 							</tr>
 							<tr>
-								<td>Bảo hành:</td>
-								<td id="guarantee-product">
+								<td>Năm phát hành:</td>
+								<td id="manufactureYear-product">
 
 									<!-- product guarantee -->
 
@@ -116,14 +111,34 @@
 								</td>
 							</tr>
 							<tr>
-								<td>Trạng thái:</td>
-								<td id="status-product">
+								<td>Mùi hương:</td>
+								<td id="fragrant-product">
 
 									<!-- product status -->
 
 								</td>
 							</tr>
 						</table>
+
+						<div class="row">
+							<button class="col-4 text-center p-2 m-2 border border-secondary rounded bg-white">
+								<div class="capacityProduct">10ML</div>
+								<div class="priceProduct font-weight-bold">10000</div>
+							</button>
+							<button class="col-4 text-center p-2 m-2 border border-secondary rounded bg-white">
+								<div class="capacityProduct">10ML</div>
+								<div class="priceProduct font-weight-bold">10000</div>
+							</button>
+							<button class="col-4 text-center p-2 m-2 border border-secondary rounded bg-white">
+								<div class="capacityProduct">10ML</div>
+								<div class="priceProduct font-weight-bold">10000</div>
+							</button>
+							<button class="col-4 text-center p-2 m-2 border border-danger rounded shadow bg-white">
+								<div class="capacityProduct">10ML</div>
+								<div class="priceProduct font-weight-bold">10000</div>
+							</button>
+						</div>
+
 						<p id="short-description-product">
 
 							<!-- product short description -->
@@ -184,19 +199,14 @@
 	<jsp:include page="/WEB-INF/views/user/layout/footer.jsp"></jsp:include>
 	<!--::footer_part end::-->
 
-	<!--::message_part start::-->
-	<div class="alert hide" id="alert_message">
-		<div id="icon-alert-message"><i class="fas fa-exclamation-circle"></i></div>
-		<span class="msg">Warning: This is a warning alert!</span>
-		<div class="close-btn-alert">
-			<span class="fas fa-times"></span>
-		</div>
-	</div>
-	<!--::message_part end::-->
+	<!--::message to client part start::-->
+	<jsp:include page="/WEB-INF/views/user/layout/message-to-user.jsp"></jsp:include>
+	<!-- Message to client part end-->
 
 	<!-- jquery plugins here-->
 	<jsp:include page="/WEB-INF/views/user/layout/script.jsp"></jsp:include>
 	<script src="${base }/user/script/product/detail.js"></script>
+	<script src="${base }/user/script/baseScript/rating-script.js"></script>
 </body>
 
 </html>

@@ -21,17 +21,17 @@ import com.mycompany.perfumeshop.controller.BaseController;
 import com.mycompany.perfumeshop.dto.MappingModel;
 import com.mycompany.perfumeshop.entities.Order;
 import com.mycompany.perfumeshop.entities.OrderDetail;
-import com.mycompany.perfumeshop.service.SaleOrderProductService;
-import com.mycompany.perfumeshop.service.SaleOrderService;
+import com.mycompany.perfumeshop.service.DetailOrderService;
+import com.mycompany.perfumeshop.service.OrderService;
 
 @Controller
 public class SaleOrderProductController extends BaseController {
 
 	@Autowired
-	private SaleOrderService saleOrderService;
+	private OrderService saleOrderService;
 
 	@Autowired
-	private SaleOrderProductService saleOrderProductService;
+	private DetailOrderService saleOrderProductService;
 
 	private MappingModel mappingModel = new MappingModel();
 

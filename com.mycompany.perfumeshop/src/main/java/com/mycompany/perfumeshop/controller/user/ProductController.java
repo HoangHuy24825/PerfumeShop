@@ -2,10 +2,9 @@ package com.mycompany.perfumeshop.controller.user;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,12 +17,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mycompany.perfumeshop.controller.BaseController;
 import com.mycompany.perfumeshop.dto.MappingModel;
 import com.mycompany.perfumeshop.dto.UserSearchProduct;
 import com.mycompany.perfumeshop.entities.Product;
-import com.mycompany.perfumeshop.entities.ProductImage;
 import com.mycompany.perfumeshop.service.CategoryService;
 import com.mycompany.perfumeshop.service.ProductAttributeService;
 import com.mycompany.perfumeshop.service.ProductImageService;
@@ -125,16 +124,17 @@ public class ProductController extends BaseController {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "/detail-product-loading" }, method = RequestMethod.GET)
-	public ResponseEntity<JSONObject> getProductDetail(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException {
+	public ResponseEntity<JSONObject> getProductDetail(final HttpServletRequest request) throws IOException {
 		try {
 			JSONObject result = new JSONObject();
-			Integer idProduct = Integer.parseInt(request.getParameter("id_product"));
-			Product product = productService.getById(idProduct);
-			product.setAttributeProducts(attributeService.getListByIdProduct(product.getId()));
-			product.setReviews(reviewService.findAllByIdProduct(product.getId()));
-			product.setProductImages(productImageService.getListByIdProduct(product.getId()));
-			result.put("product", product);
+			Integer idProduct = ConvertUtils.convertStringToInt(request.getParameter("id_product"), null);
+			if (idProduct!=null) {
+				Product product = productService.getById(idProduct);
+				product.setAttributeProducts(attributeService.getListByIdProduct(product.getId()));
+				product.setReviews(reviewService.findAllByIdProduct(product.getId()));
+				product.setProductImages(productImageService.getListByIdProduct(product.getId()));
+				result.put("product", mappingModel.mappingModel(product));
+			}
 			return ResponseEntity.ok(result);
 		} catch (Exception e) {
 			return ResponseEntity.ok(null);

@@ -37,6 +37,6 @@ public class RequestCancelOrder extends BaseEntity {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_order")
-	private Order saleOrder;
+	private Order order;
 
 }

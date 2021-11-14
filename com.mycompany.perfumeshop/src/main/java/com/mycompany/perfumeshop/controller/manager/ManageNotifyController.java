@@ -20,8 +20,8 @@ import com.mycompany.perfumeshop.dto.MappingModel;
 import com.mycompany.perfumeshop.entities.RequestCancelOrder;
 import com.mycompany.perfumeshop.entities.OrderDetail;
 import com.mycompany.perfumeshop.service.RequestCancelOrderService;
-import com.mycompany.perfumeshop.service.SaleOrderProductService;
-import com.mycompany.perfumeshop.service.SaleOrderService;
+import com.mycompany.perfumeshop.service.DetailOrderService;
+import com.mycompany.perfumeshop.service.OrderService;
 
 @Controller
 public class ManageNotifyController extends BaseController {
@@ -32,10 +32,10 @@ public class ManageNotifyController extends BaseController {
 	private MappingModel mappingModel = new MappingModel();
 
 	@Autowired
-	private SaleOrderService saleOrderService;
+	private OrderService saleOrderService;
 
 	@Autowired
-	private SaleOrderProductService saleOrderProductService;
+	private DetailOrderService saleOrderProductService;
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "/admin/load-top-three-notify" }, method = RequestMethod.GET)

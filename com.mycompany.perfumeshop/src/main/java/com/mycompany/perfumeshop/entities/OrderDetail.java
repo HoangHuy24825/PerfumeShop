@@ -22,8 +22,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OrderDetail extends BaseEntity {
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "product_id")
-	private Product product;
+	@JoinColumn(name = "attribute_product_id")
+	private AttributeProduct attributeProduct;
 
 	@Column(name = "quantity")
 	private Integer quantity;
@@ -33,6 +33,6 @@ public class OrderDetail extends BaseEntity {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "order_id")
-	private Order saleOrder;
+	private Order order;
 
 }

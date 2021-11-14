@@ -19,13 +19,13 @@ import com.mycompany.perfumeshop.controller.BaseController;
 import com.mycompany.perfumeshop.entities.RequestCancelOrder;
 import com.mycompany.perfumeshop.entities.Order;
 import com.mycompany.perfumeshop.service.RequestCancelOrderService;
-import com.mycompany.perfumeshop.service.SaleOrderService;
+import com.mycompany.perfumeshop.service.OrderService;
 
 @Controller
 public class RequestCancelOrderController extends BaseController {
 
 	@Autowired
-	private SaleOrderService saleOrderService;
+	private OrderService saleOrderService;
 
 	@Autowired
 	private RequestCancelOrderService requestCancelOrderService;
@@ -54,7 +54,7 @@ public class RequestCancelOrderController extends BaseController {
 		requestCancelOrder.setMessage("Khách hàng gửi yêu cầu hủy đơn hàng có mã " + saleOrder.getCode());
 		requestCancelOrder.setCreatedDate(Calendar.getInstance().getTime());
 		requestCancelOrder.setStatus(false);
-		requestCancelOrder.setSaleOrder(saleOrder);
+		requestCancelOrder.setOrder(saleOrder);
 		requestCancelOrder.setReason(reason);
 
 		requestCancelOrderService.saveOrUpdate(requestCancelOrder);

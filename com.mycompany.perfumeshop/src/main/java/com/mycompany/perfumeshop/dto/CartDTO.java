@@ -4,29 +4,22 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class CartDTO {
 	private BigDecimal totalPrice = BigDecimal.ZERO;
 	private List<CartItemDTO> cartItems = new ArrayList<CartItemDTO>();
 
-	public List<CartItemDTO> getCartItems() {
-		return cartItems;
-	}
-
-	public void setCartItems(List<CartItemDTO> cartItems) {
-		this.cartItems = cartItems;
-	}
-
-	public BigDecimal getTotalPrice() {
-		return totalPrice;
-	}
-
-	public void setTotalPrice(BigDecimal totalPrice) {
-		this.totalPrice = totalPrice;
-	}
-
-	public CartItemDTO getCartItemByIdProduct(Integer idProduct) {
+	public CartItemDTO getCartItemByIdProduct(Integer attrProductId) {
 		for (CartItemDTO cartItemDTO : cartItems) {
-			if (cartItemDTO.getProductId() == idProduct) {
+			if (cartItemDTO.getAttrProductId() == attrProductId) {
 				return cartItemDTO;
 			}
 		}

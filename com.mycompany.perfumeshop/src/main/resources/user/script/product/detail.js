@@ -1,76 +1,75 @@
 $(document).ready(function () {
 
     setMenuBanner();
-
-    var id_product = $('#id_detail_product').val();
-    var load = function (id_product) {
-        $.ajax({
-            url: "/detail-product-loading?",
-            type: "GET",
-            data: {
-                id_product: id_product
-            },
-            dataType: "json",
-            contentType: "application/json",
-            success: function (jsonResult) {
-                /* $("#image-product").attr("src", "/upload/"+result.avatar);*/
-                $("#name-product").html(jsonResult.product[0].title);
-                $("#price-product").html(jsonResult.product[0].price.toLocaleString('it-IT', {
-                    style: 'currency',
-                    currency: 'VND'
-                }));
-                $("#model-product").html(jsonResult.product[0].model);
-                $("#guarantee-product").html(jsonResult.product[0].guarantee + ' tháng');
-                $("#origin-product").html(jsonResult.product[0].origin);
-                var status = jsonResult.product[0].amount > 0 ? "Còn hàng" : "Hết hàng";
-                $("#status-product").html(status);
-                $("#short-description-product").html(jsonResult.product[0].description);
-                $("#detail-product").html(jsonResult.product[0].detail);
-
-                $('#numberProductOrder').attr("data-id-product", jsonResult.product[0].id);
-                $('#numberProductOrder').attr("data-max-order", jsonResult.product[0].amount);
-
-                document.title = jsonResult.product[0].title;
-                $('#add-product-to-cart').click(function () {
-                    addProductToCart(jsonResult.product[0].id);
-                });
-                $('#buy-now').click(function () {
-                    payNow(jsonResult.product[0].id);
-                });
-
-                var ol_image_slide =
-                    '<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>';
-                var image_slide = '';
-                image_slide += '<div class="carousel-item active">';
-                image_slide += '	<img class="d-block mw-100" src="${base}/upload/' +
-                    jsonResult.product[0].avatar + '" alt="First slide">';
-                image_slide += '</div>';
-
-
-                if (jsonResult.images != null) {
-                    var i = 0;
-                    $.each(jsonResult.images, function (key, value) {
-                        image_slide += '<div class="carousel-item">';
-                        image_slide +=
-                            '	<img class="d-block mw-100 mx-auto" style="max-height:600px" src="${base}/upload/' +
-                            value.path + value.title + '" alt="First slide">';
-                        image_slide += '</div>';
-                        i++;
-                        ol_image_slide +=
-                            '<li data-target="#carouselExampleIndicators" data-slide-to="' +
-                            i + '" class=""></li>';
-                    });
-                }
-
-
-                $('#ol-img-slide').html(ol_image_slide);
-                $('#img-slide').html(image_slide);
-            }
-        });
-    }
-    load(id_product);
-    loadNewProduct();
+    loadData();
+    // loadNewProduct();
 });
+
+function loadData() {
+    var id_product = $("#id_detail_product").val();
+    $.get({
+        url: "/detail-product-loading",
+        data: {
+            id_product: id_product
+        },
+        dataType: "json",
+        contentType: "application/json;charset=utf-8",
+        success: function (jsonResult) {
+            /* $("#image-product").attr("src", "/upload/"+result.avatar);*/
+            $("#name-product").html(jsonResult.product.title);
+            // $("#price-product").html(jsonResult.product.price.toLocaleString('it-IT', {
+            //     style: 'currency',
+            //     currency: 'VND'
+            // }));
+            $("#trademark-product").html(jsonResult.product.trademark);
+            $("#manufactureYear-product").html(jsonResult.product.manufactureYear);
+            $("#origin-product").html(jsonResult.product.origin);
+            $("#fragrant-product").html(jsonResult.product.fragrant);
+            $("#short-description-product").html(jsonResult.product.description);
+
+            $("#detail-product").html(jsonResult.product.detail);
+
+            $('#numberProductOrder').attr("data-id-product", jsonResult.product.id);
+            $('#numberProductOrder').attr("data-max-order", jsonResult.product.amount);
+
+            document.title = jsonResult.product.title;
+            $('#add-product-to-cart').click(function () {
+                addProductToCart(jsonResult.product.id);
+            });
+            $('#buy-now').click(function () {
+                payNow(jsonResult.product.id);
+            });
+
+            var ol_image_slide =
+                '<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>';
+            var image_slide = '';
+            image_slide += '<div class="carousel-item active">';
+            image_slide += '	<img class="d-block mw-100" src="/upload/' +
+                jsonResult.product.avatar + '" alt="First slide">';
+            image_slide += '</div>';
+
+
+            if (jsonResult.images != null) {
+                var i = 0;
+                $.each(jsonResult.images, function (key, value) {
+                    image_slide += '<div class="carousel-item">';
+                    image_slide +=
+                        '	<img class="d-block mw-100 mx-auto" style="max-height:600px" src="/upload/' +
+                        value.path + value.title + '" alt="First slide">';
+                    image_slide += '</div>';
+                    i++;
+                    ol_image_slide +=
+                        '<li data-target="#carouselExampleIndicators" data-slide-to="' +
+                        i + '" class=""></li>';
+                });
+            }
+
+
+            $('#ol-img-slide').html(ol_image_slide);
+            $('#img-slide').html(image_slide);
+        }
+    });
+}
 
 function setMenuBanner() {
 

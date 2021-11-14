@@ -1,7 +1,7 @@
 package com.mycompany.perfumeshop.dto;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Comparator;
 import java.util.List;
 
 import org.json.simple.JSONObject;
@@ -16,6 +16,7 @@ import com.mycompany.perfumeshop.entities.OrderDetail;
 import com.mycompany.perfumeshop.entities.Product;
 import com.mycompany.perfumeshop.entities.ProductImage;
 import com.mycompany.perfumeshop.entities.RequestCancelOrder;
+import com.mycompany.perfumeshop.entities.Review;
 import com.mycompany.perfumeshop.entities.User;
 
 public class MappingModel {
@@ -216,8 +217,8 @@ public class MappingModel {
 		requestJson.put("requestType", requestCancelOrder.getRequestType());
 		requestJson.put("reason", requestCancelOrder.getReason());
 		requestJson.put("message", requestCancelOrder.getMessage());
-		requestJson.put("id_order", requestCancelOrder.getSaleOrder().getId());
-		requestJson.put("codeOrder", requestCancelOrder.getSaleOrder().getCode());
+		requestJson.put("id_order", requestCancelOrder.getOrder().getId());
+		requestJson.put("codeOrder", requestCancelOrder.getOrder().getCode());
 		return requestJson;
 	}
 
@@ -244,11 +245,42 @@ public class MappingModel {
 		productJson.put("seo", product.getSeo());
 		productJson.put("reviews", product.getReviews());
 		productJson.put("attrs", product.getAttributeProducts());
-		productJson.put("maxPrice",
-				product.getAttributeProducts().stream().max(Comparator.comparing(AttributeProduct::getPrice)));
-		productJson.put("maxPrice",
-				product.getAttributeProducts().stream().min(Comparator.comparing(AttributeProduct::getPrice)));
+		productJson.put("maxPrice", maxPriceOfProduct(product.getAttributeProducts()));
+		productJson.put("minPrice", minPriceOfProduct(product.getAttributeProducts()));
+		productJson.put("starReviews", averageStar(product.getReviews()));
 		return productJson;
+	}
+
+	private BigDecimal maxPriceOfProduct(List<AttributeProduct> attributeProducts) {
+		BigDecimal maxPrice = attributeProducts.get(0).getPrice();
+		for (AttributeProduct attributeProduct : attributeProducts) {
+			if (attributeProduct.getPrice().compareTo(maxPrice) > 0) {
+				maxPrice = attributeProduct.getPrice();
+			}
+		}
+		return maxPrice;
+	}
+
+	private BigDecimal minPriceOfProduct(List<AttributeProduct> attributeProducts) {
+		BigDecimal minPrice = attributeProducts.get(0).getPrice();
+		for (AttributeProduct attributeProduct : attributeProducts) {
+			if (attributeProduct.getPrice().compareTo(minPrice) < 0) {
+				minPrice = attributeProduct.getPrice();
+			}
+		}
+		return minPrice;
+	}
+
+	private Double averageStar(List<Review> reviews) {
+		Double totalStar = 0.0;
+		Double result = 0.0;
+		for (Review review : reviews) {
+			totalStar += review.getNumberStar();
+		}
+		if (totalStar != 0) {
+			result = (double) Math.round((totalStar / reviews.size() * 10) / 10);
+		}
+		return result;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -350,23 +382,21 @@ public class MappingModel {
 	}
 
 	@SuppressWarnings("unchecked")
-	public JSONObject mappingModel(OrderDetail saleOrderProduct) {
+	public JSONObject mappingModel(OrderDetail orderDetail) {
 		JSONObject saleOrderProductJSON = new JSONObject();
-
-		saleOrderProductJSON.put("avatar", saleOrderProduct.getProduct().getAvatar());
-		saleOrderProductJSON.put("productName", saleOrderProduct.getProduct().getTitle());
-		saleOrderProductJSON.put("quality", saleOrderProduct.getQuantity());
-		saleOrderProductJSON.put("price", saleOrderProduct.getPrice());
-
-		saleOrderProductJSON.put("id", saleOrderProduct.getId());
-		saleOrderProductJSON.put("status", saleOrderProduct.getStatus());
-		saleOrderProductJSON.put("createdBy", saleOrderProduct.getCreatedBy());
-		saleOrderProductJSON.put("updatedBy", saleOrderProduct.getUpdatedBy());
-		saleOrderProductJSON.put("createdDate", sdf.format(saleOrderProduct.getCreatedDate()));
-		if (saleOrderProduct.getUpdatedDate() != null) {
-			saleOrderProductJSON.put("updatedDate", sdf.format(saleOrderProduct.getUpdatedDate()));
+		saleOrderProductJSON.put("avatar", orderDetail.getAttributeProduct().getProduct().getAvatar());
+		saleOrderProductJSON.put("productName", orderDetail.getAttributeProduct().getProduct().getTitle());
+		saleOrderProductJSON.put("quantity", orderDetail.getQuantity());
+		saleOrderProductJSON.put("price", orderDetail.getPrice());
+		saleOrderProductJSON.put("id", orderDetail.getId());
+		saleOrderProductJSON.put("status", orderDetail.getStatus());
+		saleOrderProductJSON.put("createdBy", orderDetail.getCreatedBy());
+		saleOrderProductJSON.put("updatedBy", orderDetail.getUpdatedBy());
+		saleOrderProductJSON.put("createdDate", sdf.format(orderDetail.getCreatedDate()));
+		if (orderDetail.getUpdatedDate() != null) {
+			saleOrderProductJSON.put("updatedDate", sdf.format(orderDetail.getUpdatedDate()));
 		} else {
-			saleOrderProductJSON.put("updatedDate", saleOrderProduct.getUpdatedDate());
+			saleOrderProductJSON.put("updatedDate", orderDetail.getUpdatedDate());
 		}
 		return saleOrderProductJSON;
 	}

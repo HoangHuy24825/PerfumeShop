@@ -39,7 +39,7 @@ public class LoginController extends BaseController {
 
 		int total = 0;
 		for (CartItemDTO item : cartItems) {
-			total += item.getQuanlity();
+			total += item.getQuantity();
 		}
 
 		return total;

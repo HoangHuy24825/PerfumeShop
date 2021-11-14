@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import javax.mail.MessagingException;
@@ -32,38 +30,43 @@ import com.mycompany.perfumeshop.controller.BaseController;
 import com.mycompany.perfumeshop.dto.CartDTO;
 import com.mycompany.perfumeshop.dto.CartItemDTO;
 import com.mycompany.perfumeshop.dto.SaleOrderDTO;
-import com.mycompany.perfumeshop.entities.Product;
+import com.mycompany.perfumeshop.entities.AttributeProduct;
 import com.mycompany.perfumeshop.entities.Order;
 import com.mycompany.perfumeshop.entities.OrderDetail;
 import com.mycompany.perfumeshop.entities.User;
+import com.mycompany.perfumeshop.service.DetailOrderService;
+import com.mycompany.perfumeshop.service.OrderService;
+import com.mycompany.perfumeshop.service.ProductAttributeService;
 import com.mycompany.perfumeshop.service.ProductService;
-import com.mycompany.perfumeshop.service.SaleOrderProductService;
-import com.mycompany.perfumeshop.service.SaleOrderService;
 import com.mycompany.perfumeshop.service.UserService;
 
 @Controller
 public class CartController extends BaseController {
 
 	@Autowired
-	ProductService productService;
+	private ProductService productService;
 
 	@Autowired
-	UserService userService;
+	private UserService userService;
 
 	@Autowired
-	SaleOrderService saleOrderService;
+	private OrderService saleOrderService;
 
 	@Autowired
-	SaleOrderProductService saleOrderProductService;
+	private ProductAttributeService attrService;
+
+	@Autowired
+	private DetailOrderService saleOrderProductService;
 
 	@Autowired
 	private JavaMailSender emailSender;
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "cart/add", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> addCart(final Model model, final HttpServletRequest request,
+	public ResponseEntity<JSONObject> addCart(final Model model, final HttpServletRequest request,
 			final HttpServletResponse respond, @RequestBody CartItemDTO newCartItem) {
 
-		Map<String, Object> result = new HashMap<String, Object>();
+		JSONObject result = new JSONObject();
 		HttpSession session = request.getSession();
 
 		CartDTO cartDTO;
@@ -78,23 +81,21 @@ public class CartController extends BaseController {
 
 		Boolean isExist = false;
 		for (CartItemDTO cartItem : cartItems) {
-			if (cartItem.getProductId() == newCartItem.getProductId()) {
+			if (cartItem.getAttrProductId() == newCartItem.getAttrProductId()) {
 				isExist = true;
-				cartItem.setQuanlity(cartItem.getQuanlity() + newCartItem.getQuanlity());
+				cartItem.setQuantity(cartItem.getQuantity() + newCartItem.getQuantity());
 				break;
 			}
 		}
 
 		if (!isExist) {
-			Product product = productService.getById(newCartItem.getProductId());
-
-			newCartItem.setAvatarProduct(product.getAvatar());
-			newCartItem.setProductName(product.getTitle());
-			/*
-			 * newCartItem.setPriceUnit(product.getPrice());
-			 * newCartItem.setMaxOrder(product.getAmount());
-			 */
-
+			AttributeProduct attributeProduct = attrService.getById(newCartItem.getAttrProductId());
+			newCartItem.setAvatarProduct(attributeProduct.getProduct().getAvatar());
+			newCartItem.setProductName(attributeProduct.getProduct().getTitle());
+			newCartItem.setPriceUnit((attributeProduct.getPriceSale() != null
+					&& attributeProduct.getPriceSale() != BigDecimal.valueOf(0)) ? attributeProduct.getPriceSale()
+							: attributeProduct.getPrice());
+			newCartItem.setMaxOrder(attributeProduct.getAmount());
 			cartItems.add(newCartItem);
 		}
 		result.put("code", 200);
@@ -106,11 +107,12 @@ public class CartController extends BaseController {
 		return ResponseEntity.ok(result);
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/cart/add-product", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> addProductCart(final Model model, final HttpServletRequest request,
+	public ResponseEntity<JSONObject> addProductCart(final Model model, final HttpServletRequest request,
 			final HttpServletResponse respond, @RequestBody CartItemDTO newCartItem) {
 
-		Map<String, Object> result = new HashMap<String, Object>();
+		JSONObject result = new JSONObject();
 		HttpSession session = request.getSession();
 
 		CartDTO cartDTO;
@@ -125,22 +127,22 @@ public class CartController extends BaseController {
 
 		Boolean isExist = false;
 		for (CartItemDTO cartItem : cartItems) {
-			if (cartItem.getProductId() == newCartItem.getProductId()) {
+			if (cartItem.getAttrProductId() == newCartItem.getAttrProductId()) {
 				isExist = true;
-				cartItem.setQuanlity(newCartItem.getQuanlity());
+				cartItem.setQuantity(newCartItem.getQuantity());
 				break;
 			}
 		}
 
 		if (!isExist) {
-			Product product = productService.getById(newCartItem.getProductId());
+			AttributeProduct attributeProduct = attrService.getById(newCartItem.getAttrProductId());
+			newCartItem.setAvatarProduct(attributeProduct.getProduct().getAvatar());
+			newCartItem.setProductName(attributeProduct.getProduct().getTitle());
 
-			newCartItem.setAvatarProduct(product.getAvatar());
-			newCartItem.setProductName(product.getTitle());
-			/*
-			 * newCartItem.setPriceUnit(product.getPrice());
-			 * newCartItem.setMaxOrder(product.getAmount());
-			 */
+			newCartItem.setPriceUnit((attributeProduct.getPriceSale() != null
+					&& attributeProduct.getPriceSale() != BigDecimal.valueOf(0)) ? attributeProduct.getPriceSale()
+							: attributeProduct.getPrice());
+			newCartItem.setMaxOrder(attributeProduct.getAmount());
 
 			cartItems.add(newCartItem);
 		}
@@ -155,19 +157,15 @@ public class CartController extends BaseController {
 
 	public Integer getTotalItems(final HttpServletRequest request) {
 		HttpSession httpSession = request.getSession();
-
 		if (httpSession.getAttribute("cart") == null) {
 			return 0;
 		}
-
 		CartDTO cart = (CartDTO) httpSession.getAttribute("cart");
 		List<CartItemDTO> cartItems = cart.getCartItems();
-
 		int total = 0;
 		for (CartItemDTO item : cartItems) {
-			total += item.getQuanlity();
+			total += item.getQuantity();
 		}
-
 		return total;
 	}
 
@@ -176,29 +174,29 @@ public class CartController extends BaseController {
 		return "user/cart/cart";
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/Cart/DeleteCart", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> deleteCart(final Model model, final HttpServletRequest request,
+	public ResponseEntity<JSONObject> deleteCart(final Model model, final HttpServletRequest request,
 			final HttpServletResponse respond, @RequestParam("id_product") Integer idProduct) {
-
-		/* Integer idProduct = Integer.parseInt(request.getParameter("id_product")); */
 		HttpSession session = request.getSession();
 		CartDTO cartDTO = (CartDTO) session.getAttribute("cart");
 		List<CartItemDTO> cartItems = cartDTO.getCartItems();
 		cartItems.remove(cartDTO.getCartItemByIdProduct(idProduct));
-		Map<String, Object> result = new HashMap<String, Object>();
+		JSONObject result = new JSONObject();
 		result.put("message", "Xóa thành công");
 		session.setAttribute("totalItems", getTotalItems(request));
 		return ResponseEntity.ok(result);
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/Cart/DeleteSelectedCart", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> deleteChosedCart(final Model model, final HttpServletRequest request,
-			final HttpServletResponse respond, @RequestParam("id_product") String idProduct) {
+	public ResponseEntity<JSONObject> deleteChosedCart(final Model model, final HttpServletRequest request,
+			final HttpServletResponse respond, @RequestParam("id_product") String idAttr) {
 
 		HttpSession session = request.getSession();
 		CartDTO cartDTO = (CartDTO) session.getAttribute("cart");
 
-		String[] arrIdProductStr = idProduct.split(";");
+		String[] arrIdProductStr = idAttr.split(";");
 		List<CartItemDTO> cartItemDelete = new ArrayList<CartItemDTO>();
 		for (int i = 0; i < arrIdProductStr.length; i++) {
 			if (arrIdProductStr[i] != "" || arrIdProductStr[i] != null) {
@@ -211,7 +209,7 @@ public class CartController extends BaseController {
 			cartItems.remove(item);
 		}
 
-		Map<String, Object> result = new HashMap<String, Object>();
+		JSONObject result = new JSONObject();
 		result.put("message", "Xóa thành công");
 		session.setAttribute("totalItems", getTotalItems(request));
 
@@ -262,13 +260,14 @@ public class CartController extends BaseController {
 	private Double totalPay(List<CartItemDTO> cartItemDTOs) {
 		Double total = 0.0;
 		for (CartItemDTO cartItemDTO : cartItemDTOs) {
-			total += cartItemDTO.getPriceUnit().doubleValue() * cartItemDTO.getQuanlity();
+			total += cartItemDTO.getPriceUnit().doubleValue() * cartItemDTO.getQuantity();
 		}
 		return total;
 	}
 
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "/order" }, method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> order(final Model model, final HttpServletRequest request,
+	public ResponseEntity<JSONObject> order(final Model model, final HttpServletRequest request,
 			final HttpServletResponse response, @ModelAttribute SaleOrderDTO saleOrderDTO,
 			@RequestParam("strIdProduct") String strIdProduct, @RequestParam("amount") Integer amount)
 			throws Exception {
@@ -289,32 +288,32 @@ public class CartController extends BaseController {
 		saleOrder.setUpdatedDate(Calendar.getInstance().getTime());
 
 		saleOrderService.saveOrUpdate(saleOrder);
-		Order saleOrderDB = saleOrderService.getLastSaleOrderByCustomer(saleOrder.getCustomerName(),
+		Order orderFromDB = saleOrderService.getLastSaleOrderByCustomer(saleOrder.getCustomerName(),
 				saleOrder.getCustomerAddress(), saleOrder.getCustomerPhone(), saleOrder.getCustomerEmail());
 
 		String[] arrStrIdProduct = strIdProduct.split(";");
 
 		if (amount != 0) {
 			if (arrStrIdProduct[0] != "" || arrStrIdProduct[0] != null) {
-				OrderDetail saleOrderProduct = new OrderDetail();
-				Product product = productService.getById(Integer.parseInt(arrStrIdProduct[0]));
-				saleOrderProduct.setProduct(product);
-				saleOrderProduct.setQuantity(amount);
-				/* saleOrderProduct.setPrice(product.getPrice()); */
-				saleOrderProduct.setSaleOrder(saleOrderDB);
+				OrderDetail orderDetail = new OrderDetail();
+				AttributeProduct attributeProduct = attrService.getById(Integer.parseInt(arrStrIdProduct[0]));
+				BigDecimal currentPrice = (attributeProduct.getPriceSale() != null
+						&& attributeProduct.getPriceSale() != BigDecimal.valueOf(0)) ? attributeProduct.getPriceSale()
+								: attributeProduct.getPrice();
+				orderDetail.setAttributeProduct(attributeProduct);
+				orderDetail.setQuantity(amount);
+				orderDetail.setPrice(currentPrice);
+				orderDetail.setOrder(orderFromDB);
 
-				/*
-				 * saleOrderDB.setTotal(new BigDecimal(amount *
-				 * product.getPrice().doubleValue()));
-				 */
+				orderFromDB.setTotal(new BigDecimal(amount * currentPrice.doubleValue()));
 
-				/* product.setAmount(product.getAmount() - amount); */
-				productService.saveOrUpdate(product);
-				saleOrderProductService.saveOrUpdate(saleOrderProduct);
-				saleOrderDB.addSaleOrderProducts(saleOrderProduct);
+				attributeProduct.setAmount(attributeProduct.getAmount() - amount);
+				attrService.saveOrUpdate(attributeProduct);
+				saleOrderProductService.saveOrUpdate(orderDetail);
+				orderFromDB.addSaleOrderProducts(orderDetail);
 
 				CartDTO cart = (CartDTO) session.getAttribute("cart");
-				cart.getCartItems().remove(cart.getCartItemByIdProduct(product.getId()));
+				cart.getCartItems().remove(cart.getCartItemByIdProduct(attributeProduct.getId()));
 				session.setAttribute("cart", cart);
 
 			}
@@ -331,33 +330,39 @@ public class CartController extends BaseController {
 			double total = 0;
 
 			for (CartItemDTO cartItem : cartItemsBuy) {
-				OrderDetail saleOrderProduct = new OrderDetail();
+				OrderDetail orderDetail = new OrderDetail();
 
-				Product product = productService.getById(cartItem.getProductId());
+				AttributeProduct attributeProduct = attrService.getById(Integer.parseInt(arrStrIdProduct[0]));
+				BigDecimal currentPrice = (attributeProduct.getPriceSale() != null
+						&& attributeProduct.getPriceSale() != BigDecimal.valueOf(0)) ? attributeProduct.getPriceSale()
+								: attributeProduct.getPrice();
 
-				saleOrderProduct.setProduct(product);
-				saleOrderProduct.setQuantity(cartItem.getQuanlity());
-				/* saleOrderProduct.setPrice(product.getPrice()); */
-				saleOrderProduct.setSaleOrder(saleOrderDB);
+				orderDetail.setAttributeProduct(attributeProduct);
+				orderDetail.setQuantity(cartItem.getQuantity());
+				orderDetail.setPrice(currentPrice);
+				orderDetail.setOrder(orderFromDB);
 
-				/* product.setAmount(product.getAmount() - cartItem.getQuanlity()); */
-				productService.saveOrUpdate(product);
+				attributeProduct.setAmount(attributeProduct.getAmount() - cartItem.getQuantity());
 
-				saleOrderProductService.saveOrUpdate(saleOrderProduct);
+				attrService.saveOrUpdate(attributeProduct);
+
+				saleOrderProductService.saveOrUpdate(orderDetail);
 				cart.getCartItems().remove(cartItem);
 
-				total += cartItem.getQuanlity() * cartItem.getPriceUnit().doubleValue();
-				saleOrderDB.addSaleOrderProducts(saleOrderProduct);
+				total += cartItem.getQuantity() * cartItem.getPriceUnit().doubleValue();
+				orderFromDB.addSaleOrderProducts(orderDetail);
+
 			}
 
-			saleOrderDB.setTotal(new BigDecimal(total));
+			orderFromDB.setTotal(new BigDecimal(total));
 			session.setAttribute("cart", cart);
+
 		}
 
-		saleOrderService.saveOrUpdate(saleOrderDB);
-		Map<String, Object> result = new HashMap<String, Object>();
+		saleOrderService.saveOrUpdate(orderFromDB);
+		JSONObject result = new JSONObject();
 		result.put("message", "Đặt hàng thành công!");
-		result.put("idSaleOrder", saleOrderDB.getId());
+		result.put("idSaleOrder", orderFromDB.getId());
 		session.setAttribute("totalItems", getTotalItems(request));
 		return ResponseEntity.ok(result);
 	}

@@ -34,4 +34,10 @@
     <link href="${base }/user/css/my-style-home.css" rel="stylesheet" />
     <link href="${base }/user/css/my-style-news.css" rel="stylesheet" />
     <link href="${base }/user/css/my-style-product.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+    integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+    
     <link rel="stylesheet" href="${base }/user/css/my-style.css" >
+    <link rel="stylesheet" href="${base }/user/css/rating-style.css">
+
