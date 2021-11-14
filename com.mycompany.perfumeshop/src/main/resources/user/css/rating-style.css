@@ -31,7 +31,7 @@ flex-display {
   transition: all .5s
 }
 
-input {
+/* input {
   background: transparent;
   border: solid 2px #bb5252;
   color: #fff;
@@ -45,9 +45,9 @@ input {
 
 input:focus {
   outline: none;
-}
+} */
 
-.percent {
+/* .percent {
   color: #bb5252;
   font-size: 1.5em;
-}
+} */

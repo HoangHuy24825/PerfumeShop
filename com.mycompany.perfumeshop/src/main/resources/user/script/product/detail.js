@@ -3,6 +3,46 @@ $(document).ready(function () {
     setMenuBanner();
     loadData();
     // loadNewProduct();
+
+    $("body").on("click", ".btnChoseCapacity", function () {
+        var currentChose = $(".chose-capacity-container").find(".shadow");
+        currentChose.removeClass("border-danger");
+        currentChose.removeClass("shadow");
+        $(this).addClass("shadow");
+        $(this).addClass("border-danger");
+        var price = $(this).data("price");
+        var priceSale = $(this).data("priceSale");
+        var htmlPirce = '';
+        var idAttr = $(this).data("id");
+        var maxOrder = $(this).data("maxOrder");
+        $('#numberProductOrder').data("id-product", idAttr);
+        $('#numberProductOrder').data("max-order", maxOrder);
+        if (priceSale != null && priceSale != 0) {
+            htmlPirce += `
+                    <tr>
+                        <td>Giá: </td>
+                        <td> 
+                            <h4 style="color:red" class="font-weight-bold mb-0 mr-3">${priceSale.toLocaleString('it-IT', {tyle: 'currency',currency: 'VND'})} &#8363;</h4>
+                        </td>
+                        <td>
+                            <h5 class="text-muted mb-0" style="text-decoration:line-through">${price.toLocaleString('it-IT', {tyle: 'currency',currency: 'VND'})} &#8363;</h5>
+                        </td>
+                    </tr>                    
+                    `;
+        } else {
+            htmlPirce += `
+            <tr>
+                <td>Giá: </td>
+                <td> 
+                    <h4 style="color:red" class="font-weight-bold mb-0">${price.toLocaleString('it-IT', {tyle: 'currency',currency: 'VND'})} &#8363;</h4>
+                </td>
+            </tr>
+                `;
+        }
+        $("#price-product").find("table").html(htmlPirce);
+    });
+
+    showInitPrice();
 });
 
 function loadData() {
@@ -29,12 +69,34 @@ function loadData() {
 
             $("#detail-product").html(jsonResult.product.detail);
 
-            $('#numberProductOrder').attr("data-id-product", jsonResult.product.id);
-            $('#numberProductOrder').attr("data-max-order", jsonResult.product.amount);
+            var htmlCapacity = '';
+            $.each(jsonResult.product.attrs, function (indexInArray, item) {
+                var price = 0;
+                if (item.priceSale != null && item.priceSale != 0) {
+                    price = item.priceSale.toLocaleString('it-IT', {
+                        tyle: 'currency',
+                        currency: 'VND'
+                    });
+                } else {
+                    price = item.price.toLocaleString('it-IT', {
+                        tyle: 'currency',
+                        currency: 'VND'
+                    });
+                }
+                htmlCapacity += `
+                                <button class="col-4 text-center p-2 m-2 border rounded bg-white btnChoseCapacity"
+                                data-price="${item.price}" data-price-sale="${item.priceSale}" data-id="${item.id}" data-min-price="${jsonResult.product.minPrice}"
+                                 data-amount="${item.amount}">
+                                    <div class="capacityProduct">${item.capacity} ML</div>
+                                    <div class="priceProduct font-weight-bold" >${price} &#8363;</div>
+                                </button>
+                                `;
+            });
+            $(".chose-capacity-container").html(htmlCapacity);
 
             document.title = jsonResult.product.title;
             $('#add-product-to-cart').click(function () {
-                addProductToCart(jsonResult.product.id);
+                addProductToCart();
             });
             $('#buy-now').click(function () {
                 payNow(jsonResult.product.id);
@@ -47,8 +109,6 @@ function loadData() {
             image_slide += '	<img class="d-block mw-100" src="/upload/' +
                 jsonResult.product.avatar + '" alt="First slide">';
             image_slide += '</div>';
-
-
             if (jsonResult.images != null) {
                 var i = 0;
                 $.each(jsonResult.images, function (key, value) {
@@ -63,12 +123,41 @@ function loadData() {
                         i + '" class=""></li>';
                 });
             }
-
-
             $('#ol-img-slide').html(ol_image_slide);
             $('#img-slide').html(image_slide);
         }
     });
+}
+
+function showInitPrice() {
+    var price = $(".btnChoseCapacity").first().data("price");
+    var priceSale = $(".btnChoseCapacity").first().data("priceSale");
+    var htmlPirce = '';
+    var idAttr = $(".btnChoseCapacity").first().data("id");
+    var maxOrder = $(".btnChoseCapacity").first().data("maxOrder");
+    $(".btnChoseCapacity").first().addClass("shadow");
+    $(".btnChoseCapacity").first().addClass("border border-danger");
+    if (priceSale != null && priceSale != 0) {
+        htmlPirce += `<tr>
+                        <td>Giá: </td>
+                        <td > 
+                            <h4 style="color:red" class="font-weight-bold mb-0 mr-3">${priceSale.toLocaleString('it-IT', {tyle: 'currency',currency: 'VND'})}</h4>
+                        </td>
+                        <td>
+                            <h5 class="text-muted mb-0" style="text-decoration:line-through">${price.toLocaleString('it-IT', {tyle: 'currency',currency: 'VND'})}</h5>                    
+                        </td>
+                        </tr>
+                        `;
+    } else {
+        htmlPirce += `<tr>
+                        <td>Giá: </td>
+                        <td> <h4 style="color:red" class="font-weight-bold mb-0">${price.toLocaleString('it-IT', {tyle: 'currency',currency: 'VND'})}</h4>
+                        </td>
+                    </tr>`;
+    }
+    $('#numberProductOrder').data("id-product", idAttr);
+    $('#numberProductOrder').data("max-order", maxOrder);
+    $("#price-product").find("table").html(htmlPirce);
 }
 
 function setMenuBanner() {
@@ -88,6 +177,7 @@ function setMenuBanner() {
 
 function addProductToCart(id_product) {
     var amount = $("#numberProductOrder").val();
+    var amount = $("#numberProductOrder").data("id-product");
     let data = {
         productId: id_product,
         quanlity: amount

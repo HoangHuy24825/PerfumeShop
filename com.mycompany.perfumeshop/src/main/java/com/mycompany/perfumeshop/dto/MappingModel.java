@@ -252,9 +252,14 @@ public class MappingModel {
 	}
 
 	private BigDecimal maxPriceOfProduct(List<AttributeProduct> attributeProducts) {
-		BigDecimal maxPrice = attributeProducts.get(0).getPrice();
+		BigDecimal maxPrice = (attributeProducts.get(0).getPriceSale() != null
+				&& attributeProducts.get(0).getPriceSale() != BigDecimal.valueOf(0))
+						? attributeProducts.get(0).getPriceSale()
+						: attributeProducts.get(0).getPrice();
 		for (AttributeProduct attributeProduct : attributeProducts) {
-			if (attributeProduct.getPrice().compareTo(maxPrice) > 0) {
+			if (attributeProduct.getPrice().compareTo(maxPrice) > 0 || (attributeProduct.getPriceSale() != null
+					&& attributeProduct.getPriceSale() != BigDecimal.valueOf(0)
+					&& attributeProduct.getPriceSale().compareTo(maxPrice) > 0)) {
 				maxPrice = attributeProduct.getPrice();
 			}
 		}
@@ -262,9 +267,14 @@ public class MappingModel {
 	}
 
 	private BigDecimal minPriceOfProduct(List<AttributeProduct> attributeProducts) {
-		BigDecimal minPrice = attributeProducts.get(0).getPrice();
+		BigDecimal minPrice = (attributeProducts.get(0).getPriceSale() != null
+				&& attributeProducts.get(0).getPriceSale() != BigDecimal.valueOf(0))
+						? attributeProducts.get(0).getPriceSale()
+						: attributeProducts.get(0).getPrice();
 		for (AttributeProduct attributeProduct : attributeProducts) {
-			if (attributeProduct.getPrice().compareTo(minPrice) < 0) {
+			if (attributeProduct.getPrice().compareTo(minPrice) < 0 || (attributeProduct.getPriceSale() != null
+					&& attributeProduct.getPriceSale() != BigDecimal.valueOf(0)
+					&& attributeProduct.getPriceSale().compareTo(minPrice) < 0)) {
 				minPrice = attributeProduct.getPrice();
 			}
 		}

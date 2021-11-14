@@ -120,20 +120,20 @@
 							</tr>
 						</table>
 
-						<div class="row">
-							<button class="col-4 text-center p-2 m-2 border border-secondary rounded bg-white">
+						<div class="row chose-capacity-container">
+							<button class="col-4 text-center p-2 m-2 border border-secondary rounded bg-white btnChoseCapacity">
 								<div class="capacityProduct">10ML</div>
 								<div class="priceProduct font-weight-bold">10000</div>
 							</button>
-							<button class="col-4 text-center p-2 m-2 border border-secondary rounded bg-white">
+							<button class="col-4 text-center p-2 m-2 border border-secondary rounded bg-white ">
 								<div class="capacityProduct">10ML</div>
 								<div class="priceProduct font-weight-bold">10000</div>
 							</button>
-							<button class="col-4 text-center p-2 m-2 border border-secondary rounded bg-white">
+							<button class="col-4 text-center p-2 m-2 border border-secondary rounded bg-white btnChoseCapacity">
 								<div class="capacityProduct">10ML</div>
 								<div class="priceProduct font-weight-bold">10000</div>
 							</button>
-							<button class="col-4 text-center p-2 m-2 border border-danger rounded shadow bg-white">
+							<button class="col-4 text-center p-2 m-2 border border-danger rounded shadow bg-white btnChoseCapacity">
 								<div class="capacityProduct">10ML</div>
 								<div class="priceProduct font-weight-bold">10000</div>
 							</button>
@@ -143,6 +143,11 @@
 
 							<!-- product short description -->
 
+						</p>
+						<p id="price-product">
+							<table id="table-product-detail">
+							<!-- product short description -->
+							</table>
 						</p>
 						<div class="card_area d-flex justify-content-between align-items-center">
 							<div class="product_count">
