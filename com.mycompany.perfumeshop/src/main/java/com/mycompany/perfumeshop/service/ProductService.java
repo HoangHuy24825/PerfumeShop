@@ -90,7 +90,7 @@ public class ProductService extends BaseService<Product> implements Constant {
 		}
 
 		if (!isEmptyUploadFile(images)) {
-			List<ProductImage> oldImages = imageService.getListByIdProduct(product.getId());
+			List<ProductImage> oldImages = imageService.findAllByIdProduct(product.getId());
 
 			for (ProductImage productImage : oldImages) {
 				imageService.delete(productImage);
@@ -313,7 +313,7 @@ public class ProductService extends BaseService<Product> implements Constant {
 
 			if (saleOrderProducts.size() == 0) {
 				Product product = super.getById(idProduct);
-				List<ProductImage> productImages = imageService.getListByIdProduct(idProduct);
+				List<ProductImage> productImages = imageService.findAllByIdProduct(idProduct);
 				for (ProductImage productImage : productImages) {
 					new File(UPLOAD_ROOT_PATH + productImage.getPath() + productImage.getTitle()).delete();
 				}

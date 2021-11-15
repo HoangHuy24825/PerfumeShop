@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     setMenuBanner();
     loadData();
     // loadNewProduct();
@@ -39,10 +38,48 @@ $(document).ready(function () {
             </tr>
                 `;
         }
-        $("#price-product").find("table").html(htmlPirce);
+        $("#priceProductCurrent").find("table").html(htmlPirce);
     });
 
-    showInitPrice();
+    $("body").on("click", "#addProductToCart", function () {
+        var quantity = $("#numberProductOrder").val();
+        var idAttr = $("#numberProductOrder").data("id-product");
+        let data = {
+            attrProductId: idAttr,
+            quantity: quantity
+        }
+        $.ajax({
+            url: "/cart/add",
+            type: "post",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json",
+            success: function (jsonResult) {
+                showAlertMessage("Thêm vào giỏ hàng thành công!", true);
+                $('#icon-cart-header').find($('#amount_cart')).text(jsonResult.totalItems);
+            },
+            error: function (jqXhr, textStatus, errorMessage) {
+                showAlertMessage("Không thêm được sản phẩm vào giỏ hàng!", false);
+            }
+        });
+    });
+
+    $("body").on("click", "#buyNow", function () {
+        var maxOrder = parseInt($("#numberProductOrder").data("max-order"));
+        var amount = parseInt($("#numberProductOrder").val());
+        var idProduct = $("#numberProductOrder").data("id-product");
+        if (maxOrder == 0) {
+            showAlertMessage("Sản phẩm tạm thời hết hàng!", true);
+        } else if (maxOrder < amount) {
+            showAlertMessage("Số lượng mua vượt quá số lượng hiện có!", false);
+        } else {
+            window.location.href = '/bill?idProduct=' + idProduct + "&&amount=" + amount;
+        }
+    });
+
+
+
+
 });
 
 function loadData() {
@@ -55,18 +92,16 @@ function loadData() {
         dataType: "json",
         contentType: "application/json;charset=utf-8",
         success: function (jsonResult) {
-            /* $("#image-product").attr("src", "/upload/"+result.avatar);*/
+            $(".front-stars").css("width", (jsonResult.product.starReviews == 0 ? 5 : jsonResult.product.starReviews) / 5 * 100 + "%");
+            $(".back-stars").attr("title", (jsonResult.product.starReviews == 0 ? 5 : jsonResult.product.starReviews) + "/5");
+            $(".rating-title").html((jsonResult.product.starReviews == 0 ? 5 : jsonResult.product.starReviews) + "/5 sao");
+            $(".front-stars").css("width", (3) / 5 * 100 + "%");
             $("#name-product").html(jsonResult.product.title);
-            // $("#price-product").html(jsonResult.product.price.toLocaleString('it-IT', {
-            //     style: 'currency',
-            //     currency: 'VND'
-            // }));
             $("#trademark-product").html(jsonResult.product.trademark);
             $("#manufactureYear-product").html(jsonResult.product.manufactureYear);
             $("#origin-product").html(jsonResult.product.origin);
             $("#fragrant-product").html(jsonResult.product.fragrant);
             $("#short-description-product").html(jsonResult.product.description);
-
             $("#detail-product").html(jsonResult.product.detail);
 
             var htmlCapacity = '';
@@ -94,13 +129,34 @@ function loadData() {
             });
             $(".chose-capacity-container").html(htmlCapacity);
 
+            $(".btnChoseCapacity").first().addClass("shadow");
+            $(".btnChoseCapacity").first().addClass("border border-danger");
+            var priceSaleToShow = jsonResult.product.attrs[0].priceSale;
+            var priceToShow = jsonResult.product.attrs[0].price;
+            var htmlPirce = '';
+            if (priceSaleToShow != null && priceSaleToShow != 0) {
+                htmlPirce += `<tr>
+                                <td>Giá: </td>
+                                <td > 
+                                    <h4 style="color:red" class="font-weight-bold mb-0 mr-3">${priceSaleToShow.toLocaleString('it-IT', {tyle: 'currency',currency: 'VND'})}</h4>
+                                </td>
+                                <td>
+                                    <h5 class="text-muted mb-0" style="text-decoration:line-through">${priceToShow.toLocaleString('it-IT', {tyle: 'currency',currency: 'VND'})}</h5>                    
+                                </td>
+                                </tr>
+                                `;
+            } else {
+                htmlPirce += `<tr>
+                                <td>Giá: </td>
+                                <td> <h4 style="color:red" class="font-weight-bold mb-0">${priceToShow.toLocaleString('it-IT', {tyle: 'currency',currency: 'VND'})}</h4>
+                                </td>
+                            </tr>`;
+            }
+            $('#numberProductOrder').data("id-product", jsonResult.product.attrs[0].id);
+            $('#numberProductOrder').data("max-order", jsonResult.product.attrs[0].priceSale.amount);
+            $("#priceProductCurrent").find("table").html(htmlPirce);
+
             document.title = jsonResult.product.title;
-            $('#add-product-to-cart').click(function () {
-                addProductToCart();
-            });
-            $('#buy-now').click(function () {
-                payNow(jsonResult.product.id);
-            });
 
             var ol_image_slide =
                 '<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>';
@@ -109,9 +165,9 @@ function loadData() {
             image_slide += '	<img class="d-block mw-100" src="/upload/' +
                 jsonResult.product.avatar + '" alt="First slide">';
             image_slide += '</div>';
-            if (jsonResult.images != null) {
+            if (jsonResult.product.images != null) {
                 var i = 0;
-                $.each(jsonResult.images, function (key, value) {
+                $.each(jsonResult.product.images, function (key, value) {
                     image_slide += '<div class="carousel-item">';
                     image_slide +=
                         '	<img class="d-block mw-100 mx-auto" style="max-height:600px" src="/upload/' +
@@ -135,34 +191,11 @@ function showInitPrice() {
     var htmlPirce = '';
     var idAttr = $(".btnChoseCapacity").first().data("id");
     var maxOrder = $(".btnChoseCapacity").first().data("maxOrder");
-    $(".btnChoseCapacity").first().addClass("shadow");
-    $(".btnChoseCapacity").first().addClass("border border-danger");
-    if (priceSale != null && priceSale != 0) {
-        htmlPirce += `<tr>
-                        <td>Giá: </td>
-                        <td > 
-                            <h4 style="color:red" class="font-weight-bold mb-0 mr-3">${priceSale.toLocaleString('it-IT', {tyle: 'currency',currency: 'VND'})}</h4>
-                        </td>
-                        <td>
-                            <h5 class="text-muted mb-0" style="text-decoration:line-through">${price.toLocaleString('it-IT', {tyle: 'currency',currency: 'VND'})}</h5>                    
-                        </td>
-                        </tr>
-                        `;
-    } else {
-        htmlPirce += `<tr>
-                        <td>Giá: </td>
-                        <td> <h4 style="color:red" class="font-weight-bold mb-0">${price.toLocaleString('it-IT', {tyle: 'currency',currency: 'VND'})}</h4>
-                        </td>
-                    </tr>`;
-    }
-    $('#numberProductOrder').data("id-product", idAttr);
-    $('#numberProductOrder').data("max-order", maxOrder);
-    $("#price-product").find("table").html(htmlPirce);
+
 }
 
 function setMenuBanner() {
-
-    $("#img-banner").html('<img src="${base}/user/img/my-image/banner/product1.png" alt="" width="560">');
+    $("#img-banner").html('<img src="/user/img/my-image/banner/product1.png" alt="" width="560">');
     var titlebanner = '';
     titlebanner += '<h2>Sản phẩm</h2>';
     titlebanner += '<p>Trang chủ <span>></span>Chi tiết sản phẩm</p>';
@@ -173,29 +206,6 @@ function setMenuBanner() {
     });
 
     $("#menu-product").addClass("my-menu-active");
-}
-
-function addProductToCart(id_product) {
-    var amount = $("#numberProductOrder").val();
-    var amount = $("#numberProductOrder").data("id-product");
-    let data = {
-        productId: id_product,
-        quanlity: amount
-    }
-    $.ajax({
-        url: "/cart/add",
-        type: "post",
-        data: JSON.stringify(data),
-        dataType: "json",
-        contentType: "application/json",
-        success: function (jsonResult) {
-            showAlertMessage("Thêm vào giỏ hàng thành công!", true);
-            $('#icon-cart-header').find($('#amount_cart')).text(jsonResult.totalItems);
-        },
-        error: function (jqXhr, textStatus, errorMessage) {
-            showAlertMessage("Không thêm được sản phẩm vào giỏ hàng!", false);
-        }
-    });
 }
 
 
@@ -233,19 +243,6 @@ function loadNewProduct() {
     });
 }
 
-function payNow(idProduct) {
-    var maxOrder = parseInt($("#numberProductOrder").attr("data-max-order"));
-    var amount = parseInt($("#numberProductOrder").val());
-    if (maxOrder == 0) {
-        showAlertMessage("Sản phẩm tạm thời hết hàng!", true);
-    } else if (maxOrder < amount) {
-        showAlertMessage("Số lượng mua vượt quá số lượng hiện có!", false);
-    } else {
-        window.location.href = '/bill?idProduct=' + idProduct + "&&amount=" + amount;
-    }
-}
-
-
 function isNumberKey(evt) {
     var charCode = (evt.which) ? evt.which : event.keyCode
     if (charCode > 31 && (charCode < 48 || charCode > 57))
@@ -271,7 +268,7 @@ function checkValidAmount(status) {
 
 function checkValidAmountInput() {
     var numberOrder = parseInt($('#numberProductOrder').val());
-    var maxOrder = parseInt($('#numberProductOrder').attr('data-max-order'));
+    var maxOrder = parseInt($('#numberProductOrder').data("max-order"));
     if (numberOrder < 1) {
         showAlertMessage("Số lượng không được nhỏ hơn 1!", false);
         $('#numberProductOrder').val(1);

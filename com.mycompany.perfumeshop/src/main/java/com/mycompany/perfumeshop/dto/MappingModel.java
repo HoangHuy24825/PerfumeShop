@@ -245,6 +245,7 @@ public class MappingModel {
 		productJson.put("seo", product.getSeo());
 		productJson.put("reviews", product.getReviews());
 		productJson.put("attrs", product.getAttributeProducts());
+		productJson.put("images", product.getProductImages());
 		productJson.put("maxPrice", maxPriceOfProduct(product.getAttributeProducts()));
 		productJson.put("minPrice", minPriceOfProduct(product.getAttributeProducts()));
 		productJson.put("starReviews", averageStar(product.getReviews()));

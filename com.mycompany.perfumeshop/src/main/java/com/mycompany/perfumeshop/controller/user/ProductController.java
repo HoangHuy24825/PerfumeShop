@@ -108,6 +108,7 @@ public class ProductController extends BaseController {
 				for (Product product : products) {
 					product.setAttributeProducts(attributeService.getListByIdProduct(product.getId()));
 					product.setReviews(reviewService.findAllByIdProduct(product.getId()));
+					product.setProductImages(productImageService.findAllByIdProduct(product.getId()));
 					listProduct.add(mappingModel.mappingModel(product));
 				}
 
@@ -130,7 +131,7 @@ public class ProductController extends BaseController {
 				Product product = productService.getById(idProduct);
 				product.setAttributeProducts(attributeService.getListByIdProduct(product.getId()));
 				product.setReviews(reviewService.findAllByIdProduct(product.getId()));
-				product.setProductImages(productImageService.getListByIdProduct(product.getId()));
+				product.setProductImages(productImageService.findAllByIdProduct(product.getId()));
 				result.put("product", mappingModel.mappingModel(product));
 			}
 			return ResponseEntity.ok(result);

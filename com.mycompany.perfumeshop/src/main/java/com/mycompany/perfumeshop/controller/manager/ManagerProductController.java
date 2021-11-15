@@ -150,7 +150,7 @@ public class ManagerProductController extends BaseController {
 		JSONObject result = new JSONObject();
 		Product product = productService.getById(idProduct);
 		List<JSONObject> productImagesJson = new ArrayList<>();
-		List<ProductImage> productImages = productImageService.getListByIdProduct(product.getId());
+		List<ProductImage> productImages = productImageService.findAllByIdProduct(product.getId());
 		for (ProductImage productImage : productImages) {
 			productImagesJson.add(mappingModel.mappingModel(productImage));
 		}

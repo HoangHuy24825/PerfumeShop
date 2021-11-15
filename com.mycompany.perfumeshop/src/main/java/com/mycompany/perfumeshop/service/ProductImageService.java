@@ -22,7 +22,7 @@ public class ProductImageService extends BaseService<ProductImage> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ProductImage> getListByIdProduct(Integer idProduct) {
+	public List<ProductImage> findAllByIdProduct(Integer idProduct) {
 		Query query = entityManager.createQuery("FROM ProductImage pi where pi.product.id=:productId");
 		query.setParameter("productId", idProduct);
 		return query.getResultList();
