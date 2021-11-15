@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.json.simple.JSONObject;
+import org.springframework.stereotype.Component;
 
 import com.mycompany.perfumeshop.entities.AttributeProduct;
 import com.mycompany.perfumeshop.entities.Blog;
@@ -19,6 +20,7 @@ import com.mycompany.perfumeshop.entities.RequestCancelOrder;
 import com.mycompany.perfumeshop.entities.Review;
 import com.mycompany.perfumeshop.entities.User;
 
+@Component
 public class MappingModel {
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");

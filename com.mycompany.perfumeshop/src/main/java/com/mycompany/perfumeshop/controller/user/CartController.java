@@ -196,7 +196,7 @@ public class CartController extends BaseController {
 		HttpSession session = request.getSession();
 		CartDTO cartDTO = (CartDTO) session.getAttribute("cart");
 
-		String[] arrIdProductStr = idAttr.split(";");
+		String[] arrIdProductStr = (idAttr == "") ? new String[] {} : idAttr.split(";");
 		List<CartItemDTO> cartItemDelete = new ArrayList<CartItemDTO>();
 		for (int i = 0; i < arrIdProductStr.length; i++) {
 			if (arrIdProductStr[i] != "" || arrIdProductStr[i] != null) {

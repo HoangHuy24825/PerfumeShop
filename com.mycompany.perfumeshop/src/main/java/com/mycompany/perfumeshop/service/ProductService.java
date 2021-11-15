@@ -184,7 +184,7 @@ public class ProductService extends BaseService<Product> implements Constant {
 
 			List<Predicate> predicates = new ArrayList<>();
 
-			predicates.add(criteriaBuilder.equal(root.get("status"), true));
+			predicates.add(criteriaBuilder.equal(root.get("status"), Boolean.TRUE));
 
 			if (userSearch.getKeySearch() != "" && userSearch.getKeySearch() != null) {
 				predicates.add(criteriaBuilder.or(
@@ -194,14 +194,14 @@ public class ProductService extends BaseService<Product> implements Constant {
 
 			// Thuc hien sau
 
-			if (userSearch.getMaxPrice() != null) {
-				predicates
-						.add(criteriaBuilder.le(root.get("attributeProducts").get("price"), userSearch.getMaxPrice()));
-			}
-			if (userSearch.getMinPrice() != null) {
-				predicates
-						.add(criteriaBuilder.ge(root.get("attributeProducts").get("price"), userSearch.getMaxPrice()));
-			}
+			/*
+			 * if (userSearch.getMaxPrice() != null) { predicates
+			 * .add(criteriaBuilder.le(root.get("attributeProducts").get("price"),
+			 * userSearch.getMaxPrice())); } if (userSearch.getMinPrice() != null) {
+			 * predicates
+			 * .add(criteriaBuilder.ge(root.get("attributeProducts").get("price"),
+			 * userSearch.getMaxPrice())); }
+			 */
 
 			if (userSearch.getIdCategory() != 0) {
 				predicates.add(criteriaBuilder.equal(root.get("category").get("id"), userSearch.getIdCategory()));
@@ -209,24 +209,21 @@ public class ProductService extends BaseService<Product> implements Constant {
 
 			// Thuc hien sau
 
-			switch (userSearch.getTypeOrder()) {
-			case 0:
-				break;
-			case 1:
-				criteriaQuery.orderBy(criteriaBuilder.asc(root.get("attributeProducts").get("price")));
-				break;
-			case 2:
-				criteriaQuery.orderBy(criteriaBuilder.desc(root.get("attributeProducts").get("price")));
-				break;
-			default:
-				break;
-			}
+			/*
+			 * switch (userSearch.getTypeOrder()) { case 0: break; case 1:
+			 * criteriaQuery.orderBy(criteriaBuilder.asc(root.get("attributeProducts").get(
+			 * "price"))); break; case 2:
+			 * criteriaQuery.orderBy(criteriaBuilder.desc(root.get("attributeProducts").get(
+			 * "price"))); break; default: break; }
+			 */
 
 			if (userSearch.getTypeOrder() == 0 && userSearch.getMaxPrice() == null
 					&& userSearch.getMinPrice() != null) {
 				criteriaQuery.orderBy(criteriaBuilder.desc(root.get("createdDate")),
 						criteriaBuilder.desc(root.get("updatedDate")));
 			}
+
+			criteriaQuery.where(predicates.toArray(new Predicate[] {}));
 
 			Query query = entityManager.createQuery(criteriaQuery);
 

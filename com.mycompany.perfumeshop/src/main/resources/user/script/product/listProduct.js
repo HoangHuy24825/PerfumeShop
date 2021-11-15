@@ -139,7 +139,7 @@ $(document).ready(function () {
                 if ((result.products.length == 0 || result.products == null) && searchStr != null &&
                     searchStr != "") {
                     html += `<div style="margin:auto">
-                            <img src="${base}/user/img/notFoundProduct.png" width="300" style="margin:auto"/>
+                            <img src="/user/img/notFoundProduct.png" width="300" style="margin:auto"/>
                             <br/>
                             <p style="text-align:center; margin: 25px 0px 30px;">Không tìm thấy sản phẩm phù hợp!</p>
                         </div>`;
@@ -147,7 +147,7 @@ $(document).ready(function () {
                 } else if ((result.products.length == 0 || result.products == null) && id_category != null &&
                     id_category != "") {
                     html += `<div style="margin:auto">
-                            <img src="${base}/user/img/notFoundProduct.png" width="300" style="margin:auto"/>
+                            <img src="/user/img/notFoundProduct.png" width="300" style="margin:auto"/>
                             <br/>
                             <p style="text-align:center; margin: 25px 0px 30px;">Không có sản phẩm nào trong danh mục!</p>
                         </div>`;
