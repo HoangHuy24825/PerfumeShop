@@ -100,7 +100,7 @@
                         <aside class="single_sidebar_widget popular_post_widget">
                             <h3 class="widget_title">Bài viết gần đây</h3>
                             <c:forEach var="blog" items="${recentPosts}">
-	                            <div class="media post_item" onclick="detail(${blog.id})">
+	                            <div class="media post_item" onclick="detail('${blog.id}')">
 	                                <img width="80" height="80" src="${base}/upload/${blog.avatar}" alt="post">
 	                                <div class="media-body">
 	                                    <div>
@@ -152,7 +152,7 @@
     
     function setMenuBanner() {
     	var titlebanner='';
-    	$("#img-banner").html('<img src="${base}/user/img/my-image/banner/news.png" alt="" width="300">');
+    	$("#img-banner").html('<img src="${base}/user/img/my-image/banner/news.png" alt="" width="200">');
     	titlebanner+='<h2>Blog</h2>';
     	titlebanner+='<p> Trang chủ <span>></span> Blog </p>';
     	$("#title-banner").html(titlebanner);

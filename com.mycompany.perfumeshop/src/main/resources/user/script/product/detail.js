@@ -95,7 +95,6 @@ function loadData() {
             $(".front-stars").css("width", (jsonResult.product.starReviews == 0 ? 5 : jsonResult.product.starReviews) / 5 * 100 + "%");
             $(".back-stars").attr("title", (jsonResult.product.starReviews == 0 ? 5 : jsonResult.product.starReviews) + "/5");
             $(".rating-title").html((jsonResult.product.starReviews == 0 ? 5 : jsonResult.product.starReviews) + "/5 sao");
-            $(".front-stars").css("width", (3) / 5 * 100 + "%");
             $("#name-product").html(jsonResult.product.title);
             $("#trademark-product").html(jsonResult.product.trademark);
             $("#manufactureYear-product").html(jsonResult.product.manufactureYear);
@@ -130,7 +129,7 @@ function loadData() {
             $(".chose-capacity-container").html(htmlCapacity);
 
             $(".btnChoseCapacity").first().addClass("shadow");
-            $(".btnChoseCapacity").first().addClass("border border-danger");
+            $(".btnChoseCapacity").first().addClass("border-danger");
             var priceSaleToShow = jsonResult.product.attrs[0].priceSale;
             var priceToShow = jsonResult.product.attrs[0].price;
             var htmlPirce = '';
@@ -195,7 +194,7 @@ function showInitPrice() {
 }
 
 function setMenuBanner() {
-    $("#img-banner").html('<img src="/user/img/my-image/banner/product1.png" alt="" width="560">');
+    $("#img-banner").html('<img src="/user/img/my-image/banner/product1.png" alt="" width="350">');
     var titlebanner = '';
     titlebanner += '<h2>Sản phẩm</h2>';
     titlebanner += '<p>Trang chủ <span>></span>Chi tiết sản phẩm</p>';
@@ -278,7 +277,6 @@ function checkValidAmountInput() {
         $('#numberProductOrder').val(maxOrder);
     }
 }
-
 
 function checkValidOutFocus() {
     if ($('#numberProductOrder').val() == "" || $('#numberProductOrder').val() == null) {

@@ -54,12 +54,12 @@ public class Order extends BaseEntity {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "order", fetch = FetchType.EAGER)
 	private List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
 
-	public void addSaleOrderProducts(OrderDetail _saleOrderProducts) {
+	public void addOrderDetail(OrderDetail _saleOrderProducts) {
 		_saleOrderProducts.setOrder(this);
 		orderDetails.add(_saleOrderProducts);
 	}
 
-	public void removeSaleOrderProducts(OrderDetail _saleOrderProducts) {
+	public void removeOrderDetail(OrderDetail _saleOrderProducts) {
 		_saleOrderProducts.setOrder(null);
 		orderDetails.remove(_saleOrderProducts);
 	}

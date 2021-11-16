@@ -50,19 +50,19 @@ public class CartController extends BaseController {
 	private UserService userService;
 
 	@Autowired
-	private OrderService saleOrderService;
+	private OrderService orderService;
 
 	@Autowired
 	private ProductAttributeService attrService;
 
 	@Autowired
-	private DetailOrderService saleOrderProductService;
+	private DetailOrderService detailOrderService;
 
 	@Autowired
 	private JavaMailSender emailSender;
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "cart/add", method = RequestMethod.POST)
+	@RequestMapping(value = "/cart/add", method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> addCart(final Model model, final HttpServletRequest request,
 			final HttpServletResponse respond, @RequestBody CartItemDTO newCartItem) {
 
@@ -96,6 +96,7 @@ public class CartController extends BaseController {
 					&& attributeProduct.getPriceSale() != BigDecimal.valueOf(0)) ? attributeProduct.getPriceSale()
 							: attributeProduct.getPrice());
 			newCartItem.setMaxOrder(attributeProduct.getAmount());
+			newCartItem.setCapacity(attributeProduct.getCapacity());
 			cartItems.add(newCartItem);
 		}
 		result.put("code", 200);
@@ -143,7 +144,7 @@ public class CartController extends BaseController {
 					&& attributeProduct.getPriceSale() != BigDecimal.valueOf(0)) ? attributeProduct.getPriceSale()
 							: attributeProduct.getPrice());
 			newCartItem.setMaxOrder(attributeProduct.getAmount());
-
+			newCartItem.setCapacity(attributeProduct.getCapacity());
 			cartItems.add(newCartItem);
 		}
 		result.put("code", 200);
@@ -231,6 +232,7 @@ public class CartController extends BaseController {
 	public String billCart(final Model model, final HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("strIdProduct") String strIdProduct) {
 		HttpSession session = request.getSession();
+
 		CartDTO cart = (CartDTO) session.getAttribute("cart");
 
 		String[] arrStrIdProduct = strIdProduct.split(";");
@@ -273,23 +275,19 @@ public class CartController extends BaseController {
 			throws Exception {
 		HttpSession session = request.getSession();
 
-		Order saleOrder = new Order();
+		Order order = new Order();
 
-		saleOrder.setCustomerName(saleOrderDTO.getCustomerName());
-		saleOrder.setCustomerPhone(saleOrderDTO.getCustomerPhone());
-		saleOrder.setCustomerEmail(saleOrderDTO.getCustomerEmail());
-		saleOrder.setCustomerAddress(saleOrderDTO.getCustomerAddress());
-		saleOrder.setProcessingStatus(0);
+		order.setCustomerName(saleOrderDTO.getCustomerName());
+		order.setCustomerPhone(saleOrderDTO.getCustomerPhone());
+		order.setCustomerEmail(saleOrderDTO.getCustomerEmail());
+		order.setCustomerAddress(saleOrderDTO.getCustomerAddress());
+		order.setProcessingStatus(0);
 		if (isLogined()) {
 			User user = getUserLogined();
-			saleOrder.setUserID(user.getId());
+			order.setUserID(user.getId());
 		}
-		saleOrder.setCode("DH" + (System.currentTimeMillis() % 100000));
-		saleOrder.setUpdatedDate(Calendar.getInstance().getTime());
-
-		saleOrderService.saveOrUpdate(saleOrder);
-		Order orderFromDB = saleOrderService.getLastSaleOrderByCustomer(saleOrder.getCustomerName(),
-				saleOrder.getCustomerAddress(), saleOrder.getCustomerPhone(), saleOrder.getCustomerEmail());
+		order.setCode("DH" + (System.currentTimeMillis() % 100000));
+		order.setUpdatedDate(Calendar.getInstance().getTime());
 
 		String[] arrStrIdProduct = strIdProduct.split(";");
 
@@ -303,14 +301,11 @@ public class CartController extends BaseController {
 				orderDetail.setAttributeProduct(attributeProduct);
 				orderDetail.setQuantity(amount);
 				orderDetail.setPrice(currentPrice);
-				orderDetail.setOrder(orderFromDB);
-
-				orderFromDB.setTotal(new BigDecimal(amount * currentPrice.doubleValue()));
+				order.setTotal(new BigDecimal(amount * currentPrice.doubleValue()));
 
 				attributeProduct.setAmount(attributeProduct.getAmount() - amount);
 				attrService.saveOrUpdate(attributeProduct);
-				saleOrderProductService.saveOrUpdate(orderDetail);
-				orderFromDB.addSaleOrderProducts(orderDetail);
+				order.addOrderDetail(orderDetail);
 
 				CartDTO cart = (CartDTO) session.getAttribute("cart");
 				cart.getCartItems().remove(cart.getCartItemByIdProduct(attributeProduct.getId()));
@@ -331,38 +326,27 @@ public class CartController extends BaseController {
 
 			for (CartItemDTO cartItem : cartItemsBuy) {
 				OrderDetail orderDetail = new OrderDetail();
-
 				AttributeProduct attributeProduct = attrService.getById(Integer.parseInt(arrStrIdProduct[0]));
 				BigDecimal currentPrice = (attributeProduct.getPriceSale() != null
 						&& attributeProduct.getPriceSale() != BigDecimal.valueOf(0)) ? attributeProduct.getPriceSale()
 								: attributeProduct.getPrice();
-
 				orderDetail.setAttributeProduct(attributeProduct);
 				orderDetail.setQuantity(cartItem.getQuantity());
 				orderDetail.setPrice(currentPrice);
-				orderDetail.setOrder(orderFromDB);
-
 				attributeProduct.setAmount(attributeProduct.getAmount() - cartItem.getQuantity());
-
 				attrService.saveOrUpdate(attributeProduct);
-
-				saleOrderProductService.saveOrUpdate(orderDetail);
 				cart.getCartItems().remove(cartItem);
-
 				total += cartItem.getQuantity() * cartItem.getPriceUnit().doubleValue();
-				orderFromDB.addSaleOrderProducts(orderDetail);
-
+				order.addOrderDetail(orderDetail);
 			}
-
-			orderFromDB.setTotal(new BigDecimal(total));
+			order.setTotal(new BigDecimal(total));
 			session.setAttribute("cart", cart);
-
 		}
 
-		saleOrderService.saveOrUpdate(orderFromDB);
+		orderService.saveOrUpdate(order);
 		JSONObject result = new JSONObject();
 		result.put("message", "Đặt hàng thành công!");
-		result.put("idSaleOrder", orderFromDB.getId());
+		result.put("idOrder", order.getId());
 		session.setAttribute("totalItems", getTotalItems(request));
 		return ResponseEntity.ok(result);
 	}
@@ -370,7 +354,7 @@ public class CartController extends BaseController {
 	@RequestMapping(value = { "/recent-order" }, method = RequestMethod.GET)
 	public String getRecentOrder(final Model model, final HttpServletRequest request,
 			final HttpServletResponse response, @RequestParam("idSaleOrder") Integer idSaleOrder) throws IOException {
-		model.addAttribute("saleOrder", saleOrderService.getById(idSaleOrder));
+		model.addAttribute("saleOrder", orderService.getById(idSaleOrder));
 		return "user/cart/bill";
 	}
 

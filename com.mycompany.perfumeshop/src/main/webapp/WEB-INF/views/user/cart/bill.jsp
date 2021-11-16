@@ -75,18 +75,18 @@
 	            <h4>Chi tiết sản phẩm</h4>
 	            <br>
 	
-	           <c:forEach items="${saleOrder.saleOrderProducts}" var="saleOrderProduct">
+	           <c:forEach items="${saleOrder.orderDetails}" var="detailOrder">
 	                <div class="d-flex flex-row">
-	                    <img src="/upload/${saleOrderProduct.product.avatar }" alt="" width="100" height="100">
+	                    <img src="/upload/${detailOrder.attributeProduct.product.avatar }" alt="" width="100" height="100">
 	                    <div class="ml-2">
-	                        <h4>${saleOrderProduct.product.title }</h4>
+	                        <h4>${detailOrder.attributeProduct.product.title }</h4>
 	                        <p>Giá:
 	                        	<span style="color: #ff3368">
 	                        		 <fmt:setLocale value="vi_VN"/>
-	                    			 <fmt:formatNumber value="${saleOrderProduct.price }" minFractionDigits="0" type="currency" currencySymbol="VND"/>
+	                    			 <fmt:formatNumber value="${detailOrder.price }" minFractionDigits="0" type="currency" currencySymbol="VND"/>
 								</span>
 							</p>
-	                        <p>Số lượng: <span style="color: #ff3368"> ${saleOrderProduct.quality}  </span></p>
+	                        <p>Số lượng: <span style="color: #ff3368"> ${detailOrder.quantity}</span>  </span></p>
 	                    </div>
 	                </div>
 	                <br>

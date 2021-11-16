@@ -245,7 +245,7 @@ $(document).ready(function () {
 
 function setMenuBanner() {
     var titlebanner = '';
-    $("#img-banner").html('<img src="${base}/user/img/my-image/banner/product1.png" alt="" width="560">');
+    $("#img-banner").html('<img src="/user/img/my-image/banner/product1.png" alt="" width="350">');
     titlebanner += '<h2>Sản phẩm</h2>';
     titlebanner += '<p> Trang chủ <span>></span> Sản phẩm </p>';
     $("#title-banner").html(titlebanner);
@@ -261,28 +261,6 @@ function setMenuBanner() {
 function detail(id_product) {
     window.location.href = '/detail-product/' + $('#view_' + id_product).val();
 };
-
-function addProductToCart(id_product) {
-    let data = {
-        productId: id_product,
-        quanlity: 1
-    }
-    $.ajax({
-        url: "/cart/add",
-        type: "post",
-        data: JSON.stringify(data),
-        dataType: "json",
-        contentType: "application/json",
-        success: function (jsonResult) {
-            showAlertMessage("Thêm vào giỏ hàng thành công!", true);
-            $('#icon-cart-header').find($('#amount_cart')).text(jsonResult.totalItems);
-        },
-        error: function (jqXhr, textStatus, errorMessage) {
-            showAlertMessage("Không thêm được sản phẩm vào giỏ hàng!", false);
-        }
-    });
-}
-
 
 function loadNewProduct() {
     $.ajax({

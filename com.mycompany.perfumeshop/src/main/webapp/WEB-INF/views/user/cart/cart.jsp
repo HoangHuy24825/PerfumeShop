@@ -73,7 +73,7 @@
                                                     <img src="/upload/${cartItem.avatarProduct}" alt="" width="150" />
                                                 </div>
                                                 <div class="media-body">
-                                                    <p>${cartItem.productName}</p>
+                                                    <p>${cartItem.productName} - ${cartItem.capacity} ML</p>
                                                 </div>
                                             </div>
                                         </td>
@@ -180,7 +180,7 @@
     <!-- jquery plugins here-->
     <jsp:include page="/WEB-INF/views/user/layout/script.jsp"></jsp:include>
     <script src="${base }/user/script/cart/cart.js"></script>
-    
+
 </body>
 
 </html>

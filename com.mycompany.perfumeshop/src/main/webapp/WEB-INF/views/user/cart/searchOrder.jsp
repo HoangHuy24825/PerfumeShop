@@ -356,7 +356,7 @@
 	}
 
     function setMenuBanner() {
-		$("#img-banner").html('<img src="${base}/user/img/my-image/banner/bill.png" alt="" width="250">');
+		$("#img-banner").html('<img src="${base}/user/img/my-image/banner/bill.png" alt="" width="200">');
     	var titlebanner='';
        	titlebanner+='<h2>Tra cứu thông tin đơn hàng</h2>';
        	titlebanner+='<p>Trang chủ <span>></span>Tra cứu thông tin đơn hàng</p>';

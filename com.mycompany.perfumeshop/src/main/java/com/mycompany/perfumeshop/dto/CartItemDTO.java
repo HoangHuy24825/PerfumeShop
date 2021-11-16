@@ -18,4 +18,5 @@ public class CartItemDTO {
 	private BigDecimal priceUnit;
 	private String avatarProduct;
 	private Integer maxOrder;
+	private BigDecimal capacity;
 }

@@ -19,7 +19,7 @@ $(document).ready(function () {
 
 
 function setMenuBanner() {
-    $("#img-banner").html('<img src="/user/img/my-image/banner/cart.png" alt="" width="300">');
+    $("#img-banner").html('<img src="/user/img/my-image/banner/cart.png" alt="" width="200">');
     var titlebanner = '';
     titlebanner += '<h2>Giỏ hàng</h2>';
     titlebanner += '<p>Trang chủ <span>></span>Giỏ hàng</p>';
@@ -37,7 +37,7 @@ function deleteRecord(id_product) {
 }
 
 function deleteRecordConfirmed(id_product) {
-    $('#modalCustomerConfirmContent').modal("hide");
+    $("#modalCustomerConfirm").modal("hide");
     $.ajax({
         url: "/Cart/DeleteCart?id_product=" + id_product,
         type: "post",
@@ -251,7 +251,7 @@ function deleteRecordSelected() {
 };
 
 function deleteAllRecordConfirmed() {
-    $('#modalCustomerConfirmContent').modal('hide');
+    $("#modalCustomerConfirm").modal("hide");
     var arrIdProductStr = '';
     $('#cart-container>tr').each(function () {
         if ($(this).find('input[type="checkbox"]').prop("checked") == true) {
@@ -283,7 +283,7 @@ function deleteAllRecordConfirmed() {
 
 function addProductToCart(id_product, amount) {
     let data = {
-        productId: id_product,
+        attrProductId: id_product,
         quantity: amount
     }
     $.ajax({
@@ -305,7 +305,7 @@ function addProductToCart(id_product, amount) {
 
 function addProductToCartSilent(id_product, amount) {
     let data = {
-        productId: id_product,
+        attrProductId: id_product,
         quantity: amount
     }
     $.ajax({

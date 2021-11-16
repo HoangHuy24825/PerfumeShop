@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.mycompany.perfumeshop.controller.BaseController;
+import com.mycompany.perfumeshop.entities.Introduce;
 import com.mycompany.perfumeshop.service.IntroduceSevice;
 
 @Controller
@@ -32,7 +33,10 @@ public class IntroduceController extends BaseController {
 	public ResponseEntity<JSONObject> getHtml(final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException {
 		JSONObject result = new JSONObject();
-		result.put("content", introduceSevice.getById(1));
+		result.put("content",
+				(introduceSevice.findAll() != null && introduceSevice.findAll().size() > 0)
+						? introduceSevice.findAll().get(0)
+						: new Introduce());
 		return ResponseEntity.ok(result);
 	}
 }

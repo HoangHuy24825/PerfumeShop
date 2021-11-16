@@ -28,14 +28,20 @@ public class ManagerIntroduceController extends BaseController {
 	@RequestMapping(value = { "/admin/introduce" }, method = RequestMethod.GET)
 	public String index(final Model model, final HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		model.addAttribute("introduce", introduceSevice.findAll().get(0));
+		model.addAttribute("introduce",
+				(introduceSevice.findAll() != null && introduceSevice.findAll().size() > 0)
+						? introduceSevice.findAll().get(0)
+						: new Introduce());
 		return "manager/introduce/managerIntroduce";
 	}
 
 	@RequestMapping(value = { "/admin/edit-introduce" }, method = RequestMethod.GET)
 	public String getUpdatePage(final Model model, final HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		model.addAttribute("id_introduce", introduceSevice.findAll().get(0).getId());
+		model.addAttribute("id_introduce",
+				(introduceSevice.findAll() != null && introduceSevice.findAll().size() > 0)
+						? introduceSevice.findAll().get(0).getId()
+						: new Introduce().getId());
 		return "manager/introduce/updateIntroduce";
 	}
 
@@ -52,7 +58,9 @@ public class ManagerIntroduceController extends BaseController {
 	@RequestMapping(value = { "/admin/update-introduce" }, method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> update(final Model model, final HttpServletRequest request,
 			HttpServletResponse response, @ModelAttribute IntroduceDTO introduceDTO) throws IOException {
-		Introduce introduce = introduceSevice.getById(1);
+		Introduce introduce = (introduceSevice.findAll() != null && introduceSevice.findAll().size() > 0)
+				? introduceSevice.findAll().get(0)
+				: new Introduce();
 		introduce.setDetail(introduceDTO.getDetail().replaceFirst(",", " ").trim());
 		introduce.setUpdatedBy(getUserLogined().getId());
 		introduce.setUpdatedDate(Calendar.getInstance().getTime());

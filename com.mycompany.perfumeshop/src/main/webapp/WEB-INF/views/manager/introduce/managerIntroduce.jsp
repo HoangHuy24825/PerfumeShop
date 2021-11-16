@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
+
 <!-- SPRING FORM -->
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 
@@ -22,10 +22,10 @@
     <!-- Title Page-->
     <title>Sản phẩm | Admin Electronic Device</title>
     <link rel="icon" href="${base}/manager/images/logo-asp.net.png">
-    
+
     <jsp:include page="/WEB-INF/views/common/variable.jsp"></jsp:include>
-	<jsp:include page="/WEB-INF/views/manager/layout/style.jsp"></jsp:include>
-	
+    <jsp:include page="/WEB-INF/views/manager/layout/style.jsp"></jsp:include>
+
 </head>
 
 <body class="">
@@ -41,7 +41,7 @@
         <!-- PAGE CONTAINER-->
         <div class="page-container">
             <!-- HEADER DESKTOP-->
-              <jsp:include page="/WEB-INF/views/manager/layout/header.jsp"></jsp:include>
+            <jsp:include page="/WEB-INF/views/manager/layout/header.jsp"></jsp:include>
             <!-- HEADER DESKTOP-->
 
             <!-- MAIN CONTENT-->
@@ -53,19 +53,20 @@
                                 <!-- CONTENT PAGE -->
                                 <h3 class="title-5 m-b-35">Giới thiệu thông tin công ty</h3>
                                 <div class="table-data__tool">
-	                                <div class="table-data__tool-left">
-		                               
-	                                </div>
-	                                <div class="table-data__tool-right">
-	                                	<c:if test="${notifyRole.update ==true}">	
-		                                    <button class="au-btn au-btn-icon au-btn--green au-btn--small" onclick="location.href='${base}/admin/edit-introduce'">
-		                                        <i class="fas fa-plus"></i>Cập nhật
-		                                    </button>
-		                               </c:if>   
-	                                </div>
+                                    <div class="table-data__tool-left">
+
+                                    </div>
+                                    <div class="table-data__tool-right">
+                                        <c:if test="${notifyRole.update ==true}">
+                                            <button class="au-btn au-btn-icon au-btn--green au-btn--small"
+                                                onclick="location.href='${base}/admin/edit-introduce'">
+                                                <i class="fas fa-plus"></i>Cập nhật
+                                            </button>
+                                        </c:if>
+                                    </div>
                                 </div>
                                 <div class="table-responsive  bg-white text-dark p-3">
-                                   ${introduce.detail}
+                                    ${introduce.detail}
                                 </div>
                             </div>
                             <!-- END CONTENT PAGE -->
@@ -77,63 +78,14 @@
         </div>
     </div>
     <!-- END PAGE CONTAINER-->
-    
-	<!-- START NOTIFY MODAL -->
-	 <jsp:include page="/WEB-INF/views/manager/layout/notify.jsp"></jsp:include>
-	<!-- START NOTIFI MODAL -->
-	
+
+    <!-- START NOTIFY MODAL -->
+    <jsp:include page="/WEB-INF/views/manager/layout/notify.jsp"></jsp:include>
+    <!-- START NOTIFI MODAL -->
+
     <!-- JS-->
     <jsp:include page="/WEB-INF/views/manager/layout/script.jsp"></jsp:include>
-    <%-- <script src="${base }/manager/js/productScript/product.js"></script> --%>
-    <script type="text/javascript">
-    $(document).ready(function () {
-        setActiveMenu();
-    });
-    
-    function setActiveMenu() {
-     	$( ".navbar__list li" ).each(function() {
-     		$(this).removeClass("active");
-     	});
-     	$( ".list-unstyled li" ).each(function() {
-     		$(this).removeClass("active");
-     	});
-     	$('.list-unstyled #menu--introduce').addClass("active");
-     	$('.navbar__list #menu--introduce	').addClass("active");
- 	}
-    
-    function showAlertMessage(message, messageState) {
-    	if (messageState) {
-    		$('#alert_message').css({ "background": "#C5F3D7", "border-left": "8px solid #2BD971" });
-    		$("#icon-alert-message").html('<i class="fas fa-check-circle"></i>');
-    		$("#icon-alert-message").find('i').css({ "color": "#2BD971" });
-    		$(".msg").css({ "color": "#24AD5F" });
-    		$(".close-btn-alert").css({ "background": "#2BD971", "color": "#24AD5F" });
-    		$(".close-btn-alert").find('.fas').css({ "color": "#24AD5F" });
-    		$(".close-btn-alert").hover(function(e) {
-    			$(this).css("background-color", e.type === "mouseenter" ? "#38F5A3" : "#2BD971")
-    		})
-    	} else {
-    		$('#alert_message').css({ "background": "#FFE1E3", "border-left": "8px solid #FF4456" });
-    		$("#icon-alert-message").html('<i class="fas fa-exclamation-circle"></i>');
-    		$("#icon-alert-message").find('i').css({ "color": "#FE4950" });
-    		$(".msg").css({ "color": "#F694A9" });
-    		$(".close-btn-alert").css({ "background": "#FF9CA4", "color": "#FD4653" });
-    		$(".close-btn-alert").find('.fas').css({ "color": "#FD4653" });
-    		$(".close-btn-alert").hover(function(e) {
-    			$(this).css("background-color", e.type === "mouseenter" ? "#FFBDC2" : "#FF9CA4")
-    		})
-    	}
-
-    	$('.msg').text(message);
-    	$('.alert').addClass("show");
-    	$('.alert').removeClass("hide");
-    	$('.alert').addClass("showAlert");
-    	setTimeout(function() {
-    		$('.alert').removeClass("show");
-    		$('.alert').addClass("hide");
-    	}, 3000);
-    };
-    </script>
+    <script src="${base }/manager/script/introduce/manageIntroduce.js"></script>
 </body>
 
 </html>

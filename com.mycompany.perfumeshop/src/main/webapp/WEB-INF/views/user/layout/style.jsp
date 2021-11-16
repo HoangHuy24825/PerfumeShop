@@ -28,7 +28,6 @@
     <link rel="stylesheet" href="${base }/user/css/my-style-product.css">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-   <!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
     <link href="${base }/user/css/my-style-account.css" rel="stylesheet" />
     <link href="${base }/user/css/my-style-cart.css" rel="stylesheet" />
     <link href="${base }/user/css/my-style-home.css" rel="stylesheet" />

@@ -310,7 +310,7 @@
     
     function setMenuBanner() {
     	var titlebanner='';
-    	$("#img-banner").html('<img src="${base}/user/img/my-image/banner/news.png" alt="" width="300">');
+    	$("#img-banner").html('<img src="${base}/user/img/my-image/banner/news.png" alt="" width="200">');
     	titlebanner+='<h2>Blog</h2>';
     	titlebanner+='<p> Trang chủ <span>></span> Blog </p>';
     	$("#title-banner").html(titlebanner);
