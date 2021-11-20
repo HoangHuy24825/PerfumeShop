@@ -12,16 +12,20 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.github.slugify.Slugify;
-import com.mycompany.perfumeshop.dto.Constant;
+import com.mycompany.perfumeshop.conf.GlobalConfig;
 import com.mycompany.perfumeshop.entities.Category;
 import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
 @Service
-public class CategoryService extends BaseService<Category> implements Constant {
+public class CategoryService extends BaseService<Category> {
+
+	@Autowired
+	private GlobalConfig globalConfig;
 
 	@Override
 	protected Class<Category> clazz() {
@@ -38,7 +42,7 @@ public class CategoryService extends BaseService<Category> implements Constant {
 	@Transactional
 	public Category save(Category category, MultipartFile avatar) throws Exception {
 		if (!isEmptyUploadFile(avatar)) {
-			avatar.transferTo(new File(UPLOAD_ROOT_PATH + "category/" + avatar.getOriginalFilename()));
+			avatar.transferTo(new File(globalConfig.getUploadRootPath() + "category/" + avatar.getOriginalFilename()));
 			category.setAvatar("category/" + avatar.getOriginalFilename());
 		}
 		category.setSeo(new Slugify().slugify(category.getName()));
@@ -52,8 +56,8 @@ public class CategoryService extends BaseService<Category> implements Constant {
 		Category oldCategory = super.getById(category.getId());
 
 		if (!isEmptyUploadFile(avatar)) {
-			new File(UPLOAD_ROOT_PATH + oldCategory.getAvatar()).delete();
-			avatar.transferTo(new File(UPLOAD_ROOT_PATH + "category/" + avatar.getOriginalFilename()));
+			new File(globalConfig.getUploadRootPath() + oldCategory.getAvatar()).delete();
+			avatar.transferTo(new File(globalConfig.getUploadRootPath() + "category/" + avatar.getOriginalFilename()));
 			category.setAvatar("category/" + avatar.getOriginalFilename());
 		} else {
 			category.setAvatar(oldCategory.getAvatar());
@@ -75,7 +79,7 @@ public class CategoryService extends BaseService<Category> implements Constant {
 		try {
 			Category category = super.getById(idCategory);
 			if (category.getProducts().size() == 0) {
-				new File(UPLOAD_ROOT_PATH + category.getAvatar()).delete();
+				new File(globalConfig.getUploadRootPath() + category.getAvatar()).delete();
 				super.delete(category);
 				return true;
 			}

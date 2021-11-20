@@ -17,7 +17,7 @@
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<title>Login | Electronic Device</title>
+	<title>Login | ${tileWebsite}</title>
 	<link rel="icon" href="${base }/user/img/my-logo/logo-asp.net.png">
 	<!--::style part start::-->
 	<jsp:include page="/WEB-INF/views/user/layout/style.jsp"></jsp:include>

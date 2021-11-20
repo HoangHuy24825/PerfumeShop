@@ -27,9 +27,9 @@ import com.mycompany.perfumeshop.entities.Product;
 import com.mycompany.perfumeshop.entities.ProductImage;
 import com.mycompany.perfumeshop.service.CategoryService;
 import com.mycompany.perfumeshop.service.ProductAttributeService;
-import com.mycompany.perfumeshop.service.ProductImageService;
 import com.mycompany.perfumeshop.service.ProductService;
 import com.mycompany.perfumeshop.service.UserService;
+import com.mycompany.perfumeshop.service.impl.ProductImageServiceImpl;
 import com.mycompany.perfumeshop.utils.ConvertUtils;
 import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
@@ -43,7 +43,7 @@ public class ManagerProductController extends BaseController {
 	private ProductService productService;
 
 	@Autowired
-	private ProductImageService productImageService;
+	private ProductImageServiceImpl productImageService;
 
 	@Autowired
 	private ProductAttributeService productAttrService;
@@ -65,15 +65,12 @@ public class ManagerProductController extends BaseController {
 	@RequestMapping(value = { "/admin/all-product" }, method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> getAll(final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException {
-
 		Integer currentPage = ConvertUtils.convertStringToInt(request.getParameter("currentPage"), 1);
 		Integer idCategory = ConvertUtils.convertStringToInt(request.getParameter("idCategory"), 0);
 		Integer statusProduct = ConvertUtils.convertStringToInt(request.getParameter("status"), null);
 		String keySearch = request.getParameter("keySearch");
-
 		BaseVo<Product> baseVo = productService.getListProductByFilter(currentPage, pageSize, statusProduct, idCategory,
 				keySearch);
-
 		if (baseVo != null) {
 			List<JSONObject> listProduct = new ArrayList<>();
 			if (baseVo.getListEntity() != null) {
@@ -102,7 +99,6 @@ public class ManagerProductController extends BaseController {
 			if (isLogined()) {
 				product.setCreatedBy(getUserLogined().getId());
 			}
-			/* product.setUpdatedDate(Calendar.getInstance().getTime()); */
 			productService.save(product, productDTO.getAvatar(), productDTO.getImages());
 		} else {
 			if (isLogined()) {
@@ -150,7 +146,7 @@ public class ManagerProductController extends BaseController {
 		JSONObject result = new JSONObject();
 		Product product = productService.getById(idProduct);
 		List<JSONObject> productImagesJson = new ArrayList<>();
-		List<ProductImage> productImages = productImageService.findAllByIdProduct(product.getId());
+		List<ProductImage> productImages = productImageService.findByProduct(product);
 		for (ProductImage productImage : productImages) {
 			productImagesJson.add(mappingModel.mappingModel(productImage));
 		}

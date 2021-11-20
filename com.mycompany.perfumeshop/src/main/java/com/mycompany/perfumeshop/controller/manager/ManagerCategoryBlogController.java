@@ -38,7 +38,8 @@ public class ManagerCategoryBlogController extends BaseController {
 
 	private static final Integer pageSize = 8;
 
-	private MappingModel mappingModel = new MappingModel();
+	@Autowired
+	private MappingModel mappingModel;
 
 	@RequestMapping(value = { "/admin/category-blog/index", "/admin/category-blog" }, method = RequestMethod.GET)
 	public String index(final Model model, final HttpServletRequest request, HttpServletResponse response)

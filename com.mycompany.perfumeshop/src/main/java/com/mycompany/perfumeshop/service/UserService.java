@@ -16,18 +16,25 @@ import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.mycompany.perfumeshop.dto.Constant;
+import com.mycompany.perfumeshop.conf.GlobalConfig;
 import com.mycompany.perfumeshop.entities.Role;
 import com.mycompany.perfumeshop.entities.User;
 import com.mycompany.perfumeshop.entities.UserRole;
+import com.mycompany.perfumeshop.repository.RoleRepository;
+import com.mycompany.perfumeshop.repository.UserRepository;
+import com.mycompany.perfumeshop.specification.UserSpecification;
 import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
 @Service
-public class UserService extends BaseService<User> implements Constant {
+public class UserService extends BaseService<User> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -36,19 +43,25 @@ public class UserService extends BaseService<User> implements Constant {
 	private UserRoleService userRoleService;
 
 	@Autowired
-	private RoleService roleService;
+	private RoleRepository roleRepository;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	private GlobalConfig globalConfig;
+
+	@Autowired
+	private UserSpecification userSpecification;
 
 	@Override
 	protected Class<User> clazz() {
 		return User.class;
 	}
 
-	@SuppressWarnings("unchecked")
 	public User getUserByUserName(String username) {
-		Query query = entityManager.createQuery("FROM User u WHERE u.username=:username");
-		query.setParameter("username", username);
-		List<User> users = query.getResultList();
-		return users.size() != 0 ? users.get(0) : new User();
+		User user = userRepository.findByUsername(username);
+		return user == null ? new User() : user;
 	}
 
 	private boolean isEmptyUploadFile(MultipartFile image) {
@@ -58,7 +71,7 @@ public class UserService extends BaseService<User> implements Constant {
 	@Transactional
 	public User save(User user, MultipartFile avatar, Integer typeAccount) throws Exception {
 		if (!isEmptyUploadFile(avatar)) {
-			avatar.transferTo(new File(UPLOAD_ROOT_PATH + "user/" + avatar.getOriginalFilename()));
+			avatar.transferTo(new File(globalConfig.getUploadRootPath() + "user/" + avatar.getOriginalFilename()));
 			user.setAvatar("user/" + avatar.getOriginalFilename());
 		}
 		user.setCreatedDate(Calendar.getInstance().getTime());
@@ -68,7 +81,7 @@ public class UserService extends BaseService<User> implements Constant {
 		UserRole userRole = null;
 
 		if (typeAccount == 1) {
-			List<Role> roles = roleService.findAll();
+			List<Role> roles = roleRepository.findAll();
 			for (Role role : roles) {
 				if (!role.getCode().equalsIgnoreCase("SA") && !role.getCode().equalsIgnoreCase("G")) {
 					userRole = new UserRole();
@@ -84,7 +97,7 @@ public class UserService extends BaseService<User> implements Constant {
 				}
 			}
 		} else {
-			Role role = roleService.getRoleByCode("G");
+			Role role = roleRepository.findByCode("G");
 			userRole = new UserRole();
 			userRole.setUser(user);
 			userRole.setRole(role);
@@ -105,8 +118,8 @@ public class UserService extends BaseService<User> implements Constant {
 		User oldUser = super.getById(user.getId());
 
 		if (!isEmptyUploadFile(avatar)) {
-			new File(UPLOAD_ROOT_PATH + oldUser.getAvatar()).delete();
-			avatar.transferTo(new File(UPLOAD_ROOT_PATH + "user/" + avatar.getOriginalFilename()));
+			new File(globalConfig.getUploadRootPath() + oldUser.getAvatar()).delete();
+			avatar.transferTo(new File(globalConfig.getUploadRootPath() + "user/" + avatar.getOriginalFilename()));
 			user.setAvatar("user/" + avatar.getOriginalFilename());
 		} else {
 			user.setAvatar(oldUser.getAvatar());
@@ -166,12 +179,19 @@ public class UserService extends BaseService<User> implements Constant {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	public BaseVo<User> getListUserByRoleRepo(Integer role, Integer currentPage, Integer pageSize, Integer currentID) {
+		Pageable pageable = PageRequest.of(currentPage - 1, pageSize,
+				Sort.by("createdDate").descending().and(Sort.by("updatedDate").descending()));
+		BaseVo<User> baseVo = new BaseVo<User>();
+		Page<User> page = userRepository.findAll(userSpecification.findByRole(role, currentID), pageable);
+		baseVo.setListEntity(page.getContent());
+		baseVo.setCurrentPage(page.getNumber());
+		baseVo.setTotalPage(page.getTotalPages());
+		return baseVo;
+	}
+
 	public User getUserByEmail(String email) {
-		Query query = entityManager.createQuery("FROM User u where u.email=:email");
-		query.setParameter("email", email);
-		List<User> listUser = query.getResultList();
-		return listUser.size() != 0 ? listUser.get(0) : null;
+		return userRepository.findByEmail(email);
 	}
 
 }

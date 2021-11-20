@@ -2,6 +2,7 @@ package com.mycompany.perfumeshop.dto;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.simple.JSONObject;
@@ -367,51 +368,47 @@ public class MappingModel {
 	}
 
 	@SuppressWarnings("unchecked")
-	public JSONObject mappingModel(Order saleOrder) {
-		JSONObject saleOrderJSON = new JSONObject();
+	public JSONObject mappingModel(Order order) {
+		JSONObject orderJSON = new JSONObject();
 
-		saleOrderJSON.put("code", saleOrder.getCode());
-		saleOrderJSON.put("total", saleOrder.getTotal());
-		saleOrderJSON.put("customerName", saleOrder.getCustomerName());
-		saleOrderJSON.put("customerAddress", saleOrder.getCustomerAddress());
-		saleOrderJSON.put("customerPhone", saleOrder.getCustomerPhone());
-		saleOrderJSON.put("customerEmail", saleOrder.getCustomerEmail());
-		saleOrderJSON.put("seo", saleOrder.getSeo());
-		saleOrderJSON.put("processingStatus", saleOrder.getProcessingStatus());
-		saleOrderJSON.put("userID", saleOrder.getUserID());
+		orderJSON.put("code", order.getCode());
+		orderJSON.put("total", order.getTotal());
+		orderJSON.put("customerName", order.getCustomerName());
+		orderJSON.put("customerAddress", order.getCustomerAddress());
+		orderJSON.put("customerPhone", order.getCustomerPhone());
+		orderJSON.put("customerEmail", order.getCustomerEmail());
+		orderJSON.put("seo", order.getSeo());
+		orderJSON.put("processingStatus", order.getProcessingStatus());
+		orderJSON.put("userID", order.getUserID());
+		List<OrderDetail> details = order.getOrderDetails();
+		List<JSONObject> orderDetails = new ArrayList<JSONObject>();
+		details.forEach(d -> orderDetails.add(mappingModel(d)));
+		orderJSON.put("orderDetails", orderDetails);
 
-		saleOrderJSON.put("id", saleOrder.getId());
-		saleOrderJSON.put("status", saleOrder.getStatus());
-		saleOrderJSON.put("createdBy", saleOrder.getCreatedBy());
-		saleOrderJSON.put("updatedBy", saleOrder.getUpdatedBy());
-		saleOrderJSON.put("createdDate", sdf.format(saleOrder.getCreatedDate()));
-		if (saleOrder.getUpdatedDate() != null) {
-			saleOrderJSON.put("updatedDate", sdf.format(saleOrder.getUpdatedDate()));
-		} else {
-			saleOrderJSON.put("updatedDate", saleOrder.getUpdatedDate());
-		}
-
-		return saleOrderJSON;
+		orderJSON.put("id", order.getId());
+		orderJSON.put("status", order.getStatus());
+		orderJSON.put("createdBy", order.getCreatedBy());
+		orderJSON.put("updatedBy", order.getUpdatedBy());
+		orderJSON.put("createdDate", sdf.format(order.getCreatedDate()));
+		orderJSON.put("updatedDate", order.getUpdatedDate() != null ? sdf.format(order.getUpdatedDate()) : "");
+		return orderJSON;
 	}
 
 	@SuppressWarnings("unchecked")
 	public JSONObject mappingModel(OrderDetail orderDetail) {
-		JSONObject saleOrderProductJSON = new JSONObject();
-		saleOrderProductJSON.put("avatar", orderDetail.getAttributeProduct().getProduct().getAvatar());
-		saleOrderProductJSON.put("productName", orderDetail.getAttributeProduct().getProduct().getTitle());
-		saleOrderProductJSON.put("quantity", orderDetail.getQuantity());
-		saleOrderProductJSON.put("price", orderDetail.getPrice());
-		saleOrderProductJSON.put("id", orderDetail.getId());
-		saleOrderProductJSON.put("status", orderDetail.getStatus());
-		saleOrderProductJSON.put("createdBy", orderDetail.getCreatedBy());
-		saleOrderProductJSON.put("updatedBy", orderDetail.getUpdatedBy());
-		saleOrderProductJSON.put("createdDate", sdf.format(orderDetail.getCreatedDate()));
-		if (orderDetail.getUpdatedDate() != null) {
-			saleOrderProductJSON.put("updatedDate", sdf.format(orderDetail.getUpdatedDate()));
-		} else {
-			saleOrderProductJSON.put("updatedDate", orderDetail.getUpdatedDate());
-		}
-		return saleOrderProductJSON;
+		JSONObject orderDetailJSON = new JSONObject();
+		orderDetailJSON.put("avatar", orderDetail.getAttributeProduct().getProduct().getAvatar());
+		orderDetailJSON.put("productName", orderDetail.getAttributeProduct().getProduct().getTitle());
+		orderDetailJSON.put("quantity", orderDetail.getQuantity());
+		orderDetailJSON.put("price", orderDetail.getPrice());
+		orderDetailJSON.put("id", orderDetail.getId());
+		orderDetailJSON.put("status", orderDetail.getStatus());
+		orderDetailJSON.put("createdBy", orderDetail.getCreatedBy());
+		orderDetailJSON.put("updatedBy", orderDetail.getUpdatedBy());
+		orderDetailJSON.put("createdDate", sdf.format(orderDetail.getCreatedDate()));
+		orderDetailJSON.put("updatedDate",
+				orderDetail.getUpdatedDate() != null ? sdf.format(orderDetail.getUpdatedDate()) : "");
+		return orderDetailJSON;
 	}
 
 }

@@ -10,16 +10,16 @@
                     <div class="single_footer_part">
                         <h4>Liên hệ</h4>
                         <ul class="list-unstyled">
-                            <li><a >Địa chỉ: Đại học Công Nghiệp Hà Nội</a></li>
-                            <li><a >Số điện thoại: 0999888776</a></li>
-                            <li><a >Email: eShop@electronicdevice.com</a></li>
+                            <li><a >Địa chỉ: Số 256 Phú Diễn, Bắc Từ Liêm, Hà Nội</a></li>
+                            <li><a >Số điện thoại: 0123456789 - 0241234567</a></li>
+                            <li><a >Email: perfumeShop@gmail.com</a></li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="col-sm-6 col-lg-4">
                     <div class="single_footer_part">
-                        <h4>Về Electronic Device</h4>
+                        <h4>Về Perfume Shop</h4>
                         <ul class="list-unstyled">
                             <li><a href="${base }/introdure">Giới thiệu</a></li>
                             <li><a href="${base }/product">Sản phẩm</a></li>

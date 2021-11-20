@@ -25,7 +25,8 @@ public class CategoryController extends BaseController{
 	@Autowired
 	private CategoryService categoryService;
 
-	private MappingModel mappingModel = new MappingModel();
+	@Autowired
+	private MappingModel mappingModel;
 
 	@RequestMapping(value = { "/category-slide-home" }, method = RequestMethod.GET)
 	public ResponseEntity<List<JSONObject>> getAllSlide(final Model model, final HttpServletRequest request,

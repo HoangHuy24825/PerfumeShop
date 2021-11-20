@@ -45,6 +45,7 @@ public class Review extends BaseEntity {
 	@JoinColumn(name = "product_id")
 	private Product product;
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "customer_id")
 	private User user;

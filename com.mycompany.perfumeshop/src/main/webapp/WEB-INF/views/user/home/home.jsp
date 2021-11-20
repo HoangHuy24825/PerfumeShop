@@ -17,7 +17,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Trang chủ | Electronic Device</title>
+    <title>Trang chủ | ${tileWebsite}</title>
     <link rel="icon" href="${base }/user/img/my-logo/logo-asp.net.png">
     <!--::style part start::-->
     <jsp:include page="/WEB-INF/views/user/layout/style.jsp"></jsp:include>
@@ -121,12 +121,12 @@
                                     <div class="single_product_text">
                                         <h4>${product.title}</h4>
                                         <h5>
-                                            <fmt:setLocale value="vi_VN" />
+                                            <fmt:setLocale value="vi-VN" />
                                             <fmt:formatNumber value="${product.minPrice}" type="currency"
-                                                currencySymbol="VNĐ" minFractionDigits="0" />
+                                                minFractionDigits="0" currencySymbol="VNĐ" />
                                             -
                                             <fmt:formatNumber value="${product.maxPrice}" type="currency"
-                                                currencySymbol="VNĐ" minFractionDigits="0" />
+                                                minFractionDigits="0" currencySymbol="VNĐ" />
                                         </h5>
                                         <div class="mt-3">
                                             <div class="star-rating"
@@ -223,10 +223,10 @@
                                     <h5>
                                         <fmt:setLocale value="vi_VN" />
                                         <fmt:formatNumber value="${product.minPrice}" type="currency"
-                                            currencySymbol="VNĐ" minFractionDigits="0" />
+                                            minFractionDigits="0" currencySymbol="VNĐ" />
                                         -
                                         <fmt:formatNumber value="${product.maxPrice}" type="currency"
-                                            currencySymbol="VNĐ" minFractionDigits="0" />
+                                            minFractionDigits="0" currencySymbol="VNĐ" />
                                     </h5>
                                     <div class="mt-3">
                                         <div class="star-rating"

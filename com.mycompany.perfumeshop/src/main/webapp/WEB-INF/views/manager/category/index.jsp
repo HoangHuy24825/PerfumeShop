@@ -20,7 +20,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title Page-->
-    <title>Danh mục | Admin Electronic Device</title>
+    <title>Danh mục | ${tileWebsite}</title>
     <link rel="icon" href="${base}/manager/images/logo-asp.net.png">
     
     <jsp:include page="/WEB-INF/views/common/variable.jsp"></jsp:include>

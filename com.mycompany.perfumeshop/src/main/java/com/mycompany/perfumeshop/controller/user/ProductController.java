@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.mycompany.perfumeshop.controller.BaseController;
 import com.mycompany.perfumeshop.dto.MappingModel;
-import com.mycompany.perfumeshop.dto.UserSearchProduct;
 import com.mycompany.perfumeshop.entities.Product;
+import com.mycompany.perfumeshop.request.UserSearchProduct;
 import com.mycompany.perfumeshop.service.CategoryService;
 import com.mycompany.perfumeshop.service.ProductAttributeService;
-import com.mycompany.perfumeshop.service.ProductImageService;
 import com.mycompany.perfumeshop.service.ProductService;
 import com.mycompany.perfumeshop.service.ReviewService;
+import com.mycompany.perfumeshop.service.impl.ProductImageServiceImpl;
 import com.mycompany.perfumeshop.utils.ConvertUtils;
 import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
@@ -36,7 +36,7 @@ public class ProductController extends BaseController {
 	private ProductService productService;
 
 	@Autowired
-	private ProductImageService productImageService;
+	private ProductImageServiceImpl productImageService;
 
 	@Autowired
 	private CategoryService categoryService;
@@ -49,7 +49,8 @@ public class ProductController extends BaseController {
 
 	private static final Integer PAGE_SIZE = 9;
 
-	private MappingModel mappingModel = new MappingModel();
+	@Autowired
+	private MappingModel mappingModel;
 
 	@RequestMapping(value = { "/product", "/product/index" }, method = RequestMethod.GET)
 	public String index(final Model model, final HttpServletRequest request, final HttpServletResponse response)
@@ -108,7 +109,7 @@ public class ProductController extends BaseController {
 				for (Product product : products) {
 					product.setAttributeProducts(attributeService.getListByIdProduct(product.getId()));
 					product.setReviews(reviewService.findAllByIdProduct(product.getId()));
-					product.setProductImages(productImageService.findAllByIdProduct(product.getId()));
+					product.setProductImages(productImageService.findByProduct(product));
 					listProduct.add(mappingModel.mappingModel(product));
 				}
 
@@ -127,11 +128,11 @@ public class ProductController extends BaseController {
 		try {
 			JSONObject result = new JSONObject();
 			Integer idProduct = ConvertUtils.convertStringToInt(request.getParameter("id_product"), null);
-			if (idProduct!=null) {
+			if (idProduct != null) {
 				Product product = productService.getById(idProduct);
 				product.setAttributeProducts(attributeService.getListByIdProduct(product.getId()));
 				product.setReviews(reviewService.findAllByIdProduct(product.getId()));
-				product.setProductImages(productImageService.findAllByIdProduct(product.getId()));
+				product.setProductImages(productImageService.findByProduct(product));
 				result.put("product", mappingModel.mappingModel(product));
 			}
 			return ResponseEntity.ok(result);

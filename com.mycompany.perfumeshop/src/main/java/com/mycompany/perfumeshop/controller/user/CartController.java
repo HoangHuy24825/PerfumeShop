@@ -34,20 +34,11 @@ import com.mycompany.perfumeshop.entities.AttributeProduct;
 import com.mycompany.perfumeshop.entities.Order;
 import com.mycompany.perfumeshop.entities.OrderDetail;
 import com.mycompany.perfumeshop.entities.User;
-import com.mycompany.perfumeshop.service.DetailOrderService;
 import com.mycompany.perfumeshop.service.OrderService;
 import com.mycompany.perfumeshop.service.ProductAttributeService;
-import com.mycompany.perfumeshop.service.ProductService;
-import com.mycompany.perfumeshop.service.UserService;
 
 @Controller
 public class CartController extends BaseController {
-
-	@Autowired
-	private ProductService productService;
-
-	@Autowired
-	private UserService userService;
 
 	@Autowired
 	private OrderService orderService;
@@ -56,19 +47,14 @@ public class CartController extends BaseController {
 	private ProductAttributeService attrService;
 
 	@Autowired
-	private DetailOrderService detailOrderService;
-
-	@Autowired
 	private JavaMailSender emailSender;
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/cart/add", method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> addCart(final Model model, final HttpServletRequest request,
 			final HttpServletResponse respond, @RequestBody CartItemDTO newCartItem) {
-
 		JSONObject result = new JSONObject();
 		HttpSession session = request.getSession();
-
 		CartDTO cartDTO;
 		if (session.getAttribute("cart") == null) {
 			cartDTO = new CartDTO();
@@ -76,7 +62,6 @@ public class CartController extends BaseController {
 		} else {
 			cartDTO = (CartDTO) session.getAttribute("cart");
 		}
-
 		List<CartItemDTO> cartItems = cartDTO.getCartItems();
 
 		Boolean isExist = false;
@@ -220,7 +205,7 @@ public class CartController extends BaseController {
 	@RequestMapping(value = "/bill", method = RequestMethod.GET)
 	public String bill(final Model model, final HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("idProduct") Integer idProduct, @RequestParam("amount") Integer amount) {
-		model.addAttribute("product", productService.getById(idProduct));
+		model.addAttribute("attr", attrService.getById(idProduct));
 		model.addAttribute("amount", amount);
 		model.addAttribute("cartItems", null);
 		model.addAttribute("totalMoney", null);
@@ -308,7 +293,9 @@ public class CartController extends BaseController {
 				order.addOrderDetail(orderDetail);
 
 				CartDTO cart = (CartDTO) session.getAttribute("cart");
-				cart.getCartItems().remove(cart.getCartItemByIdProduct(attributeProduct.getId()));
+				if (cart != null) {
+					cart.getCartItems().remove(cart.getCartItemByIdProduct(attributeProduct.getId()));
+				}
 				session.setAttribute("cart", cart);
 
 			}

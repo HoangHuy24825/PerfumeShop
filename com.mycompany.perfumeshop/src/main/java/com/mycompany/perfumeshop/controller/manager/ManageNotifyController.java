@@ -29,7 +29,8 @@ public class ManageNotifyController extends BaseController {
 	@Autowired
 	private RequestCancelOrderService requestCancelOrderService;
 
-	private MappingModel mappingModel = new MappingModel();
+	@Autowired
+	private MappingModel mappingModel;
 
 	@Autowired
 	private OrderService saleOrderService;

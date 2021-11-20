@@ -20,14 +20,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.mycompany.perfumeshop.conf.GlobalConfig;
 import com.mycompany.perfumeshop.controller.BaseController;
 import com.mycompany.perfumeshop.dto.MappingModel;
 import com.mycompany.perfumeshop.entities.AttributeProduct;
 import com.mycompany.perfumeshop.entities.Order;
 import com.mycompany.perfumeshop.entities.OrderDetail;
-import com.mycompany.perfumeshop.service.DetailOrderService;
 import com.mycompany.perfumeshop.service.OrderService;
 import com.mycompany.perfumeshop.service.ProductAttributeService;
+import com.mycompany.perfumeshop.utils.ConvertUtils;
 import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
 @Controller
@@ -40,14 +41,13 @@ public class ManagerOrderController extends BaseController {
 	private OrderService orderService;
 
 	@Autowired
-	private DetailOrderService detailOrderService;
-
-	@Autowired
 	private ProductAttributeService attrService;
 
-	private MappingModel mappingModel = new MappingModel();
-
-	private static final Integer PAGE_SIZE = 10;
+	@Autowired
+	private MappingModel mappingModel;
+	
+	@Autowired 
+	private GlobalConfig globalConfig;
 
 	@RequestMapping(value = { "/admin/order" }, method = RequestMethod.GET)
 	public String index(final Model model, final HttpServletRequest request, final HttpServletResponse response)
@@ -60,17 +60,9 @@ public class ManagerOrderController extends BaseController {
 	public ResponseEntity<JSONObject> getNewOrder(final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException {
 		JSONObject result = new JSONObject();
-		Integer status;
-		Integer page;
-		try {
-			page = Integer.parseInt(request.getParameter("page"));
-			status = Integer.parseInt(request.getParameter("status"));
-		} catch (Exception e) {
-			page = 1;
-			status = 0;
-		}
-
-		BaseVo<Order> baseVo = orderService.getListOrderByMutilStatus(status, page, PAGE_SIZE);
+		Integer status = ConvertUtils.convertStringToInt(request.getParameter("status"), 1);
+		Integer page = ConvertUtils.convertStringToInt(request.getParameter("page"),globalConfig.getInitPage());
+		BaseVo<Order> baseVo = orderService.getListOrderByMutilStatus(status, page, globalConfig.getSizeManagePage());
 		List<Order> ordersFromDb = baseVo.getListEntity();
 		List<JSONObject> ordersJSON = new ArrayList<JSONObject>();
 		for (Order item : ordersFromDb) {
@@ -87,25 +79,10 @@ public class ManagerOrderController extends BaseController {
 	public ResponseEntity<JSONObject> getDetailOrder(final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException {
 		JSONObject result = new JSONObject();
-		Integer idOrder;
-		try {
-			idOrder = Integer.parseInt(request.getParameter("idOrder"));
-		} catch (Exception e) {
-			return ResponseEntity.ok(null);
-		}
-
+		Integer idOrder = ConvertUtils.convertStringToInt(request.getParameter("idOrder"), null);
 		Order order = orderService.getById(idOrder);
 		JSONObject orderJson = mappingModel.mappingModel(order);
-
-		List<OrderDetail> orderDetails = detailOrderService.getListProductOrderByIdOrder(idOrder);
-		List<JSONObject> orderDetailsJSON = new ArrayList<JSONObject>();
-
-		for (OrderDetail saleOrderProduct : orderDetails) {
-			orderDetailsJSON.add(mappingModel.mappingModel(saleOrderProduct));
-		}
-
 		result.put("order", orderJson);
-		result.put("orderDetails", orderDetailsJSON);
 		return ResponseEntity.ok(result);
 	}
 

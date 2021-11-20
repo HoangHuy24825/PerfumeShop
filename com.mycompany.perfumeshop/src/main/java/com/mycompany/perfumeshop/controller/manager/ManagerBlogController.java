@@ -20,13 +20,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.mycompany.perfumeshop.conf.GlobalConfig;
 import com.mycompany.perfumeshop.controller.BaseController;
 import com.mycompany.perfumeshop.dto.BlogDTO;
 import com.mycompany.perfumeshop.dto.MappingModel;
 import com.mycompany.perfumeshop.entities.Blog;
+import com.mycompany.perfumeshop.request.UserRequest;
 import com.mycompany.perfumeshop.service.BlogService;
 import com.mycompany.perfumeshop.service.CategoryBlogService;
 import com.mycompany.perfumeshop.service.UserService;
+import com.mycompany.perfumeshop.utils.ConvertUtils;
+import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
 @Controller
 public class ManagerBlogController extends BaseController {
@@ -39,9 +43,11 @@ public class ManagerBlogController extends BaseController {
 	@Autowired
 	private CategoryBlogService categoryBlogService;
 
-	private static final Integer pageSize = 8;
+	@Autowired
+	private GlobalConfig globalConfig;
 
-	private MappingModel mappingModel = new MappingModel();
+	@Autowired
+	private MappingModel mappingModel;
 
 	@RequestMapping(value = { "/admin/blog" }, method = RequestMethod.GET)
 	public String index(final Model model, final HttpServletRequest request, HttpServletResponse response)
@@ -113,36 +119,20 @@ public class ManagerBlogController extends BaseController {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "/admin/all-blog" }, method = RequestMethod.GET)
-	public ResponseEntity<Map<String, List<JSONObject>>> getAll(final Model model, final HttpServletRequest request,
+	public ResponseEntity<JSONObject> getAll(final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException {
+		JSONObject result = new JSONObject();
+		Integer currentPage = ConvertUtils.convertStringToInt(request.getParameter("currentPage"),
+				globalConfig.getInitPage());
+		String keySearch = request.getParameter("keySearch");
 
-		Integer currentPage;
-		try {
-			currentPage = Integer.parseInt(request.getParameter("currentPage"));
-		} catch (Exception e) {
-			currentPage = 1;
-		}
+		UserRequest userRequest = new UserRequest();
+		userRequest.setCurrentPage(currentPage);
+		userRequest.setSizeOfPage(globalConfig.getSizeManagePage());
+		userRequest.setKeySearch(keySearch);
 
-		String keySearch;
-		keySearch = request.getParameter("keySearch");
-
-		List<Blog> blogs = blogService.getListBlogByFilter(currentPage, pageSize, keySearch);
-		List<JSONObject> listBlog = new ArrayList<>();
-		for (Blog blog : blogs) {
-			listBlog.add(mappingModel.mappingModel(blog));
-		}
-
-		Map<String, List<JSONObject>> result = new HashMap<>();
-		result.put("blogs", listBlog);
-
-		List<JSONObject> listPage = new ArrayList<>();
-		JSONObject pageJson = new JSONObject();
-		pageJson.put("currentPage", currentPage);
-		pageJson.put("totalPage", blogService.getTotalPageBlogByFilter(pageSize, keySearch));// pageSize
-		listPage.add(pageJson);
-
-		result.put("listPage", listPage);
-
+		BaseVo<Blog> baseVo = blogService.getListBlogByFilter(userRequest);
+		result.put("baseVo", baseVo);
 		return ResponseEntity.ok(result);
 	}
 

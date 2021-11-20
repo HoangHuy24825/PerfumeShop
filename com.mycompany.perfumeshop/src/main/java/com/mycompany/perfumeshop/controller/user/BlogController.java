@@ -2,9 +2,7 @@ package com.mycompany.perfumeshop.controller.user;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,12 +15,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.mycompany.perfumeshop.conf.GlobalConfig;
 import com.mycompany.perfumeshop.controller.BaseController;
 import com.mycompany.perfumeshop.dto.MappingModel;
-import com.mycompany.perfumeshop.dto.SearchObject;
 import com.mycompany.perfumeshop.entities.Blog;
+import com.mycompany.perfumeshop.request.UserRequest;
 import com.mycompany.perfumeshop.service.BlogService;
 import com.mycompany.perfumeshop.service.CategoryBlogService;
+import com.mycompany.perfumeshop.utils.ConvertUtils;
+import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
 @Controller
 public class BlogController extends BaseController {
@@ -33,8 +34,11 @@ public class BlogController extends BaseController {
 	@Autowired
 	private BlogService blogService;
 
-	private static final Integer PAGE_SIZE = 5;
-	private MappingModel mappingModel = new MappingModel();
+	@Autowired
+	private MappingModel mappingModel;
+
+	@Autowired
+	private GlobalConfig globalConfig;
 
 	@RequestMapping(value = { "/blog" }, method = RequestMethod.GET)
 	public String index(final Model model, final HttpServletRequest request, final HttpServletResponse response)
@@ -47,48 +51,28 @@ public class BlogController extends BaseController {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "/all-blog" }, method = RequestMethod.GET)
-	public ResponseEntity<Map<String, List<JSONObject>>> getAll(final Model model, final HttpServletRequest request,
+	public ResponseEntity<JSONObject> getAll(final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException {
-
-		Map<String, List<JSONObject>> result = new HashMap<String, List<JSONObject>>();
-
-		Integer currentPage;
-		Integer idCategory;
+		JSONObject result = new JSONObject();
+		Integer currentPage=ConvertUtils.convertStringToInt(request.getParameter("page"), globalConfig.getInitPage());
+		Integer idCategory=ConvertUtils.convertStringToInt(request.getParameter("id_category"), null);
 		String searchStr = request.getParameter("searchStr");
-		try {
-			currentPage = Integer.parseInt(request.getParameter("page"));
-		} catch (Exception e) {
-			currentPage = 1;
-		}
-
-		try {
-			idCategory = Integer.parseInt(request.getParameter("id_category"));
-		} catch (Exception e) {
-			idCategory = 0;
-		}
-
-		SearchObject searchObject = new SearchObject();
-		searchObject.setIdCategory(idCategory);
-		searchObject.setKeySearch(searchStr);
-
-		List<Blog> blogs = blogService.getListBlogByFilter(currentPage, PAGE_SIZE, searchObject);
-
+		UserRequest userRequest = new UserRequest();
+		userRequest.setCurrentPage(currentPage);
+		userRequest.setIdParent(idCategory);
+		userRequest.setSizeOfPage(globalConfig.getSizeClientBlog());
+		userRequest.setKeySearch(searchStr);
+		userRequest.setStatus(true);
+		BaseVo<Blog> baseVo = blogService.getListBlogByFilter(userRequest);
+		List<Blog> blogs = baseVo.getListEntity();
 		List<JSONObject> listBlog = new ArrayList<JSONObject>();
 		for (Blog blog : blogs) {
 			listBlog.add(mappingModel.mappingModel(blog));
 		}
-
 		result.put("blogs", listBlog);
-
-		List<JSONObject> listPage = new ArrayList<>();
-		JSONObject pageJson = new JSONObject();
-		pageJson.put("currentPage", currentPage);
-		pageJson.put("totalPage", blogService.getTotalPageBlogByFilter(PAGE_SIZE, searchObject));// pageSize
-		listPage.add(pageJson);
-
-		model.addAttribute("searchKey", searchStr);
-
-		result.put("listPage", listPage);
+		result.put("currentPage", currentPage);
+		result.put("totalPage", baseVo.getTotalPage());// pageSize
+		model.addAttribute("searchKey", userRequest.getKeySearch());
 		return ResponseEntity.ok(result);
 	}
 

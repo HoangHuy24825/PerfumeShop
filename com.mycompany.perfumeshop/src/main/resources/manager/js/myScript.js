@@ -3,17 +3,17 @@ var status_all_notify_modal=false;
 
 $(document).ready(function(){
 	$('a[href="' + location.pathname + '"]').closest('li').addClass('active'); 
-	showNotifyHeader();
+	// showNotifyHeader();
 	/*  FUNCTION WHEN MODAL NOTIFY CLOSING */
-    $("#notify-detail-modal").on('hide.bs.modal', function(){
-    	showNotifyHeader();
-    	if (status_all_notify_modal) {
-    		showAllNotify();
-		}else{
-			showAllNotify;
-			$('#notify-modal').modal('hide');
-		}
-     });
+    // $("#notify-detail-modal").on('hide.bs.modal', function(){
+    // 	showNotifyHeader();
+    // 	if (status_all_notify_modal) {
+    // 		showAllNotify();
+	// 	}else{
+	// 		showAllNotify;
+	// 		$('#notify-modal').modal('hide');
+	// 	}
+    //  });
 
 	$('#input-reason-reject').keydown(function () {
             $('#reason-message-error').hide();

@@ -72,11 +72,11 @@
             <div class="modal-footer mx-auto" style="border:unset">
                 <button type="button" id="btnCloseConfirm" onclick="" class="btn btn-secondary" data-dismiss="modal"
                     aria-label="Close">
-                    Không
+                    Hủy
                 </button>
                 <button type="button" id="btnAgreeOrder" style="width:150px" onclick="" class="btn btn-primary">
                     <!--Button Save-->
-                    Đặt hàng
+                    Thêm vào giỏ
                 </button>
             </div>
         </div>

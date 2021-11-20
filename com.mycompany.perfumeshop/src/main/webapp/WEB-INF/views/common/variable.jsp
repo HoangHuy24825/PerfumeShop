@@ -6,3 +6,4 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <c:set var="base" value="${pageContext.servletContext.contextPath}"></c:set>
+<c:set var="tileWebsite" value="Perfume Shop"></c:set>

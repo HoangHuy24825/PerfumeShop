@@ -17,7 +17,7 @@
 		<!-- Required meta tags -->
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title>Sản phẩm | Electronic Device</title>
+		<title>Sản phẩm | ${tileWebsite}</title>
 		<link rel="icon" href="${base }/user/img/my-logo/logo-asp.net.png">
 		<!--::style part start::-->
 		<jsp:include page="/WEB-INF/views/user/layout/style.jsp"></jsp:include>
@@ -82,7 +82,7 @@
 									<i class="fa fa-star" aria-hidden="true"></i>
 									<i class="fa fa-star" aria-hidden="true"></i>
 
-									<div class="front-stars" >
+									<div class="front-stars">
 										<i class="fa fa-star" aria-hidden="true"></i>
 										<i class="fa fa-star" aria-hidden="true"></i>
 										<i class="fa fa-star" aria-hidden="true"></i>
@@ -178,6 +178,10 @@
 						<a class="nav-link active" id="home-tab" data-toggle="tab" href="#deteal-product" role="tab"
 							aria-controls="home" aria-selected="true">Thông tin sản phẩm</a>
 					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="review-tab" data-toggle="tab" href="#review" role="tab"
+							aria-controls="review" aria-selected="false">Đánh giá sản phẩm</a>
+					</li>
 				</ul>
 				<div class="tab-content" id="myTabContent">
 					<div class="tab-pane fade show active" id="deteal-product" role="tabpanel"
@@ -189,7 +193,158 @@
 
 						</p>
 					</div>
+					<div class="tab-pane fade " id="review" role="tabpanel" aria-labelledby="review-tab">
+						<br><br>
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="row total_rate">
+									<div class="col-12">
+										<div class="box_total">
+											<div class="d-flex flex-row justify-content-center">
+												<div class="border-right border-danger pr-5">
+													<h5>Đánh giá chung</h5>
+													<br>
+													<h5 class="text-danger">5 trên 5</h5>
+													<br>
+													<h6 class="text-warning"><i class="fa fa-star"></i>
+														<i class="fa fa-star"></i>
+														<i class="fa fa-star"></i>
+														<i class="fa fa-star"></i>
+														<i class="fa fa-star"></i>
+													</h6>
+												</div>
+												<div class="pl-5">
+													<div class="rating_list">
+														<h5>Tổng quan</h5>
+														<br />
+														<ul class="list">
+															<li>
+																<a href="#">5 / 5
+																	<i class="fa fa-star text-warning"></i>
+																	<i class="fa fa-star text-warning"></i>
+																	<i class="fa fa-star text-warning"></i>
+																	<i class="fa fa-star text-warning"></i>
+																	<i class="fa fa-star text-warning"></i> ( 01 )</a>
+															</li>
+															<li>
+																<a href="#">4 / 5
+																	<i class="fa fa-star text-warning"></i>
+																	<i class="fa fa-star text-warning"></i>
+																	<i class="fa fa-star text-warning"></i>
+																	<i class="fa fa-star text-warning"></i>
+																	<i class="fa fa-star text-secondary"></i> ( 01 )</a>
+															</li>
+															<li>
+																<a href="#">3 / 5
+																	<i class="fa fa-star text-warning"></i>
+																	<i class="fa fa-star text-warning"></i>
+																	<i class="fa fa-star text-warning"></i>
+																	<i class="fa fa-star text-secondary"></i>
+																	<i class="fa fa-star text-secondary"></i> ( 01 )</a>
+															</li>
+															<li>
+																<a href="#">2 / 5
+																	<i class="fa fa-star text-warning"></i>
+																	<i class="fa fa-star text-warning"></i>
+																	<i class="fa fa-star text-secondary"></i>
+																	<i class="fa fa-star text-secondary"></i>
+																	<i class="fa fa-star text-secondary"></i> ( 01 )</a>
+															</li>
+															<li>
+																<a href="#">1 / 5
+																	<i class="fa fa-star text-warning"></i>
+																	<i class="fa fa-star text-secondary"></i>
+																	<i class="fa fa-star text-secondary"></i>
+																	<i class="fa fa-star text-secondary"></i>
+																	<i class="fa fa-star text-secondary"></i> ( 01 )</a>
+															</li>
+														</ul>
+													</div>
+												</div>
+											</div>
+
+										</div>
+
+									</div>
+
+								</div>
+								<br>
+								<div class="review_list">
+									<div class="review_item">
+										<div class="media">
+											<div class="d-flex">
+												<img class="rounded-circle" width="60" height="60"
+													src="https://vcdn-dulich.vnecdn.net/2020/09/04/1-Meo-chup-anh-dep-khi-di-bien-9310-1599219010.jpg"
+													alt="" />
+											</div>
+											<div class="media-body">
+												<h4>Người dùng 1</h4>
+												<i class="fa fa-star"></i>
+												<i class="fa fa-star"></i>
+												<i class="fa fa-star"></i>
+												<i class="fa fa-star"></i>
+												<i class="fa fa-star"></i>
+											</div>
+										</div>
+										<p>
+											Sản phẩm rất tốt, tôi sẽ mua lại sản phẩm này để ủng hộ shop
+										</p>
+									</div>
+
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="review_box">
+									<h4>Đánh giá sản phẩm</h4>
+									<p>Mức độ hài lòng:</p>
+									<ul class="list">
+										<li>
+											<a href="#">
+												<i class="fa fa-star"></i>
+											</a>
+										</li>
+										<li>
+											<a href="#">
+												<i class="fa fa-star"></i>
+											</a>
+										</li>
+										<li>
+											<a href="#">
+												<i class="fa fa-star"></i>
+											</a>
+										</li>
+										<li>
+											<a href="#">
+												<i class="fa fa-star"></i>
+											</a>
+										</li>
+										<li>
+											<a href="#">
+												<i class="fa fa-star"></i>
+											</a>
+										</li>
+									</ul>
+									<p>Rất hài lòng</p>
+									<form class="row contact_form" method="post" novalidate="novalidate">
+
+										<div class="col-md-12">
+											<div class="form-group">
+												<textarea class="form-control" name="message" rows="6"
+													placeholder="Đánh giả về sản phẩm ..."></textarea>
+											</div>
+										</div>
+										<div class="col-md-12 text-right">
+											<button type="submit" value="submit" class="btn_3">
+												Gửi đánh giá
+											</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
+
 			</div>
 		</section>
 

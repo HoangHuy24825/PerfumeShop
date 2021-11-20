@@ -32,7 +32,8 @@ public class RegisterController extends BaseController{
 	@Autowired
 	private JavaMailSender emailSender;
 
-	private MappingModel mappingModel = new MappingModel();
+	@Autowired
+	private MappingModel mappingModel;
 
 	@Autowired
 	private UserService userService;

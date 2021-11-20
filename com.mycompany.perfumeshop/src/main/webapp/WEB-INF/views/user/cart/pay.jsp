@@ -17,7 +17,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Đặt hàng | Electronic Device</title>
+    <title>Đặt hàng | ${tileWebsite}</title>
     <link rel="icon" href="${base }/user/img/my-logo/logo-asp.net.png">
     <!--::style part start::-->
     <jsp:include page="/WEB-INF/views/user/layout/style.jsp"></jsp:include>
@@ -87,8 +87,9 @@
                         <fmt:setLocale value="vi_VN" />
                         <h3 id="totalPay">Tổng tiền phải trả:
                             <span style="color: #ff3368">
-                                <fmt:formatNumber value="${product.price*amount}" minFractionDigits="0" type="currency"
-                                    currencySymbol="VND" />
+                                <fmt:formatNumber
+                                    value="${((attr.priceSale!=null && attr.priceSale!=null)? attr.priceSale: attr.price)*amount}"
+                                    minFractionDigits="0" type="currency" currencySymbol="VND" />
                             </span>
                         </h3>
                     </c:if>
@@ -112,14 +113,15 @@
                 <h3>Chi tiết sản phẩm</h3>
                 <br>
                 <c:if test="${cartItems==null }">
-                    <div class="d-flex flex-row item-product" data-id-product="${ product.id}"
+                    <div class="d-flex flex-row item-product" data-id-product="${ attr.id}"
                         data-amount-product="${amount }">
-                        <img src="${base }/upload/${ product.avatar}" alt="" width="100" height="100">
+                        <img src="${base }/upload/${ attr.product.avatar}" alt="" width="100" height="100">
                         <div class="ml-2">
-                            <h5>${ product.title}</h5>
+                            <h5>${ attr.product.title}</h5>
                             <p>Giá: <span style="color: #ff3368">
-                                    <fmt:formatNumber value="${product.price}" minFractionDigits="0" type="currency"
-                                        currencySymbol="VND" /> </span></p>
+                                    <fmt:formatNumber
+                                        value="${(attr.priceSale!=null && attr.priceSale!=null)? attr.priceSale: attr.price}"
+                                        minFractionDigits="0" type="currency" currencySymbol="VND" /> </span></p>
                             <p>Số lượng: <span style="color: #ff3368">${amount }</span></p>
                         </div>
                     </div>

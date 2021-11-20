@@ -23,7 +23,7 @@
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>Giới thiệu | Admin Electronic Device</title>
+    <title>Giới thiệu | ${tileWebsite}</title>
     <link rel="icon" href="${base}/manager/images/logo-asp.net.png">
     <jsp:include page="/WEB-INF/views/common/variable.jsp"></jsp:include>
     <jsp:include page="/WEB-INF/views/manager/layout/style.jsp"></jsp:include>

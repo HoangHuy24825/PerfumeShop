@@ -1,7 +1,6 @@
 package com.mycompany.perfumeshop.controller.manager;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.mycompany.perfumeshop.conf.GlobalConfig;
 import com.mycompany.perfumeshop.controller.BaseController;
 import com.mycompany.perfumeshop.dto.MappingModel;
 import com.mycompany.perfumeshop.dto.UserDTO;
@@ -25,14 +25,14 @@ import com.mycompany.perfumeshop.entities.User;
 import com.mycompany.perfumeshop.entities.UserRole;
 import com.mycompany.perfumeshop.service.UserRoleService;
 import com.mycompany.perfumeshop.service.UserService;
-import com.mycompany.perfumeshop.utils.Constants;
 import com.mycompany.perfumeshop.utils.ConvertUtils;
 import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
 @Controller
 public class ManagerAccounController extends BaseController {
 
-	private MappingModel mappingModel = new MappingModel();
+	@Autowired
+	private MappingModel mappingModel;
 
 	@Autowired
 	private UserService userService;
@@ -40,7 +40,8 @@ public class ManagerAccounController extends BaseController {
 	@Autowired
 	private UserRoleService userRoleService;
 
-	private static final Integer PAGE_SIZE = 10;
+	@Autowired
+	private GlobalConfig globalConfig;
 
 	@RequestMapping(value = { "/admin/my-account" }, method = RequestMethod.GET)
 	public String index(final Model model, final HttpServletRequest request, final HttpServletResponse response)
@@ -117,29 +118,15 @@ public class ManagerAccounController extends BaseController {
 		return "manager/account/manageAccount";
 	}
 
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "/admin/list-account" }, method = RequestMethod.GET)
-	public ResponseEntity<JSONObject> findAll(final Model model, final HttpServletRequest request,
+	public ResponseEntity<BaseVo<User>> findAll(final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException {
-
-		JSONObject result = new JSONObject();
-		Integer currentPage = ConvertUtils.convertStringToInt(request.getParameter("page"), Constants.INIT_PAGE);
+		Integer currentPage = ConvertUtils.convertStringToInt(request.getParameter("page"), globalConfig.getInitPage());
 		Integer typeAccount = ConvertUtils.convertStringToInt(request.getParameter("type"), 0);
-
-		BaseVo<User> baseVo = userService.getListUserByRole(typeAccount, currentPage, PAGE_SIZE,
-				getUserLogined().getId());
+		BaseVo<User> baseVo = userService.getListUserByRoleRepo(typeAccount, currentPage,
+				globalConfig.getSizeManagePage(), getUserLogined().getId());
 		if (baseVo != null) {
-			List<JSONObject> jsonUsers = new ArrayList<JSONObject>();
-			if (baseVo.getListEntity() != null && baseVo.getListEntity().size() > 0) {
-				List<User> users = baseVo.getListEntity();
-				for (User user : users) {
-					jsonUsers.add(mappingModel.mappingModel(user));
-				}
-			}
-			result.put("users", jsonUsers);
-			result.put("currentPage", currentPage);
-			result.put("totalPage", baseVo.getTotalPage());
-			return ResponseEntity.ok(result);
+			return ResponseEntity.ok(baseVo);
 		}
 		return null;
 	}

@@ -41,7 +41,8 @@ public class ProductDTO extends BaseDTO {
 		List<AttributeProductDTO> attributeProductDTOs = new ArrayList<AttributeProductDTO>();
 		for (int i = 0; i < amount.length; i++) {
 			if (amount[i] != null && amount[i] != "") {
-				attributeProductDTOs.add(new AttributeProductDTO(ConvertUtils.convertStringToInt(idAttribute[i], null),
+				attributeProductDTOs.add(new AttributeProductDTO(
+						ConvertUtils.convertStringToInt(idAttribute.length > 0 ? idAttribute[i] : null, null),
 						new BigDecimal(capacity[i]), new BigDecimal(price[i]),
 						ConvertUtils.convertStringToBigDecimal(priceSale[i], null),
 						ConvertUtils.convertStringToInt(amount[i], 0)));

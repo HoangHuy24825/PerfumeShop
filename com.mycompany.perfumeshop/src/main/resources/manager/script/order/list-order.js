@@ -6,18 +6,18 @@ var status_all_notify_modal = false;
 $(document).ready(function () {
     setActiveMenu();
     LoadNewOrder(1);
-    showNotifyHeader();
+    // showNotifyHeader();
 
     /*  FUNCTION WHEN MODAL NOTIFY CLOSING */
-    $("#notify-detail-modal").on('hide.bs.modal', function () {
-        showNotifyHeader();
-        if (status_all_notify_modal) {
-            showAllNotify();
-        } else {
-            showAllNotify;
-            $('#notify-modal').modal('hide');
-        }
-    });
+    // $("#notify-detail-modal").on('hide.bs.modal', function () {
+    //     showNotifyHeader();
+    //     if (status_all_notify_modal) {
+    //         showAllNotify();
+    //     } else {
+    //         showAllNotify;
+    //         $('#notify-modal').modal('hide');
+    //     }
+    // });
 
 
     $("body").on("click", "#paged--list--new--order li a", function (event) {
@@ -256,7 +256,7 @@ function viewOrderNotify(idNotify, idOrder, status_all_notify_modal_1) {
             var html = '';
             $.each(result.saleOrderProduct, function (i, item) {
                 html += '<div class="d-flex flex-row">';
-                html += '    <img class="" src="${base}/upload/' + item.avatar + '" alt="' + item
+                html += '    <img class="" src="/upload/' + item.avatar + '" alt="' + item
                     .productName + '"';
                 html += '        width="100" height="100">';
                 html += '    <div class="ml-4">';
@@ -368,43 +368,34 @@ function LoadNewOrder(page) {
         success: function (result) {
             var html = '';
             $.each(result.listOrder, function (i, item) {
-                html += '<tr class="tr-shadow">';
-                html += '    <td class="number_order">' + item.id + '</td>';
-                html += '    <td>';
-                html += '        <span>' + item.code + '</span>';
-                html += '    </td>';
-                html += '    <td>';
-                html += '         <span>' + item.customerName + '</span>';
-                html += '    </td>';
-                html += '    <td>';
-                html += '         <span>' + item.customerAddress + '</span>';
-                html += '    </td>';
-                html += '     <td>';
-                html += '          <span class="text-primary font-weight-bold">' + item.total
-                    .toLocaleString('it-IT', {
-                        style: 'currency',
-                        currency: 'VND'
-                    }) + '</span>';
-                html += '     </td>';
-                html += '     <td>';
-                html += '          <span class="block-name-product">' + item.createdDate +
-                    '</span>';
-                html += '     </td>';
-                html += '     <td>';
-                html +=
-                    '          <input type="button" class="btn btn-outline-info" value="Xem" onclick="viewOrder(' +
-                    item.id + ')">';
-                if (update_role == 'true') {
-                    html +=
-                        '          <input type="button" class="btn btn-outline-success" value="Nhận đơn" onclick="changeStatusOrder(' +
-                        item.id + ',1,0)">';
-                    html +=
-                        '          <input type="button" class="btn btn-outline-danger" value="Hủy đơn" onclick="cancelBill(' +
-                        item.id + ')">';
-                }
-                html += '     </td>';
-                html += '</tr>';
-                html += '<tr class="spacer"></tr>';
+                html += `  <tr class="tr-shadow">
+                            <td class="number_order">${item.id }</td>
+                            <td>
+                                <span>${ item.code }</span>
+                             </td>
+                             <td>
+                                <span>${ item.customerName }</span>
+                             </td>
+                            <td>
+                                <span>${ item.customerAddress }</span>
+                            </td>
+                            <td>
+                                <span class="text-primary font-weight-bold">
+                                    ${item.total.toLocaleString('it-IT', {style: 'currency',currency: 'VND'})}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="block-name-product">${ item.createdDate}</span>
+                            </td>
+                            <td>
+                                <input type="button" class="btn btn-outline-info" value="Xem" onclick="viewOrder(${item.id})">
+                                <input type="button" class="btn btn-outline-success" value="Nhận đơn" ${update_role == '    true'?"":"hide"}
+                                    onclick="changeStatusOrder(${item.id},1,0)">
+                                <input type="button" class="btn btn-outline-danger" value="Hủy đơn" ${update_role == 'true'?"":"hide"} 
+                                    onclick="cancelBill(${item.id})">
+                            </td>
+                        </tr>
+                        <tr class="spacer"></tr>`;
             });
 
             var totalPage = result.totalPage;
@@ -412,29 +403,40 @@ function LoadNewOrder(page) {
             var pagination_string = '';
             if (currentPage > 1) {
                 var previousPage = currentPage - 1;
-                pagination_string += '<li class="page-item"><a href="" class="page-link" data-page=' +
-                    previousPage + ' data-type-list=' + result.listOrder[0].processingStatus +
-                    '><i class="fas fa-angle-double-left" style="font-size:18px"></i></a></li>';
+                pagination_string += `
+                                    <li class="page-item">
+                                        <a href="" class="page-link" data-page=${previousPage} data-type-list=${result.listOrder[0].processingStatus}>
+                                            <i class="fas fa-angle-double-left" style="font-size:18px"></i>
+                                        </a>
+                                    </li>`;
             }
 
             for (i = 1; i <= totalPage; i++) {
                 if (i == currentPage) {
-                    pagination_string +=
-                        '<li class="page-item active"><a href="" class="page-link" data-page=' + i +
-                        ' data-type-list=' + result.listOrder[0].processingStatus + '>' + currentPage +
-                        '</a></li>';
+                    pagination_string += `
+                                        <li class="page-item active">
+                                            <a href="" class="page-link" data-page=${i} data-type-list=${result.listOrder[0].processingStatus}>
+                                                ${currentPage}
+                                            </a>
+                                        </li>`;
                 } else if (i >= currentPage - 3 && i <= currentPage + 4) {
-                    pagination_string += '<li class="page-item"><a href="" class="page-link" data-page=' +
-                        i + ' data-type-list=' + result.listOrder[0].processingStatus + '>' + i +
-                        '</a></li>';
+                    pagination_string += `
+                                        <li class="page-item">
+                                            <a href="" class="page-link" data-page=${i} data-type-list=${result.listOrder[0].processingStatus}>
+                                                ${i}
+                                            </a>
+                                        </li>`;
                 }
             }
 
             if (currentPage > 0 && currentPage < totalPage) {
                 var nextPage = currentPage + 1;
-                pagination_string += '<li class="page-item"><a href="" class="page-link"  data-page=' +
-                    nextPage + ' data-type-list=' + result.listOrder[0].processingStatus +
-                    '><i class="fas fa-angle-double-right" style="font-size:18px"></i></a></li>';
+                pagination_string += `
+                                        <li class="page-item">
+                                            <a href="" class="page-link" data-page=${ nextPage} data-type-list=${result.listOrder[0].processingStatus}>
+                                                <i class="fas fa-angle-double-right" style="font-size:18px"></i>
+                                            </a>
+                                        </li>`;
             }
 
             $('#newBill').html(html);
@@ -712,10 +714,9 @@ function viewOrder(idOrder) {
 
 
             var html = '';
-            $.each(result.orderDetails, function (i, item) {
+            $.each(result.order.orderDetails, function (i, item) {
                 html += '<div class="d-flex flex-row">';
-                html += '    <img class="" src="${base}/upload/' + item.avatar + '" alt="' + item
-                    .productName + '"';
+                html += '    <img class="" src="/upload/' + item.avatar + '" alt="' + item.productName + '"';
                 html += '        width="100" height="100">';
                 html += '    <div class="ml-4">';
                 html += '        <h5>' + item.productName + '</h5>';

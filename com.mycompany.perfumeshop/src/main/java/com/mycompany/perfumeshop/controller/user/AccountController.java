@@ -33,7 +33,8 @@ public class AccountController extends BaseController {
 	@Autowired
 	private UserService userService;
 
-	private MappingModel mappingModel = new MappingModel();
+	@Autowired
+	private MappingModel mappingModel;
 
 	@Autowired
 	private JavaMailSender emailSender;

@@ -113,6 +113,12 @@
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
 
+		<!-- read properties file -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>com.mycompany.electronicdevice</finalName>

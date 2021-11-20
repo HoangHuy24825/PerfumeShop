@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import com.mycompany.perfumeshop.conf.GlobalConfig;
 import com.mycompany.perfumeshop.entities.User;
 import com.mycompany.perfumeshop.entities.UserRole;
 import com.mycompany.perfumeshop.service.UserService;
@@ -15,6 +16,9 @@ public abstract class BaseController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private GlobalConfig globalConfig;
 
 	@ModelAttribute("isLogined")
 	public boolean isLogined() {
@@ -128,7 +132,7 @@ public abstract class BaseController {
 		}
 		return null;
 	}
-	
+
 	@ModelAttribute("introduceRole")
 	public UserRole getIntroduceRole() {
 		User user = getUserLogined();
@@ -141,7 +145,7 @@ public abstract class BaseController {
 		}
 		return null;
 	}
-	
+
 	@ModelAttribute("notifyRole")
 	public UserRole getNotifyRole() {
 		User user = getUserLogined();
@@ -153,6 +157,11 @@ public abstract class BaseController {
 			}
 		}
 		return null;
+	}
+
+	@ModelAttribute("tileWebsite")
+	public String getTitleWebSite() {
+		return globalConfig.getTitleWebsite();
 	}
 
 }

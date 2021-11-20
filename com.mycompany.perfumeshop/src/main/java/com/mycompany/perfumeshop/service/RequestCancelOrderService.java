@@ -6,15 +6,21 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mycompany.perfumeshop.entities.RequestCancelOrder;
+import com.mycompany.perfumeshop.repository.RequestCancelOrderRepository;
 
 @Service
+@Transactional
 public class RequestCancelOrderService extends BaseService<RequestCancelOrder> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@Autowired
+	private RequestCancelOrderRepository requestRepository;
 
 	@Override
 	protected Class<RequestCancelOrder> clazz() {
@@ -22,30 +28,20 @@ public class RequestCancelOrderService extends BaseService<RequestCancelOrder> {
 	}
 
 	public List<RequestCancelOrder> getTopThreeContact() {
-		return super.executeNativeSql(
-				"SELECT * FROM electronicdeviceshop.tbl_request_cancel_order order by created_date desc limit 3");
+		return requestRepository.findTop3ByOrderByCreatedDateDesc();
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<RequestCancelOrder> getUnreadNotify() {
-		return entityManager.createNativeQuery("SELECT * FROM electronicdeviceshop.tbl_request_cancel_order "
-				+ "WHERE status=0 ORDER BY created_date DESC", RequestCancelOrder.class).getResultList();
+		return requestRepository.findByStatus(false);
 	}
 
 	public Integer countUnreadNotify() {
-		return getUnreadNotify().size();
+		return requestRepository.countByStatus(false);
 	}
 
-	@Transactional
 	public Boolean deleteNotifyById(Integer idNotify) {
-		try {
-			entityManager.createNativeQuery("DELETE FROM electronicdeviceshop.tbl_request_cancel_order WHERE id=:notifyID")
-					.setParameter("notifyID", idNotify).executeUpdate();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
+		requestRepository.deleteById(idNotify);
+		return true;
 	}
 
 }

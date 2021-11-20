@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.mycompany.perfumeshop.conf.GlobalConfig;
 import com.mycompany.perfumeshop.controller.BaseController;
 import com.mycompany.perfumeshop.dto.CategoryDTO;
 import com.mycompany.perfumeshop.dto.MappingModel;
 import com.mycompany.perfumeshop.entities.Category;
 import com.mycompany.perfumeshop.service.CategoryService;
 import com.mycompany.perfumeshop.service.UserService;
-import com.mycompany.perfumeshop.utils.Constants;
 import com.mycompany.perfumeshop.utils.ConvertUtils;
 import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
@@ -38,9 +38,11 @@ public class ManagerCategoryController extends BaseController {
 	@Autowired
 	private UserService userService;
 
-	private static final Integer pageSize = 8;
+	@Autowired
+	private GlobalConfig globalConfig;
 
-	private MappingModel mappingModel = new MappingModel();
+	@Autowired
+	private MappingModel mappingModel;
 
 	@RequestMapping(value = { "/admin/category/index", "/admin/category" }, method = RequestMethod.GET)
 	public String index(final Model model, final HttpServletRequest request, HttpServletResponse response)
@@ -135,10 +137,12 @@ public class ManagerCategoryController extends BaseController {
 			final HttpServletResponse response) throws IOException {
 
 		JSONObject result = new JSONObject();
-		Integer currentPage = ConvertUtils.convertStringToInt(request.getParameter("currentPage"), Constants.INIT_PAGE);
+		Integer currentPage = ConvertUtils.convertStringToInt(request.getParameter("currentPage"),
+				globalConfig.getInitPage());
 		String keySearch = request.getParameter("keySearch");
 
-		BaseVo<Category> baseVo = categoryService.getListCategoryByFilter(currentPage, pageSize, keySearch);
+		BaseVo<Category> baseVo = categoryService.getListCategoryByFilter(currentPage, globalConfig.getSizeManagePage(),
+				keySearch);
 		if (baseVo != null) {
 			List<JSONObject> listCategory = new ArrayList<>();
 			List<Category> categories = baseVo.getListEntity();

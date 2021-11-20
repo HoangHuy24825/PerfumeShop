@@ -137,22 +137,22 @@ function loadData() {
                 htmlPirce += `<tr>
                                 <td>Giá: </td>
                                 <td > 
-                                    <h4 style="color:red" class="font-weight-bold mb-0 mr-3">${priceSaleToShow.toLocaleString('it-IT', {tyle: 'currency',currency: 'VND'})}</h4>
+                                    <h4 style="color:red" class="font-weight-bold mb-0 mr-3">${priceSaleToShow.toLocaleString('it-IT', {tyle: 'currency',currency: 'VND'})} &#8363;</h4>
                                 </td>
                                 <td>
-                                    <h5 class="text-muted mb-0" style="text-decoration:line-through">${priceToShow.toLocaleString('it-IT', {tyle: 'currency',currency: 'VND'})}</h5>                    
+                                    <h5 class="text-muted mb-0" style="text-decoration:line-through">${priceToShow.toLocaleString('it-IT', {tyle: 'currency',currency: 'VND'})} &#8363;</h5>                    
                                 </td>
                                 </tr>
                                 `;
             } else {
                 htmlPirce += `<tr>
                                 <td>Giá: </td>
-                                <td> <h4 style="color:red" class="font-weight-bold mb-0">${priceToShow.toLocaleString('it-IT', {tyle: 'currency',currency: 'VND'})}</h4>
+                                <td> <h4 style="color:red" class="font-weight-bold mb-0">${priceToShow.toLocaleString('it-IT', {tyle: 'currency',currency: 'VND'})} &#8363;</h4>
                                 </td>
                             </tr>`;
             }
             $('#numberProductOrder').data("id-product", jsonResult.product.attrs[0].id);
-            $('#numberProductOrder').data("max-order", jsonResult.product.attrs[0].priceSale.amount);
+            $('#numberProductOrder').data("max-order", jsonResult.product.attrs[0].amount);
             $("#priceProductCurrent").find("table").html(htmlPirce);
 
             document.title = jsonResult.product.title;

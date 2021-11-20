@@ -23,7 +23,7 @@
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>Sản phẩm | Admin Electronic Device</title>
+    <title>Sản phẩm | ${tileWebsite}</title>
     <link rel="icon" href="${base}/manager/images/logo-asp.net.png">
     <jsp:include page="/WEB-INF/views/common/variable.jsp"></jsp:include>
     <jsp:include page="/WEB-INF/views/manager/layout/style.jsp"></jsp:include>
@@ -115,7 +115,7 @@
                                                             <div class="card-body row detail-attribute-card">
                                                                 <div class="item-attribute row col-12">
                                                                     <input name="idAttribute" class="idAttribute"
-                                                                        type="number" hidden="true" 
+                                                                        type="number" hidden="true"
                                                                         value="${id_product}" />
 
                                                                     <div class="form-group col-3">
@@ -152,8 +152,7 @@
                                                                             lượng <span
                                                                                 class="required">*</span></label>
                                                                         <input type="number" autocomplete="off"
-                                                                            class="form-control amount"
-                                                                            name="amount"
+                                                                            class="form-control amount" name="amount"
                                                                             placeholder="Số lượng"></input>
                                                                     </div>
 

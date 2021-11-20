@@ -19,16 +19,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.github.slugify.Slugify;
-import com.mycompany.perfumeshop.dto.Constant;
-import com.mycompany.perfumeshop.dto.UserSearchProduct;
+import com.mycompany.perfumeshop.conf.GlobalConfig;
 import com.mycompany.perfumeshop.entities.AttributeProduct;
 import com.mycompany.perfumeshop.entities.OrderDetail;
 import com.mycompany.perfumeshop.entities.Product;
 import com.mycompany.perfumeshop.entities.ProductImage;
+import com.mycompany.perfumeshop.request.UserSearchProduct;
 import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
 @Service
-public class ProductService extends BaseService<Product> implements Constant {
+public class ProductService extends BaseService<Product> {
 
 	@Autowired
 	ProductImageService imageService;
@@ -38,6 +38,9 @@ public class ProductService extends BaseService<Product> implements Constant {
 
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@Autowired
+	private GlobalConfig globalConfig;
 
 	@Override
 	protected Class<Product> clazz() {
@@ -58,13 +61,15 @@ public class ProductService extends BaseService<Product> implements Constant {
 	@Transactional
 	public Product save(Product product, MultipartFile avatar, MultipartFile[] images) throws Exception {
 		if (!isEmptyUploadFile(avatar)) {
-			avatar.transferTo(new File(UPLOAD_ROOT_PATH + "product/avatar/" + avatar.getOriginalFilename()));
+			avatar.transferTo(
+					new File(globalConfig.getUploadRootPath() + "product/avatar/" + avatar.getOriginalFilename()));
 			product.setAvatar("product/avatar/" + avatar.getOriginalFilename());
 		}
 
 		if (!isEmptyUploadFile(images)) {
 			for (MultipartFile image : images) {
-				image.transferTo(new File(UPLOAD_ROOT_PATH + "product/images/" + image.getOriginalFilename()));
+				image.transferTo(
+						new File(globalConfig.getUploadRootPath() + "product/images/" + image.getOriginalFilename()));
 
 				ProductImage img = new ProductImage();
 				img.setPath("product/images/");
@@ -82,24 +87,26 @@ public class ProductService extends BaseService<Product> implements Constant {
 	public Product edit(Product product, MultipartFile avatar, MultipartFile[] images) throws Exception {
 		Product oldProduct = super.getById(product.getId());
 		if (!isEmptyUploadFile(avatar)) {
-			new File(UPLOAD_ROOT_PATH + oldProduct.getAvatar()).delete();
-			avatar.transferTo(new File(UPLOAD_ROOT_PATH + "product/avatar/" + avatar.getOriginalFilename()));
+			new File(globalConfig.getUploadRootPath() + oldProduct.getAvatar()).delete();
+			avatar.transferTo(
+					new File(globalConfig.getUploadRootPath() + "product/avatar/" + avatar.getOriginalFilename()));
 			product.setAvatar("product/avatar/" + avatar.getOriginalFilename());
 		} else {
 			product.setAvatar(oldProduct.getAvatar());
 		}
 
 		if (!isEmptyUploadFile(images)) {
-			List<ProductImage> oldImages = imageService.findAllByIdProduct(product.getId());
+			List<ProductImage> oldImages = imageService.findByProduct(product);
 
 			for (ProductImage productImage : oldImages) {
 				imageService.delete(productImage);
 				oldProduct.removeImage(productImage);
-				new File(UPLOAD_ROOT_PATH + productImage.getPath() + productImage.getTitle()).delete();
+				new File(globalConfig.getUploadRootPath() + productImage.getPath() + productImage.getTitle()).delete();
 			}
 
 			for (MultipartFile image : images) {
-				image.transferTo(new File(UPLOAD_ROOT_PATH + "product/images/" + image.getOriginalFilename()));
+				image.transferTo(
+						new File(globalConfig.getUploadRootPath() + "product/images/" + image.getOriginalFilename()));
 
 				ProductImage img = new ProductImage();
 				img.setPath("product/images/");
@@ -136,8 +143,8 @@ public class ProductService extends BaseService<Product> implements Constant {
 	}
 
 	public List<Product> getHotProduct() {
-		return entityManager.createQuery("FROM Product p ORDER BY p.isHot DESC, p.createdDate DESC", Product.class)
-				.setMaxResults(8).getResultList();
+		return entityManager.createQuery("FROM Product p WHERE p.isHot=true ORDER BY p.isHot DESC, p.createdDate DESC",
+				Product.class).setMaxResults(8).getResultList();
 	}
 
 	/**
@@ -310,11 +317,12 @@ public class ProductService extends BaseService<Product> implements Constant {
 
 			if (saleOrderProducts.size() == 0) {
 				Product product = super.getById(idProduct);
-				List<ProductImage> productImages = imageService.findAllByIdProduct(idProduct);
+				List<ProductImage> productImages = imageService.findByProduct(product);
 				for (ProductImage productImage : productImages) {
-					new File(UPLOAD_ROOT_PATH + productImage.getPath() + productImage.getTitle()).delete();
+					new File(globalConfig.getUploadRootPath() + productImage.getPath() + productImage.getTitle())
+							.delete();
 				}
-				new File(UPLOAD_ROOT_PATH + product.getAvatar()).delete();
+				new File(globalConfig.getUploadRootPath() + product.getAvatar()).delete();
 
 				entityManager.createQuery("DELETE FROM ProductImage pi WHERE pi.product.id=:productID")
 						.setParameter("productID", idProduct).executeUpdate();

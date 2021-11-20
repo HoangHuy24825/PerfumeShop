@@ -7,6 +7,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "tbl_blog")
 public class Blog extends BaseEntity {
@@ -29,6 +31,7 @@ public class Blog extends BaseEntity {
 	@Column(name = "is_hot", nullable = true)
 	private Boolean isHot = Boolean.FALSE;
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "category_blog_id")
 	private CategoryBlog categoryBlog;

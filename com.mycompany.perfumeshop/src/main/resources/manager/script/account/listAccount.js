@@ -54,7 +54,7 @@ function loadStaff(page) {
         contentType: "application/json",
         success: function (result) {
             var html = '';
-            $.each(result.users, function (i, item) {
+            $.each(result.listEntity, function (i, item) {
                 html += `   <tr class="tr-shadow">
                                 <td class="number_order">${ item.username }</td>
                                 <td class="block-image">
@@ -78,6 +78,13 @@ function loadStaff(page) {
                                         <label class="switch">
                                             <input type="checkbox" data-id-item="${item.id}" ${update_role==true?"":"disabled"} class="btnChangeStatus" 
                                             ${item.status==true? "checked" : ""} >
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </span>
+                                    <span>
+                                        <!-- Rounded switch -->
+                                        <label class="switch">
+                                            <input type="checkbox" class="btnChangeStatus" data-id-item="${item.id}" ${item.status==true? "checked" : ""}>
                                             <span class="slider round"></span>
                                         </label>    
                                     </span>
@@ -134,7 +141,7 @@ function loadCustomer(page) {
         contentType: "application/json",
         success: function (result) {
             var html = '';
-            $.each(result.users, function (i, item) {
+            $.each(result.listEntity, function (i, item) {
                 html += `   <tr class="tr-shadow">
                                  <td class="number_order">${item.username}</td>
                             <td class="block-image">
