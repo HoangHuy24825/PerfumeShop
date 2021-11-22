@@ -9,8 +9,17 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @Entity
 @Table(name = "tbl_blog")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Blog extends BaseEntity {
 
 	@Column(name = "name", length = 1000, nullable = false)
@@ -33,63 +42,7 @@ public class Blog extends BaseEntity {
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "category_blog_id")
+	@JoinColumn(name = "category_blog_id", referencedColumnName = "id")
 	private CategoryBlog categoryBlog;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getAvatar() {
-		return avatar;
-	}
-
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
-	}
-
-	public String getDetail() {
-		return detail;
-	}
-
-	public void setDetail(String detail) {
-		this.detail = detail;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getSeo() {
-		return seo;
-	}
-
-	public void setSeo(String seo) {
-		this.seo = seo;
-	}
-
-	public Boolean getIsHot() {
-		return isHot;
-	}
-
-	public void setIsHot(Boolean isHot) {
-		this.isHot = isHot;
-	}
-
-	public CategoryBlog getCategoryBlog() {
-		return categoryBlog;
-	}
-
-	public void setCategoryBlog(CategoryBlog categoryBlog) {
-		this.categoryBlog = categoryBlog;
-	}
 
 }

@@ -200,6 +200,12 @@ public class MappingModel {
 		return blogJson;
 	}
 
+	public List<JSONObject> mappingModel(List<Blog> blogs) {
+		List<JSONObject> blogJsons = new ArrayList<JSONObject>();
+		blogs.forEach(b -> blogJsons.add(mappingModel(b)));
+		return blogJsons;
+	}
+
 	@SuppressWarnings("unchecked")
 	public JSONObject mappingModel(RequestCancelOrder requestCancelOrder) {
 		JSONObject requestJson = new JSONObject();

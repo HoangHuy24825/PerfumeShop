@@ -9,16 +9,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import com.mycompany.perfumeshop.entities.Blog;
+import com.mycompany.perfumeshop.entities.CategoryBlog;
 
 @Repository
-public interface BlogRepository extends JpaRepository<Blog, Integer>, JpaSpecificationExecutor<Blog> {
+public interface CategoryBlogRepository
+		extends JpaRepository<CategoryBlog, Integer>, JpaSpecificationExecutor<CategoryBlog> {
 
-	Page<Blog> findAll(Specification<Blog> spec, Pageable pageable);
+	List<CategoryBlog> findTop5ByStatus(Boolean status);
 
-	List<Blog> findTop5ByOrderByCreatedDateDescUpdatedDateDesc();
+	CategoryBlog findBySeo(String seo);
 
-	Blog findBySeo(String seo);
-
-	List<Blog> findByStatus(Boolean status);
+	Page<CategoryBlog> findAll(Specification<CategoryBlog> spec, Pageable pageable);
+	
+	List<CategoryBlog> findByStatus(Boolean status);
 }

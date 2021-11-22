@@ -125,26 +125,10 @@
 	 <jsp:include page="/WEB-INF/views/manager/layout/notify.jsp"></jsp:include>
 	<!-- START NOTIFI MODAL -->
 	
+
     <!-- JS-->
     <jsp:include page="/WEB-INF/views/manager/layout/script.jsp"></jsp:include>
-    <script type="text/javascript">
-    $(document).ready(function() {
-    	setActiveMenu();
-    });
-    
-    function setActiveMenu() {
-    	console.log("call");
-    	$( ".navbar__list li" ).each(function() {
-    		$(this).removeClass("active");
-    	});
-    	$( ".list-unstyled li" ).each(function() {
-    		$(this).removeClass("active");
-    	});
-    	$('.list-unstyled #menu--category--blog').addClass("active");
-    	$('.navbar__list #menu--category--blog').addClass("active");
-	}
-    
-    </script>
+    <script src="${base }/manager/script/categoryBlog/detail.js"></script>
 </body>
 
 </html>

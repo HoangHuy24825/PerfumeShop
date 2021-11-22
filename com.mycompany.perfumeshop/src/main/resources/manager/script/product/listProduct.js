@@ -60,12 +60,6 @@ $(document).ready(function () {
         }
     });
 
-    /*  $("#input-search-header").keyup(function(event) {
-         $("#filter-status").val("0");
-         $("#select-category").val("0");
-         $('#btn_search_header').click();
-     }); */
-    /* SEARCH HEADER END */
 
     $("body").on("change", "#select-category", function () {
         var filterType = $("#filter-status").val();

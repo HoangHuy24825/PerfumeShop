@@ -1,7 +1,7 @@
 package com.mycompany.perfumeshop.entities;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -36,14 +36,20 @@ public class CategoryBlog extends BaseEntity {
 	private Boolean isHot = Boolean.FALSE;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "categoryBlog")
-	private Set<Blog> blogs = new HashSet<>();
+	private List<Blog> blogs;
 
 	public void addProduct(Blog blog) {
+		if (blogs == null) {
+			blogs = new ArrayList<Blog>();
+		}
 		blogs.add(blog);
 		blog.setCategoryBlog(this);
 	}
 
 	public void removeProduct(Blog blog) {
+		if (blogs == null) {
+			blogs = new ArrayList<Blog>();
+		}
 		blogs.remove(blog);
 		blog.setCategoryBlog(null);
 	}

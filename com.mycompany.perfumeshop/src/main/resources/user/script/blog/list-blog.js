@@ -27,7 +27,7 @@ $(document).ready(function () {
         event.preventDefault();
         var page = $(this).attr('data-page');
         var id_category = $('.table-categoty').find('.chosed').attr('id');
-      
+
         var txtSearch = $("#searchStr").val();
         if (txtSearch != "") {
             loadData(txtSearch, page, id_category);
@@ -36,7 +36,7 @@ $(document).ready(function () {
         }
     });
 
-    $("body").on("click","#search", function () {
+    $("body").on("click", "#search", function () {
         $('#list-category-blog').find('.selected-category').removeClass('selected-category');
         var txtSearch = $("#searchStr").val();
         console.log(txtSearch);
@@ -47,7 +47,7 @@ $(document).ready(function () {
         }
     });
 
-    $("body").on("click","#list-category-blog li", function () {
+    $("body").on("click", "#list-category-blog li", function () {
         $('#searchStr').val("");
 
         $('#list-category-blog').find('.selected-category').removeClass('selected-category');
@@ -84,22 +84,22 @@ function loadData(searchStr, page, id_category) {
         url: "/all-blog",
         type: "GET",
         data: {
-            searchStr: searchStr,
-            page: page,
-            id_category: id_category
+            keySearch: searchStr,
+            currentPage: page,
+            idParent: id_category
         },
         dataType: "json",
         contentType: "application/json;charset=utf-8",
         success: function (result) {
             var html = '';
-            if ((result.blogs.length == 0 || result.blogs == null) && searchStr != null && searchStr != "") {
+            if ((result.listBlog.length == 0 || result.listBlog == null) && result.keySearch != null && result.keySearch != "") {
                 html += '<div style="margin:auto;text-align:center">';
                 html += ' <img src="/user/img/NotFoundBlog.png" width="300" style="margin:auto"/>';
                 html += '<br/>'
                 html += ' <p style="text-align:center; margin: 25px 0px 30px;">Không tìm thấy blog phù hợp!</p>';
                 html += '</div>';
                 $("#load-pagination").html("");
-            } else if ((result.blogs.length == 0 || result.blogs == null) && id_category != null && id_category != "") {
+            } else if ((result.listBlog.length == 0 || result.listBlog == null) && result.idCategory != null) {
                 html += '<div style="margin:auto;text-align:center">';
                 html += ' <img src="/user/img/NotFoundBlog.png" width="300" style="margin:auto"/>';
                 html += '<br/>'
@@ -107,7 +107,7 @@ function loadData(searchStr, page, id_category) {
                 html += '</div>';
                 $("#load-pagination").html("");
             } else {
-                $.each(result.blogs, function (index, item) {
+                $.each(result.listBlog, function (index, item) {
                     html += '<article class="blog_item" onclick="detail(' + item.id + ')">';
                     html += '		<div class="blog_item_img">';
                     html += '         <img class="card-img rounded-0" width="750" height="375" src="/upload/' + item.avatar + '	" alt="">';

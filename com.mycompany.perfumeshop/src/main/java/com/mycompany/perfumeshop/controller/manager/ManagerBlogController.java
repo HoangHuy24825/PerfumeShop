@@ -1,23 +1,19 @@
 package com.mycompany.perfumeshop.controller.manager;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mycompany.perfumeshop.conf.GlobalConfig;
@@ -29,11 +25,10 @@ import com.mycompany.perfumeshop.request.UserRequest;
 import com.mycompany.perfumeshop.service.BlogService;
 import com.mycompany.perfumeshop.service.CategoryBlogService;
 import com.mycompany.perfumeshop.service.UserService;
-import com.mycompany.perfumeshop.utils.ConvertUtils;
-import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
 @Controller
 public class ManagerBlogController extends BaseController {
+
 	@Autowired
 	private BlogService blogService;
 
@@ -49,16 +44,14 @@ public class ManagerBlogController extends BaseController {
 	@Autowired
 	private MappingModel mappingModel;
 
-	@RequestMapping(value = { "/admin/blog" }, method = RequestMethod.GET)
-	public String index(final Model model, final HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	@GetMapping("/admin/blog")
+	public String index() {
 		return "manager/blog/managerBlog";
 	}
 
-	@RequestMapping(value = { "/admin/blog-detail/{seo}" }, method = RequestMethod.GET)
-	public String detail(final Model model, final HttpServletRequest request, HttpServletResponse response,
-			@PathVariable("seo") String seo) throws IOException {
-		Blog blog = blogService.getBySeo(seo);
+	@GetMapping("/admin/blog-detail/{seo}")
+	public String detail(Model model, @PathVariable("seo") String seo) throws Exception {
+		Blog blog = blogService.findBySeo(seo);
 		model.addAttribute("createdBy", userService.getById(blog.getCreatedBy()));
 		if (blog.getUpdatedBy() != null) {
 			model.addAttribute("updatedBy", userService.getById(blog.getUpdatedBy()));
@@ -69,106 +62,53 @@ public class ManagerBlogController extends BaseController {
 		return "manager/blog/managerDetailBlog";
 	}
 
-	@RequestMapping(value = { "/admin/add-blog" }, method = RequestMethod.GET)
-	public String add(final Model model, final HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	@GetMapping("/admin/add-blog")
+	public String add(final Model model) {
 		model.addAttribute("id_blog", null);
 		return "manager/blog/createOrUpdateBlog";
 	}
 
-	@RequestMapping(value = { "/admin/edit-blog/{seo}" }, method = RequestMethod.GET)
-	public String edit(final Model model, final HttpServletRequest request, HttpServletResponse response,
-			@PathVariable("seo") String seo) throws IOException {
-
-		model.addAttribute("id_blog", blogService.getBySeo(seo).getId());
+	@GetMapping("/admin/edit-blog/{seo}")
+	public String edit(final Model model, @PathVariable("seo") String seo) throws Exception {
+		model.addAttribute("id_blog", blogService.findBySeo(seo).getId());
 		return "manager/blog/createOrUpdateBlog";
 	}
 
-	@RequestMapping(value = { "/admin/add-update-blog" }, method = RequestMethod.POST)
-	public ResponseEntity<Object> addOrUpdate(final Model model, final HttpServletRequest request,
-			HttpServletResponse response, @ModelAttribute("Blog") BlogDTO blogDTO) throws Exception {
+	@PostMapping("/admin/add-update-blog")
+	public ResponseEntity<Boolean> addOrUpdate(@ModelAttribute("Blog") BlogDTO blogDTO) throws Exception {
 		blogDTO.setDetail(blogDTO.getDetail().replaceFirst(",", " ").trim());
 		Blog blog = mappingModel.mappingModel(blogDTO);
-		blog.setCategoryBlog(categoryBlogService.getById(blogDTO.getId_category_blog()));
-		if (blog.getId() == null) {
-			if (isLogined()) {
-				blog.setCreatedBy(getUserLogined().getId());
-			}
-			/* blog.setUpdatedDate(Calendar.getInstance().getTime()); */
-			blogService.save(blog, blogDTO.getAvatar());
-		} else {
-			if (isLogined()) {
-				blog.setUpdatedBy(getUserLogined().getId());
-			}
-			blogService.edit(blog, blogDTO.getAvatar());
-		}
-		return ResponseEntity.ok(null);
+		blog.setCategoryBlog(categoryBlogService.findById(blogDTO.getId_category_blog().toString()).get());
+		blogService.saveOrUpdate(blog, blogDTO.getAvatar(), getUserLogined().getId());
+		return ResponseEntity.ok(Boolean.TRUE);
 	}
 
-	@RequestMapping(value = { "/admin/all-blog-active" }, method = RequestMethod.GET)
-	public ResponseEntity<List<JSONObject>> getAllActive(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException {
-
-		List<Blog> blogs = blogService.findAllActive();
-		List<JSONObject> listBlog = new ArrayList<>();
-		for (Blog blog : blogs) {
-			listBlog.add(mappingModel.mappingModel(blog));
-		}
-		return ResponseEntity.ok(listBlog);
+	@GetMapping("/admin/all-blog-active")
+	public ResponseEntity<List<Blog>> getAllActive() throws Exception {
+		return ResponseEntity.ok(blogService.findByStatus(true));
 	}
 
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/admin/all-blog" }, method = RequestMethod.GET)
-	public ResponseEntity<JSONObject> getAll(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException {
-		JSONObject result = new JSONObject();
-		Integer currentPage = ConvertUtils.convertStringToInt(request.getParameter("currentPage"),
-				globalConfig.getInitPage());
-		String keySearch = request.getParameter("keySearch");
-
-		UserRequest userRequest = new UserRequest();
-		userRequest.setCurrentPage(currentPage);
-		userRequest.setSizeOfPage(globalConfig.getSizeManagePage());
-		userRequest.setKeySearch(keySearch);
-
-		BaseVo<Blog> baseVo = blogService.getListBlogByFilter(userRequest);
-		result.put("baseVo", baseVo);
+	@GetMapping("/admin/all-blog")
+	public ResponseEntity<Map<String, Object>> getAll(@RequestParam("currentPage") Integer currentPageStr,
+			@RequestParam("keySearch") String keySearch) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		UserRequest userRequest = new UserRequest(currentPageStr, globalConfig.getSizeManagePage(), keySearch, null,
+				null);
+		Page<Blog> page = blogService.getListBlogByFilter(userRequest);
+		result.put("listBlog", page.getContent());
+		result.put("currentPage", page.getNumber());
+		result.put("totalPage", page.getTotalPages());
 		return ResponseEntity.ok(result);
 	}
 
-	@RequestMapping(value = { "/admin/detail-blog" }, method = RequestMethod.GET)
-	public ResponseEntity<Map<String, List<JSONObject>>> detailBlog(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response, @RequestParam("idBlog") Integer idBlog) throws IOException {
-
-		Map<String, List<JSONObject>> result = new HashMap<>();
-
-		Blog blog = blogService.getById(idBlog);
-
-		List<JSONObject> blogJson = new ArrayList<>();
-		blogJson.add(mappingModel.mappingModel(blog));
-
-		result.put("blog", blogJson);
-
-		return ResponseEntity.ok(result);
+	@GetMapping("/admin/detail-blog")
+	public ResponseEntity<JSONObject> detailBlog(@RequestParam("idBlog") String idBlog) throws Exception {
+		return ResponseEntity.ok(mappingModel.mappingModel(blogService.findById(idBlog).get()));
 	}
 
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/admin/delete-blog" }, method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> delete(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException {
-		try {
-			JSONObject result = new JSONObject();
-			Integer idBlog = Integer.parseInt(request.getParameter("idBlog"));
-			if (blogService.deleteBlogById(idBlog)) {
-				result.put("message", Boolean.TRUE);
-				return ResponseEntity.ok(result);
-			} else {
-				result.put("message", Boolean.FALSE);
-				return ResponseEntity.ok(result);
-			}
-		} catch (Exception e) {
-			return ResponseEntity.ok(null);
-		}
+	@PostMapping("/admin/delete-blog")
+	public ResponseEntity<Boolean> delete(@RequestParam("idBlog") String idBlog) throws Exception {
+		return blogService.deleteById(idBlog) ? ResponseEntity.ok(Boolean.TRUE) : ResponseEntity.ok(Boolean.FALSE);
 	}
 
 }

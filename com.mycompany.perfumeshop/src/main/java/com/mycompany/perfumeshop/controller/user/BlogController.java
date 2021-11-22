@@ -1,19 +1,15 @@
 package com.mycompany.perfumeshop.controller.user;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mycompany.perfumeshop.conf.GlobalConfig;
 import com.mycompany.perfumeshop.controller.BaseController;
@@ -21,72 +17,49 @@ import com.mycompany.perfumeshop.dto.MappingModel;
 import com.mycompany.perfumeshop.entities.Blog;
 import com.mycompany.perfumeshop.request.UserRequest;
 import com.mycompany.perfumeshop.service.BlogService;
-import com.mycompany.perfumeshop.service.CategoryBlogService;
-import com.mycompany.perfumeshop.utils.ConvertUtils;
-import com.mycompany.perfumeshop.valueObjects.BaseVo;
+import com.mycompany.perfumeshop.service.impl.CategoryBlogServiceImpl;
 
 @Controller
 public class BlogController extends BaseController {
 
 	@Autowired
-	private CategoryBlogService categoryBlogService;
+	private CategoryBlogServiceImpl categoryBlogService;
 
 	@Autowired
 	private BlogService blogService;
 
 	@Autowired
-	private MappingModel mappingModel;
-
-	@Autowired
 	private GlobalConfig globalConfig;
 
-	@RequestMapping(value = { "/blog" }, method = RequestMethod.GET)
-	public String index(final Model model, final HttpServletRequest request, final HttpServletResponse response)
-			throws IOException {
-		model.addAttribute("categoryBlogs", categoryBlogService.findAllActive());
-		model.addAttribute("amountBlog", blogService.findAllActive().size());
+	@Autowired
+	private MappingModel mappingModel;
+
+	@GetMapping("/blog")
+	public String index(final Model model) throws Exception {
+		model.addAttribute("categoryBlogs", categoryBlogService.findByStatus(true));
+		model.addAttribute("amountBlog", blogService.findByStatus(true).size());
 		model.addAttribute("recentPosts", blogService.getRecentPost());
 		return "user/blog/blog";
 	}
 
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/all-blog" }, method = RequestMethod.GET)
-	public ResponseEntity<JSONObject> getAll(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException {
-		JSONObject result = new JSONObject();
-		Integer currentPage=ConvertUtils.convertStringToInt(request.getParameter("page"), globalConfig.getInitPage());
-		Integer idCategory=ConvertUtils.convertStringToInt(request.getParameter("id_category"), null);
-		String searchStr = request.getParameter("searchStr");
-		UserRequest userRequest = new UserRequest();
-		userRequest.setCurrentPage(currentPage);
-		userRequest.setIdParent(idCategory);
-		userRequest.setSizeOfPage(globalConfig.getSizeClientBlog());
-		userRequest.setKeySearch(searchStr);
-		userRequest.setStatus(true);
-		BaseVo<Blog> baseVo = blogService.getListBlogByFilter(userRequest);
-		List<Blog> blogs = baseVo.getListEntity();
-		List<JSONObject> listBlog = new ArrayList<JSONObject>();
-		for (Blog blog : blogs) {
-			listBlog.add(mappingModel.mappingModel(blog));
-		}
-		result.put("blogs", listBlog);
-		result.put("currentPage", currentPage);
-		result.put("totalPage", baseVo.getTotalPage());// pageSize
-		model.addAttribute("searchKey", userRequest.getKeySearch());
+	@GetMapping("/all-blog")
+	public ResponseEntity<Map<String, Object>> getAll(@RequestParam("keySearch") String keySearch,
+			@RequestParam("currentPage") Integer currentPage, @RequestParam("idParent") Integer idCategory, Model model)
+			throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		UserRequest userRequest = new UserRequest(currentPage, globalConfig.getSizeClientBlog(), keySearch, idCategory,
+				true);
+		Page<Blog> page = blogService.getListBlogByFilter(userRequest);
+		result.put("listBlog", mappingModel.mappingModel(page.getContent()));
+		result.put("currentPage", page.getNumber() + 1);
+		result.put("totalPage", page.getTotalPages());
+		result.put("searchKey", userRequest.getKeySearch());
+		result.put("idCategory", userRequest.getIdParent());
 		return ResponseEntity.ok(result);
 	}
 
-	@RequestMapping(value = { "/detail-blog" }, method = RequestMethod.GET)
-	public ResponseEntity<JSONObject> detail(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException {
-		JSONObject blogJSON = new JSONObject();
-		Integer idBlog;
-		try {
-			idBlog = Integer.parseInt(request.getParameter("idBlog"));
-		} catch (Exception e) {
-			return null;
-		}
-		blogJSON = mappingModel.mappingModel(blogService.getById(idBlog));
-		return ResponseEntity.ok(blogJSON);
+	@GetMapping("/detail-blog")
+	public ResponseEntity<Blog> detail(@RequestParam("idBlog") String idBlog) throws Exception {
+		return ResponseEntity.ok(blogService.findById(idBlog).get());
 	}
 }
