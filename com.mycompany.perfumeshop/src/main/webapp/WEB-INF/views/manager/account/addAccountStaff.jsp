@@ -54,7 +54,7 @@
                             <div class="col-md-12">
                                 <!-- DATA TABLE -->
                                 <div class="d-flex">
-                                    <a href="${base}/admin/account" class="btn_back_list"><i
+                                    <a href="${base}/perfume-shop/admin/account.html" class="btn_back_list"><i
                                             class="fa fa-arrow-left"></i></a> &nbsp
                                     <h3 class="title-5 m-b-35">Thêm tài khoản nhân viên</h3>
                                 </div>
@@ -109,7 +109,7 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <a class="btn btn-secondary"
-                                                            href="${base}/admin/account">Hủy</a>
+                                                            href="${base}/perfume-shop/admin/account.html">Hủy</a>
                                                         <button type="button" class="btn btn-primary"
                                                             onclick="saveOrUpdate()">Lưu</button>
                                                     </div>

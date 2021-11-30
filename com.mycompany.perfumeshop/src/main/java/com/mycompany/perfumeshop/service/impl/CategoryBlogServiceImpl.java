@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,14 +18,16 @@ import org.springframework.web.multipart.MultipartFile;
 import com.github.slugify.Slugify;
 import com.mycompany.perfumeshop.conf.GlobalConfig;
 import com.mycompany.perfumeshop.entities.CategoryBlog;
+import com.mycompany.perfumeshop.entities.User;
 import com.mycompany.perfumeshop.repository.CategoryBlogRepository;
-import com.mycompany.perfumeshop.request.UserRequest;
 import com.mycompany.perfumeshop.service.CategoryBlogService;
 import com.mycompany.perfumeshop.specification.CategoryBlogSpecification;
 import com.mycompany.perfumeshop.utils.Constants;
 import com.mycompany.perfumeshop.utils.Validate;
+import com.mycompany.perfumeshop.valueObjects.UserRequest;
 
 @Service
+@Transactional
 public class CategoryBlogServiceImpl implements CategoryBlogService {
 
 	@Autowired
@@ -36,8 +40,9 @@ public class CategoryBlogServiceImpl implements CategoryBlogService {
 	private CategoryBlogSpecification categoryBlogSpecification;
 
 	@Override
-	public CategoryBlog saveOrUpdate(CategoryBlog category, MultipartFile avatar, Integer idUserLogin)
+	public CategoryBlog saveOrUpdate(CategoryBlog category, MultipartFile avatar, User userLogin)
 			throws Exception {
+		Integer idUserLogin = userLogin != null ? userLogin.getId() : null;
 		category.setSeo(new Slugify().slugify(category.getName()));
 		category.setUpdatedDate(Calendar.getInstance().getTime());
 		category.setUpdatedBy(idUserLogin);

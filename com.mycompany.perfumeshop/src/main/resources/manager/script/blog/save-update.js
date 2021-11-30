@@ -37,7 +37,7 @@ function clickSaveBlog() {
     $.ajax({
         type: "POST",
         enctype: 'multipart/form-data',
-        url: "/admin/add-update-blog",
+        url: "/perfume-shop/admin/add-update-blog",
         data: data,
         processData: false, //prevent jQuery from automatically transforming the data into a query string
         contentType: false,
@@ -45,7 +45,7 @@ function clickSaveBlog() {
         timeout: 600000,
         success: function (data) {
             showAlertMessage("Thành công", true);
-            $(location).attr('href', "/admin/blog");
+            $(location).attr('href', "/perfume-shop/admin/blog.html");
         },
         error: function (e) {
             console.log("ERROR : ", e);
@@ -55,7 +55,7 @@ function clickSaveBlog() {
 
 function loadDetailForEdit(idBlog) {
     $.ajax({
-        url: "/admin/detail-blog",
+        url: "/perfume-shop/admin/detail-blog",
         type: "get",
         contentType: "application/json", //set data send to server is json
         data: {
@@ -89,7 +89,7 @@ function loadDetailForEdit(idBlog) {
 
 function loadCategory() {
     $.ajax({
-        url: "/admin/all-category-blog-active",
+        url: "/perfume-shop/admin/all-category-blog-active",
         type: "get",
         contentType: "application/json", //set data send to server is json
         data: "",

@@ -9,21 +9,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mycompany.perfumeshop.conf.GlobalConfig;
 import com.mycompany.perfumeshop.controller.BaseController;
 import com.mycompany.perfumeshop.dto.MappingModel;
 import com.mycompany.perfumeshop.entities.Blog;
-import com.mycompany.perfumeshop.request.UserRequest;
 import com.mycompany.perfumeshop.service.BlogService;
-import com.mycompany.perfumeshop.service.impl.CategoryBlogServiceImpl;
+import com.mycompany.perfumeshop.service.CategoryBlogService;
+import com.mycompany.perfumeshop.valueObjects.UserRequest;
 
 @Controller
+@RequestMapping("/perfume-shop/")
 public class BlogController extends BaseController {
 
 	@Autowired
-	private CategoryBlogServiceImpl categoryBlogService;
+	private CategoryBlogService categoryBlogService;
 
 	@Autowired
 	private BlogService blogService;
@@ -34,7 +36,7 @@ public class BlogController extends BaseController {
 	@Autowired
 	private MappingModel mappingModel;
 
-	@GetMapping("/blog")
+	@GetMapping("blog.html")
 	public String index(final Model model) throws Exception {
 		model.addAttribute("categoryBlogs", categoryBlogService.findByStatus(true));
 		model.addAttribute("amountBlog", blogService.findByStatus(true).size());
@@ -42,7 +44,7 @@ public class BlogController extends BaseController {
 		return "user/blog/blog";
 	}
 
-	@GetMapping("/all-blog")
+	@GetMapping("all-blog")
 	public ResponseEntity<Map<String, Object>> getAll(@RequestParam("keySearch") String keySearch,
 			@RequestParam("currentPage") Integer currentPage, @RequestParam("idParent") Integer idCategory, Model model)
 			throws Exception {
@@ -58,8 +60,8 @@ public class BlogController extends BaseController {
 		return ResponseEntity.ok(result);
 	}
 
-	@GetMapping("/detail-blog")
-	public ResponseEntity<Blog> detail(@RequestParam("idBlog") String idBlog) throws Exception {
-		return ResponseEntity.ok(blogService.findById(idBlog).get());
+	@GetMapping("detail-blog")
+	public ResponseEntity<Blog> detail(@RequestParam("idBlog") Integer idBlog) throws Exception {
+		return ResponseEntity.ok(blogService.findById(idBlog));
 	}
 }

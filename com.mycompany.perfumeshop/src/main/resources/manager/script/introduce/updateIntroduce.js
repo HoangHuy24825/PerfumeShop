@@ -31,7 +31,7 @@ function clickSave() {
     $.ajax({
         type: "POST",
         enctype: 'multipart/form-data',
-        url: "/admin/update-introduce",
+        url: "/perfume-shop/admin/update-introduce",
         data: data,
         processData: false, //prevent jQuery from automatically transforming the data into a query string
         contentType: false,
@@ -39,7 +39,7 @@ function clickSave() {
         timeout: 600000,
         success: function (data) {
             alert("Cập nhật thành công!");
-            $(location).attr('href', "/admin/introduce");
+            $(location).attr('href', "/perfume-shop/admin/introduce.html");
         },
         error: function (e) {
             console.log("ERROR : ", e);
@@ -49,7 +49,7 @@ function clickSave() {
 
 function loadDetailForEdit(idBlog) {
     $.ajax({
-        url: "/admin/introduce-detail",
+        url: "/perfume-shop/admin/introduce-detail",
         type: "get",
         contentType: "application/json", //set data send to server is json
         data: {

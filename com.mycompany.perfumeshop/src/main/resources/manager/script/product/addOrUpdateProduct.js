@@ -76,12 +76,15 @@ function setActiveMenu() {
 function saveOrUpdate() {
 	var form = $('#formDetailProduct')[0];
 	var data = new FormData(form);
+	if ($(".price").length == 1) {
+		data.append("priceSale", "");
+	}
 	var detailCkEditor = editor.getData();
 	data.append('detail', detailCkEditor);
 	$.ajax({
 		type: "POST",
 		enctype: 'multipart/form-data',
-		url: "/admin/add-update-product",
+		url: "/perfume-shop/admin/add-update-product",
 		data: data,
 		processData: false, //prevent jQuery from automatically transforming the data into a query string
 		contentType: false,
@@ -93,7 +96,7 @@ function saveOrUpdate() {
 			} else {
 				showAlertMessage("Thêm mới sản phẩm thành công!", true);
 			}
-			$(location).attr('href', "/admin/product");
+			$(location).attr('href', "/perfume-shop/admin/product.html");
 		},
 		error: function (e) {
 			console.log("ERROR : ", e);
@@ -104,7 +107,7 @@ function saveOrUpdate() {
 //function to add category for selecting
 function loadProduct() {
 	$.ajax({
-		url: "/admin/all-category-active",
+		url: "/perfume-shop/admin/all-category-active",
 		type: "get",
 		contentType: "application/json", //set data send to server is json
 		data: "",
@@ -123,34 +126,29 @@ function loadProduct() {
 }
 
 function loadDetailForEdit(id_product) {
-	$.ajax({
-		url: "/admin/detail-product",
-		type: "get",
+	$.get({
+		url: "/perfume-shop/product/" + id_product,
 		contentType: "application/json", //set data send to server is json
-		data: {
-			idProduct: id_product
-		},
-		dataType: "json", //set data return is json
 		success: function (result) {
 
-			$('#id').val(result.product.id);
-			$('#title').val(result.product.title);
-			$('#select-category').val(result.product.id_category);
-			$('.img--avatar').css("background-image", "url(/upload/" + result.product.avatar + ")");
-			$('#description').val(result.product.description);
-			$("#trademark").val(result.product.trademark);
-			$('#manufactureYear').val(result.product.manufactureYear);
-			$('#origin').val(result.product.origin);
-			$('#fragrant').val(result.product.fragrant);
-			editor.setData(result.product.detail);
+			$('#id').val(result.id);
+			$('#title').val(result.title);
+			$('#select-category').val(result.id_category);
+			$('.img--avatar').css("background-image", "url(/upload/" + result.avatar + ")");
+			$('#description').val(result.description);
+			$("#trademark").val(result.trademark);
+			$('#manufactureYear').val(result.manufactureYear);
+			$('#origin').val(result.origin);
+			$('#fragrant').val(result.fragrant);
+			editor.setData(result.detail);
 
-			if (result.product.isHot == true) {
+			if (result.isHot == true) {
 				$('#isHot1').attr("checked", true);
 			} else {
 				$('#isHot2').attr("checked", true);
 			}
 
-			if (result.product.status == true) {
+			if (result.status == true) {
 				$("#status").attr("checked", true);
 			} else {
 				$("#status").attr("checked", false);
@@ -168,7 +166,7 @@ function loadDetailForEdit(id_product) {
 			});
 
 			var html = '';
-			$.each(result.productAttrs, function (index, value) {
+			$.each(result.attributeProducts, function (index, value) {
 				html += `<div class="item-attribute row col-12">
                         <input name="idAttribute" class="idAttribute" type="number" hidden="true" value="${value.id}" />
 
@@ -182,14 +180,14 @@ function loadDetailForEdit(id_product) {
                         <div class="form-group col-3">
                             <label for="price" class="font-weight-bold">Giá <span class="required">*</span></label>
                             <input type="number" autocomplete="off" class="form-control price" name="price"
-                                placeholder="Giá sản phẩm" required="required" value="${value.price}"></input>
+                                placeholder="Giá sản phẩm" required="required" value="${value.price}" min="0"></input>
                         </div>
 
                         <div class="form-group col-3">
                             <label for="priceSale" class="font-weight-bold">Giảm giá <span
                                     class="required">*</span></label>
                             <input type="number" autocomplete="off" class="form-control priceSale" name="priceSale"
-                                placeholder="Giảm giá" value="${value.priceSale}"></input>
+                                placeholder="Giảm giá" value="${value.priceSale}" min="0"></input>
                         </div>
 
                         <div class="form-group col-3">

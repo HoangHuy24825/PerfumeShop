@@ -27,13 +27,12 @@ function setActiveMenu() {
 //function to add new product
 function saveOrUpdate() {
     var form = $('#form--upload')[0];
-    var data = new FormData(form);
     var typeAccount = 1;
     $.ajax({
         type: "POST",
         enctype: 'multipart/form-data',
-        url: "/admin/add-update-account?typeAccount=" + typeAccount,
-        data: data,
+        url: "/perfume-shop/admin/add-update-account?typeAccount=" + typeAccount,
+        data: new FormData(form),
         processData: false, //prevent jQuery from automatically transforming the data into a query string
         contentType: false,
         cache: false,
@@ -41,7 +40,7 @@ function saveOrUpdate() {
         success: function (jsonResult) {
             if (jsonResult.result == true) {
                 showAlertMessage("Thêm thành công!", true);
-                $(location).attr('href', "/admin/account");
+                $(location).attr('href', "/perfume-shop/admin/account.html");
             } else {
                 showAlertMessage("Thêm thất bại!", false);
                 $("#username_error").text(jsonResult.message + '');

@@ -3,7 +3,6 @@ package com.mycompany.perfumeshop.service.impl;
 import java.io.File;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -18,12 +17,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.github.slugify.Slugify;
 import com.mycompany.perfumeshop.conf.GlobalConfig;
 import com.mycompany.perfumeshop.entities.Blog;
+import com.mycompany.perfumeshop.entities.User;
+import com.mycompany.perfumeshop.exceptions.EntityNotFoundCustomException;
 import com.mycompany.perfumeshop.repository.BlogRepository;
-import com.mycompany.perfumeshop.request.UserRequest;
 import com.mycompany.perfumeshop.service.BlogService;
 import com.mycompany.perfumeshop.specification.BlogSpecification;
 import com.mycompany.perfumeshop.utils.Constants;
 import com.mycompany.perfumeshop.utils.Validate;
+import com.mycompany.perfumeshop.valueObjects.UserRequest;
 
 @Service
 @Transactional
@@ -39,7 +40,8 @@ public class BlogServiceImpl implements BlogService {
 	private BlogSpecification blogSprecification;
 
 	@Override
-	public Blog saveOrUpdate(Blog blog, MultipartFile avatar, Integer idUserLogin) throws Exception {
+	public Blog saveOrUpdate(Blog blog, MultipartFile avatar, User userLogin) throws Exception {
+		Integer idUserLogin = userLogin != null ? userLogin.getId() : null;
 		blog.setSeo(new Slugify().slugify(blog.getName()));
 		blog.setUpdatedDate(Calendar.getInstance().getTime());
 		blog.setUpdatedBy(idUserLogin);
@@ -63,17 +65,6 @@ public class BlogServiceImpl implements BlogService {
 			}
 		}
 		return blogRepository.save(blog);
-	}
-
-	@Override
-	public Boolean deleteById(String idBlog) throws Exception {
-		if (!Validate.isNumber(idBlog)) {
-			return false;
-		}
-		Blog blog = blogRepository.getOne(Integer.parseInt(idBlog));
-		new File(globalConfig.getUploadRootPath() + blog.getAvatar()).delete();
-		blogRepository.delete(blog);
-		return true;
 	}
 
 	@Override
@@ -108,11 +99,18 @@ public class BlogServiceImpl implements BlogService {
 	}
 
 	@Override
-	public Optional<Blog> findById(String id) throws Exception {
-		if (!Validate.isNumber(id)) {
-			return null;
-		}
-		return blogRepository.findById(Integer.parseInt(id));
+	public Boolean deleteById(Integer id) throws Exception {
+		Blog blog = blogRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundCustomException("Not found blog has id: " + id));
+		new File(globalConfig.getUploadRootPath() + blog.getAvatar()).delete();
+		blogRepository.deleteById(id);
+		return true;
+	}
+
+	@Override
+	public Blog findById(Integer idBlog) throws Exception {
+		return blogRepository.findById(idBlog)
+				.orElseThrow(() -> new EntityNotFoundCustomException("Not found blog has id: " + idBlog));
 	}
 
 }

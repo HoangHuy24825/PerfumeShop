@@ -51,7 +51,7 @@ public class Order extends BaseEntity {
 	@Column(name = "user_id")
 	private Integer userID;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "order", fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
 	private List<OrderDetail> orderDetails = new ArrayList<OrderDetail>();
 
 	public void addOrderDetail(OrderDetail _saleOrderProducts) {
@@ -64,7 +64,12 @@ public class Order extends BaseEntity {
 		orderDetails.remove(_saleOrderProducts);
 	}
 
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "order", fetch = FetchType.EAGER)
-	private RequestCancelOrder requestCancelOrder;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+	private List<RequestCancelOrder> requestCancelOrders;
+
+	public Order(Integer id) {
+		super(id);
+		// TODO Auto-generated constructor stub
+	}
 
 }

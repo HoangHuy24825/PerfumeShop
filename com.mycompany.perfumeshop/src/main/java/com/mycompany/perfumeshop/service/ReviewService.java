@@ -2,29 +2,13 @@ package com.mycompany.perfumeshop.service;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
-import org.springframework.stereotype.Service;
-
+import com.mycompany.perfumeshop.entities.Product;
 import com.mycompany.perfumeshop.entities.Review;
 
-@Service
-public class ReviewService extends BaseService<Review> {
+public interface ReviewService {
 
-	@PersistenceContext
-	private EntityManager entityManager;
+	List<Review> findByProduct(Product product) throws Exception;
 
-	@Override
-	protected Class<Review> clazz() {
-		return Review.class;
-	}
+	public Boolean deleteById(Integer id) throws Exception;
 
-	@SuppressWarnings("unchecked")
-	public List<Review> findAllByIdProduct(Integer idProduct) {
-		Query query = entityManager.createQuery("FROM Review r WHERE r.product.id=:idProduct");
-		query.setParameter("idProduct", idProduct);
-		return query.getResultList();
-	}
 }

@@ -211,7 +211,7 @@ function CallSubmit() {
         var form = $('#form-upload')[0];
         var data = new FormData(form);
         $.ajax({
-            url: "/order?strIdProduct=" + arrIdProductStr + "&&amount=" + amount,
+            url: "/perfume-shop/order?strIdProduct=" + arrIdProductStr + "&&amount=" + amount,
             type: "POST",
             enctype: 'multipart/form-data',
             data: data,
@@ -220,7 +220,7 @@ function CallSubmit() {
             cache: false,
             timeout: 600000,
             success: function (jsonResult) {
-                $(location).attr('href', "/recent-order?idSaleOrder=" + jsonResult.idOrder);
+                $(location).attr('href', "/perfume-shop/recent-order?idSaleOrder=" + jsonResult.idOrder);
             },
             error: function (e) {
                 showAlertMessage("Đặt hàng không thành công!", false);

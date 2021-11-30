@@ -58,7 +58,7 @@
 									<div class="table-data__tool-right">
 										<c:if test="${productRole.insert ==true}">
 											<button class="au-btn au-btn-icon au-btn--green au-btn--small"
-												onclick="location.href='${base}/admin/add-account'">
+												onclick="location.href='${base}/perfume-shop/admin/add-account'">
 												<i class="fas fa-plus"></i>Thêm mới nhân viên
 											</button>
 										</c:if>
@@ -115,24 +115,22 @@
 									<!--START TAB LIST ORDER BE PROCESSING-->
 									<div class="tab-pane fade" id="pills-profile" role="tabpanel"
 										aria-labelledby="pills-processing-tab">
-										<div class="table-responsive table-data">
-											<table class="table table-data2">
-												<thead>
-													<tr>
-														<th>Tên đăng nhập</th>
-														<th>Ảnh đại diện</th>
-														<th>Họ tên</th>
-														<th>Email</th>
-														<th>Số điện thoại</th>
-														<th>Địa chỉ</th>
-														<th>Trạng thái</th>
-													</tr>
-												</thead>
-												<tbody id="customer-list">
-													<!-- list order were be processing -->
-												</tbody>
-											</table>
-										</div>
+										<table class="table table-data2">
+											<thead>
+												<tr>
+													<th>Tên đăng nhập</th>
+													<th>Ảnh đại diện</th>
+													<th>Họ tên</th>
+													<th>Email</th>
+													<th>Số điện thoại</th>
+													<th>Địa chỉ</th>
+													<th>Trạng thái</th>
+												</tr>
+											</thead>
+											<tbody id="customer-list">
+												<!-- list order were be processing -->
+											</tbody>
+										</table>
 										<div class="my-3">
 											<nav aria-label="Page navigation example">
 												<ul class="pagination justify-content-center "

@@ -1,6 +1,6 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-    font-size: 16px !important;
+    font-size: 13px !important;
     color: black !important;
 }
 
@@ -170,27 +170,27 @@ input[type=radio] {
 }
 
 /* alert message success */
-.alert{
+.alert {
     background-color: #C5F3D7;
     border-left: 8px solid #2BD971;
-  }
-  
-  .alert #icon-alert-message i {
+}
+
+.alert #icon-alert-message i {
     position: absolute;
     left: 20px;
     top: 50%;
     transform: translateY(-50%);
     color: #2BD971;
     font-size: 30px;
-  }
-  
-  .alert .msg {
+}
+
+.alert .msg {
     padding: 0 20px;
     font-size: 18px;
     color: #24AD5F;
-  }
-  
-  .alert .close-btn-alert {
+}
+
+.alert .close-btn-alert {
     position: absolute;
     right: 0px;
     top: 50%;
@@ -198,44 +198,44 @@ input[type=radio] {
     background: #24AD5F;
     padding: 20px 18px;
     cursor: pointer;
-  }
-  
-  .alert .close-btn-alert:hover {
+}
+
+.alert .close-btn-alert:hover {
     background: #38F5A3;
-  }
-  
-  .alert .close-btn-alert .fas {
+}
+
+.alert .close-btn-alert .fas {
     color: #cdecdb;
     font-size: 22px;
     line-height: 40px;
-  }
-  
-  .alert .close-btn-alert:hover .fas{
+}
+
+.alert .close-btn-alert:hover .fas {
     color: #24AD5F;
-  }
-  
-  /* alert message fail */
-  .alert-fail{
+}
+
+/* alert message fail */
+.alert-fail {
     background-color: #FFE1E3;
     border-left: 8px solid #FF4456;
-  }
-  
-  .alert-fail #icon-alert-message i {
+}
+
+.alert-fail #icon-alert-message i {
     position: absolute;
     left: 20px;
     top: 50%;
     transform: translateY(-50%);
     color: #FE4950;
     font-size: 30px;
-  }
-  
-  .alert-fail .msg {
+}
+
+.alert-fail .msg {
     padding: 0 20px;
     font-size: 18px;
     color: #F694A9;
-  }
-  
-  .alert-fail .close-btn-alert {
+}
+
+.alert-fail .close-btn-alert {
     position: absolute;
     right: 0px;
     top: 50%;
@@ -243,22 +243,22 @@ input[type=radio] {
     background: #FF9CA4;
     padding: 20px 18px;
     cursor: pointer;
-  }
-  
-  .alert-fail .close-btn-alert:hover {
+}
+
+.alert-fail .close-btn-alert:hover {
     background: #FFBDC2;
-  }
-  
-  .alert-fail .close-btn-alert .fas {
+}
+
+.alert-fail .close-btn-alert .fas {
     color: #FD4653;
     font-size: 22px;
     line-height: 40px;
-  }
-  
-  .alert-fail .close-btn-alert:hover .fas{
+}
+
+.alert-fail .close-btn-alert:hover .fas {
     color: #FD4653;
-  }
-  
+}
+
 
 .switch {
     position: relative;
@@ -324,11 +324,43 @@ input:checked+.slider:before {
 
 .table-data2.table tbody td,
 .table-data2.table thead th,
-.block-name-product  {
-    font-size: 16px !important;
+.block-name-product {
+    font-size: 14px !important;
 }
 
 #btnCloseConfirm,
 #btnAgree {
-  width: 150px !important;
+    width: 150px !important;
+}
+
+label.error {
+    color: red;
+    font-size: 1rem;
+    display: block;
+    margin-top: 5px;
+}
+
+input.error {
+    border: 1px solid red;
+    font-weight: 300;
+    color: red;
+}
+
+.section__content--p30 {
+    font-size: 13px !important;
+}
+
+.table-data2 th,
+.table-data2 td {
+    font-size: 13px !important;
+}
+
+.table-data2 img {
+    width: 60px !important;
+    height: 60px !important;
+}
+
+.modal,
+.nav-item {
+    font-size: 16px !important;
 }

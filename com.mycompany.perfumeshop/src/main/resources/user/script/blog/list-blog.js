@@ -81,7 +81,7 @@ function setMenuBanner() {
 
 function loadData(searchStr, page, id_category) {
     $.ajax({
-        url: "/all-blog",
+        url: "/perfume-shop/all-blog",
         type: "GET",
         data: {
             keySearch: searchStr,
@@ -168,7 +168,7 @@ function loadData(searchStr, page, id_category) {
 
 function detail(id_blog) {
     $.ajax({
-        url: "/detail-blog",
+        url: "/perfume-shop/detail-blog",
         type: "GET",
         data: {
             idBlog: id_blog

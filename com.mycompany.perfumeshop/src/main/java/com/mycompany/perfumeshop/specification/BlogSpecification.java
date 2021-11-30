@@ -9,7 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import com.mycompany.perfumeshop.entities.Blog;
-import com.mycompany.perfumeshop.request.UserRequest;
+import com.mycompany.perfumeshop.valueObjects.UserRequest;
 
 @Component
 public class BlogSpecification {

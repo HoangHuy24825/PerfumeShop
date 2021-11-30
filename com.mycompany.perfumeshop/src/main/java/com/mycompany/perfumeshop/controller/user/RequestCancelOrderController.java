@@ -1,51 +1,34 @@
 package com.mycompany.perfumeshop.controller.user;
 
-import java.io.IOException;
 import java.util.Calendar;
 
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mycompany.perfumeshop.controller.BaseController;
-import com.mycompany.perfumeshop.entities.RequestCancelOrder;
 import com.mycompany.perfumeshop.entities.Order;
-import com.mycompany.perfumeshop.service.RequestCancelOrderService;
+import com.mycompany.perfumeshop.entities.RequestCancelOrder;
 import com.mycompany.perfumeshop.service.OrderService;
+import com.mycompany.perfumeshop.service.RequestCancelOrderService;
 
 @Controller
+@RequestMapping("/perfume-shop/")
 public class RequestCancelOrderController extends BaseController {
 
 	@Autowired
-	private OrderService saleOrderService;
+	private OrderService orderService;
 
 	@Autowired
 	private RequestCancelOrderService requestCancelOrderService;
 
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/request-cancel-order" }, method = RequestMethod.GET)
-	public ResponseEntity<JSONObject> requestCancelOrder(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException, MessagingException {
-		JSONObject result = new JSONObject();
-		Integer idOrder;
-		try {
-			idOrder = Integer.parseInt(request.getParameter("idOrder"));
-		} catch (Exception e) {
-			result.put("message", Boolean.FALSE);
-			return ResponseEntity.ok(result);
-		}
-
-		String reason = request.getParameter("reason");
-		Order saleOrder = saleOrderService.getById(idOrder);
-
+	@GetMapping("request-cancel-order")
+	public ResponseEntity<Boolean> requestCancelOrder(@RequestParam("idOrder") String idOrder,
+			@RequestParam("reason") String reason) throws Exception {
+		Order saleOrder = orderService.findById(idOrder);
 		RequestCancelOrder requestCancelOrder = new RequestCancelOrder();
 		requestCancelOrder.setCreatedBy(saleOrder.getUserID());
 		requestCancelOrder.setCustomerName(saleOrder.getCustomerName());
@@ -56,10 +39,8 @@ public class RequestCancelOrderController extends BaseController {
 		requestCancelOrder.setStatus(false);
 		requestCancelOrder.setOrder(saleOrder);
 		requestCancelOrder.setReason(reason);
-
 		requestCancelOrderService.saveOrUpdate(requestCancelOrder);
-		result.put("message", Boolean.TRUE);
-		return ResponseEntity.ok(result);
+		return ResponseEntity.ok( Boolean.TRUE);
 	}
 
 }

@@ -43,7 +43,7 @@
 						<div class="login_part_text_iner">
 							<h2>Bạn mới đến với cửa hàng của chúng tôi?</h2>
 							<p>Tạo một tài khoản để tham gia mua sắm được dễ dàng và thuận tiện hơn!</p>
-							<a href="${base }/register" class="btn_3">Tạo một tài khoản</a>
+							<a href="${base }/perfume-shop/register.html" class="btn_3">Tạo một tài khoản</a>
 						</div>
 					</div>
 				</div>

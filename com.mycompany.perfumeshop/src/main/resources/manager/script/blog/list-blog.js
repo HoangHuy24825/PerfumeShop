@@ -37,7 +37,7 @@ function loadBlog(keySearch, currentPage) {
     var update_role = $("#update_role").val();
     var delete_role = $("#delete_role").val();
     $.ajax({
-        url: "/admin/all-blog",
+        url: "/perfume-shop/admin/all-blog",
         type: "get",
         contentType: "application/json", // kieu du lieu gui len server la json
         data: {
@@ -143,11 +143,11 @@ $("body").on("click", ".pagination li a", function (event) {
 
 
 function detail(id) {
-    window.location.href = '/admin/blog-detail/' + $('#view_' + id).val();
+    window.location.href = '/perfume-shop/admin/blog-detail/' + $('#view_' + id).val();
 }
 
 function edit(id) {
-    window.location.href = '/admin/edit-blog/' + $('#edit_' + id).val();
+    window.location.href = '/perfume-shop/admin/edit-blog/' + $('#edit_' + id).val();
 }
 
 function deleteCategory(idBlog) {
@@ -158,13 +158,13 @@ function deleteCategory(idBlog) {
 function deleteConfirmed(idBlog) {
     $('#modalCustomerConfirmContent').modal('hide');
     $.post({
-        url: '/admin/delete-blog',
+        url: '/perfume-shop/admin/delete-blog',
         type: "POST",
         data: {
             idBlog: idBlog
         },
         success: function (result) {
-            if (result.message == true) {
+            if (result == true) {
                 showAlertMessage("Xóa danh mục thành công!", true);
                 loadBlog(null, 1);
             } else {

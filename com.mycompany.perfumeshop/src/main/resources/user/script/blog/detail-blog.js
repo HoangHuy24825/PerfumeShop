@@ -102,7 +102,7 @@ function setMenuBanner() {
 
 function loadData(searchStr, page, id_category, typeOrder, filterType) {
     $.ajax({
-        url: "/all-product",
+        url: "/perfume-shop/all-product",
         type: "GET",
         data: {
             searchStr: searchStr,
@@ -180,7 +180,7 @@ function loadData(searchStr, page, id_category, typeOrder, filterType) {
 }
 
 function detail(id_product) {
-    window.location.href = '/detail-product?id-product=' + id_product;
+    window.location.href = '/perfume-shop/detail-product?id-product=' + id_product;
 };
 
 function addProductToCart(id_product) {
@@ -189,7 +189,7 @@ function addProductToCart(id_product) {
         quanlity: 1
     }
     $.ajax({
-        url: "/cart/add",
+        url: "/perfume-shop/cart/add",
         type: "post",
         data: JSON.stringify(data),
         dataType: "json",
@@ -207,7 +207,7 @@ function addProductToCart(id_product) {
 function loadNewProduct() {
     console.log("load new product");
     $.ajax({
-        url: "/new-product",
+        url: "/perfume-shop/new-product",
         type: "GET",
         data: {},
         dataType: "json",

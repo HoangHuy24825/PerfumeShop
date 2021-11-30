@@ -31,12 +31,11 @@ public abstract class BaseController {
 	}
 
 	@ModelAttribute("userLogined")
-	public User getUserLogined() {
+	public User getUserLogined() throws Exception {
 		Object userLogined = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (userLogined != null && userLogined instanceof UserDetails) {
 			User user = (User) userLogined;
-			User userBD = userService.getById(user.getId());
-
+			User userBD = userService.findById(user.getId());
 			user.setStatus(userBD.getStatus());
 			user.setCreatedBy(userBD.getCreatedBy());
 			user.setUpdatedBy(userBD.getUpdatedBy());
@@ -56,7 +55,7 @@ public abstract class BaseController {
 	}
 
 	@ModelAttribute("categoryRole")
-	public UserRole getCategoryRole() {
+	public UserRole getCategoryRole() throws Exception {
 		User user = getUserLogined();
 		if (user != null) {
 			for (UserRole userRole : user.getUserRoles()) {
@@ -69,7 +68,7 @@ public abstract class BaseController {
 	}
 
 	@ModelAttribute("productRole")
-	public UserRole getProductRole() {
+	public UserRole getProductRole() throws Exception {
 		User user = getUserLogined();
 		if (user != null) {
 			for (UserRole userRole : user.getUserRoles()) {
@@ -82,7 +81,7 @@ public abstract class BaseController {
 	}
 
 	@ModelAttribute("categoryBlogRole")
-	public UserRole getCategoryBlofRole() {
+	public UserRole getCategoryBlofRole() throws Exception {
 		User user = getUserLogined();
 		if (user != null) {
 			for (UserRole userRole : user.getUserRoles()) {
@@ -95,7 +94,7 @@ public abstract class BaseController {
 	}
 
 	@ModelAttribute("blogRole")
-	public UserRole getBlogRole() {
+	public UserRole getBlogRole() throws Exception {
 		User user = getUserLogined();
 		if (user != null) {
 			for (UserRole userRole : user.getUserRoles()) {
@@ -108,7 +107,7 @@ public abstract class BaseController {
 	}
 
 	@ModelAttribute("orderRole")
-	public UserRole getOrderRole() {
+	public UserRole getOrderRole() throws Exception {
 		User user = getUserLogined();
 		if (user != null) {
 			for (UserRole userRole : user.getUserRoles()) {
@@ -121,7 +120,7 @@ public abstract class BaseController {
 	}
 
 	@ModelAttribute("accountRole")
-	public UserRole getAccountRole() {
+	public UserRole getAccountRole() throws Exception {
 		User user = getUserLogined();
 		if (user != null) {
 			for (UserRole userRole : user.getUserRoles()) {
@@ -134,7 +133,7 @@ public abstract class BaseController {
 	}
 
 	@ModelAttribute("introduceRole")
-	public UserRole getIntroduceRole() {
+	public UserRole getIntroduceRole() throws Exception {
 		User user = getUserLogined();
 		if (user != null) {
 			for (UserRole userRole : user.getUserRoles()) {
@@ -147,7 +146,7 @@ public abstract class BaseController {
 	}
 
 	@ModelAttribute("notifyRole")
-	public UserRole getNotifyRole() {
+	public UserRole getNotifyRole() throws Exception {
 		User user = getUserLogined();
 		if (user != null) {
 			for (UserRole userRole : user.getUserRoles()) {

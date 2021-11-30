@@ -177,22 +177,18 @@ function validateFormInfor() {
 function clickUpdateInfo() {
     if (validateFormInfor()) {
         var form = $('#form-infor')[0];
-        var data = new FormData(form);
-        for (var value of data.values()) {
-            console.log(value);
-        }
         $.ajax({
             type: "POST",
             enctype: 'multipart/form-data',
-            url: "/add-update-account",
-            data: data,
+            url: "/perfume-shop/add-update-account",
+            data: new FormData(form),
             processData: false, //prevent jQuery from automatically transforming the data into a query string
             contentType: false,
             cache: false,
             timeout: 600000,
             success: function (data) {
                 showAlertMessage("Đổi thông tin thành công!", true);
-                window.location.href = '/my-account';
+                window.location.href = '/perfume-shop/my-account.html';
             },
             error: function (e) {
                 console.log("ERROR : ", e);
@@ -235,19 +231,16 @@ function changePassword() {
             $("#error_confirm_password").text("Nhập lại mật khẩu mới phải trùng mới mật khẩu mới!");
             $("#error_confirm_password").show();
         } else {
-            $.ajax({
-                type: "POST",
-                enctype: 'multipart/form-data',
-                url: "/update-password?oldPass=" + oldPassword + "&&newPass=" + newPassword,
-                data: {},
-                processData: false, //prevent jQuery from automatically transforming the data into a query string
-                contentType: false,
-                cache: false,
-                timeout: 600000,
+            $.post({
+                url: "/perfume-shop/update-password",
+                data: {
+                    oldPassword: oldPassword,
+                    newPassword: newPassword
+                },
                 success: function (jsonResult) {
-                    if (jsonResult.message == true) {
+                    if (jsonResult == true) {
                         showAlertMessage("Đổi mật khẩu thành công!", true);
-                        window.location.href = '/my-account';
+                        window.location.href = '/perfume-shop/my-account.html';
                     } else {
                         $('#error_old_password').text("Sai mật khẩu!");
                         $('#error_old_password').show();
@@ -267,7 +260,7 @@ const loadFile = (event) => {
 
 function LoadBillModal(idOrder) {
     $.ajax({
-        url: '/load-sale-order-id-order',
+        url: '/perfume-shop/order',
         data: {
             idOrder: idOrder
         },
@@ -303,7 +296,7 @@ function LoadBillModal(idOrder) {
 
 function loadSaleOrderProduct(idOrder, status) {
     $.ajax({
-        url: '/sale-order-product-id-order',
+        url: '/perfume-shop/sale-order-product-id-order',
         data: {
             idOrder: idOrder
         },
@@ -314,7 +307,7 @@ function loadSaleOrderProduct(idOrder, status) {
             }
             var html1 = '';
             var html2 = '';
-            $.each(jsonResult.saleOrderProducts, function (i, item) {
+            $.each(jsonResult.orderDetails, function (i, item) {
                 if (status) {
                     html1 += '<div class="sp">';
                     html1 += '<br>';
@@ -355,31 +348,10 @@ function loadSaleOrderProduct(idOrder, status) {
     });
 }
 
-function loadSaleOrderProductTable(idOrder) {
-    $.ajax({
-        url: '/sale-order-product-id-order',
-        data: {
-            idOrder: idOrder
-        },
-        type: "GET",
-
-        success: function (jsonResult) {
-
-            var html = "";
-            $.each(jsonResult.saleOrderProducts, function (i, item) {
-                html += '<span>' + item.productName + '</span>';
-                html += '<br/>';
-                html += '<br/>';
-
-            });
-            $('#billBelow' + idOrder).html(html);
-        }
-    });
-}
 
 function loadSaleOrder(idAccount) {
     $.ajax({
-        url: '/load-sale-order-id-account',
+        url: '/perfume-shop/order-by-account',
         data: {
             idAccount: idAccount
         },
@@ -387,25 +359,24 @@ function loadSaleOrder(idAccount) {
         success: function (jsonResult) {
             var html = '';
             var html2 = '';
-            var arrIdOrder = [];
-            $.each(jsonResult.saleOrders, function (index, item) {
-                if (item.processingStatus == 1 || item.processingStatus == 2 || item
+            $.each(jsonResult.orders, function (index, order) {
+                if (order.processingStatus == 1 || order.processingStatus == 2 || order
                     .processingStatus == 0) {
                     var status;
-                    if (item.processingStatus == 1)
+                    if (order.processingStatus == 1)
                         status = "Đã tiếp nhận";
-                    else if (item.processingStatus == 2)
+                    else if (order.processingStatus == 2)
                         status = "Giao cho đơn vị vận chuyển";
-                    else if (item.processingStatus == 0)
+                    else if (order.processingStatus == 0)
                         status = "Đơn hàng mới";
 
-                    html += '<div class="row' + item.id + '">';
+                    html += '<div class="row' + order.id + '">';
                     html += '<div class="col-md-12">';
                     html += '<div class="card">';
                     html += '<div class="card-header">';
                     html += '<ul class="blog-info-link">';
-                    html += '<li><a href="#"><i class="far fa-clock"></i>' + item.createdDate +
-                        '</a></li>';
+                    html += '<li><a href="#"><i class="far fa-clock"></i>' + order
+                        .createdDate + '</a></li>';
                     html += '<li>';
                     html += '<a href="#" class="text-success">';
                     html += '<i class="fas fa-shipping-fast"></i>';
@@ -416,9 +387,26 @@ function loadSaleOrder(idAccount) {
                     html += '</div>';
                     html += '<div class="card-body">';
                     html += '<div class=" ">';
-                    html += '<div id="' + item.id + '"></div>';
-                    html += '<div class="p-4">';
-                    html += '<h4 class="text-danger float-right">Tổng tiền: ' + item.total
+                    $.each(order.orderDetails, function (indexInArray, detail) {
+                        html +=
+                            `
+                            <div class="sp_bill px-4">
+                                <br>
+                                <div class="d-flex flex-row">
+                                    <img class="border" src="/upload/${detail.avatar}" alt="" width="100" height="100">
+                                    <div class="ml-3">
+                                    <h5>${detail.productName}</h5>
+                                    <p>
+                                        Giá: ${detail.price.toLocaleString('it-IT', {style: 'currency',currency: 'VND'})}
+                                    </p>
+                                    <p>Số lượng: ${detail.quantity}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            `
+                    });
+                    html += '<div class="px-4 pt-2">';
+                    html += '<h4 class="text-success font-weight-bold float-right">Tổng tiền: ' + order.total
                         .toLocaleString('it-IT', {
                             style: 'currency',
                             currency: 'VND'
@@ -429,11 +417,10 @@ function loadSaleOrder(idAccount) {
                     html += '<div class="checkout_btn_inner float-right">';
                     html +=
                         '<button style="border:unset" type="button" class="btn_1 btn_billAccount" onclick="LoadBillModal(' +
-                        item.id +
+                        order.id +
                         ')" value="Chi tiết" data-toggle="modal" data-target="#modal-bill-detail">Chi tiết đơn hàng</button>';
                     html +=
-                        '<button style="border:unset" type="button" class="btn_1 checkout_btn_1 btn_billAccount" id="btn_pay" onclick="cancelOrder(' +
-                        item.id + ')">Hủy đơn hàng</button>';
+                        `<button style="border:unset" type="button" class="btn_1 btn_billAccount btn_pay" data-id-order="${order.id}" >Hủy đơn hàng</button>`;
                     html += '</div>';
                     html += '</div>';
                     html += '</div>';
@@ -443,50 +430,75 @@ function loadSaleOrder(idAccount) {
                     html += '</div >';
                     html += '</div >';
                     html += '</div ></br>';
-                    arrIdOrder.push(item.id);
                 }
             });
             $('#newBill').html(html);
-            for (const element of arrIdOrder) {
-                loadSaleOrderProduct(element, false);
-            }
-
-            var arrIdOrderBelow = [];
-            $.each(jsonResult.saleOrders, function (index, item) {
-                if (item.processingStatus == 3 || item.processingStatus == 4) {
+            $.each(jsonResult.orders, function (index, order) {
+                if (order.processingStatus == 3 || order.processingStatus == 4) {
                     var status = "";
-                    if (item.processingStatus == 3) {
+                    if (order.processingStatus == 3) {
                         status = "Đã giao thành công";
-                    } else if (item.processingStatus == 4) {
+                    } else if (order.processingStatus == 4) {
                         status = "Đã hủy";
                     }
-
                     html2 += '<tr>';
-                    html2 += '<th scope="row">' + item.code + '</th>';
-                    html2 += '<td>' + item.createdDate + '</td>';
-                    html2 += '<td id = "billBelow' + item.id + '">'; /*product*/
+                    html2 += '<th scope="row">' + order.code + '</th>';
+                    html2 += '<td>' + order.createdDate + '</td>';
+                    html2 += '<td id = "billBelow' + order.id + '">';
+                    $.each(order.orderDetails, function (indexInArray, detail) {
+                        html2 +=
+                            `
+                            <span>${detail.productName}</span>
+                        
+                        `
+                    });
                     html2 += '</td >';
-                    html2 += '<td>' + item.total.toLocaleString('it-IT', {
+                    html2 += '<td>' + order.total.toLocaleString('it-IT', {
                         style: 'currency',
                         currency: 'VND'
                     }) + '</td>';
 
-                    if (item.processingStatus == 4)
+                    if (order.processingStatus == 4)
                         html2 += '<td id="statusBill" style="color:red">' + status + '</td>';
-                    else if (item.processingStatus == 3)
-                        html2 += '<td id="statusBill" style="color:green">' + status + '</td>';
+                    else if (order.processingStatus == 3)
+                        html2 += '<td id="statusBill" style="color:green">' + status +
+                        '</td>';
                     html2 += '</tr>';
                     $('#oldBill').html(html2);
-                    if (item.Status == 4)
-                        $('#statusBill' + item.id).css("color", "red");
-                    if (item.Status == 3)
-                        $('#statusBill' + item.id).css("color", "green");
-                    arrIdOrderBelow.push(item.id);
+                    if (order.Status == 4)
+                        $('#statusBill' + order.id).css("color", "red");
+                    if (order.Status == 3)
+                        $('#statusBill' + order.id).css("color", "green");
                 }
             });
-            for (const element of arrIdOrderBelow) {
-                loadSaleOrderProductTable(element);
+        }
+    });
+
+    $("body").on("click", ".btn_pay", function () {
+        var idOrder = parseInt($(this).data("id-order"));
+        $("#modal-confirm").modal("show");
+        $.get({
+            url: "/perfume-shop/get-code-cancel-bill/" + null + "/" + null,
+            success: function (jsonResult) {
+                $(".btnSendCode").data("code-confirm", jsonResult.codeConfirm);
+                $(".btnSendCode").data("id-order", idOrder);
+            },
+            error: function (e) {
+
             }
+        });
+    });
+
+
+    $("body").on("click", ".btnSendCode", function () {
+        if ($(this).data("code-confirm") == $("#code-confirm").val()) {
+            $("#modal-confirm").modal("hide");
+            cancelOrder($(this).data("id-order"));
+            console.log($(this).data("id-order"));
+            $(this).data("code-confirm", "");
+        } else {
+            $("#code-confirm-message").text("Nhập sai mã! Vui lòng nhập lại!");
+            $("#code-confirm-message").show();
         }
     });
 }
@@ -502,33 +514,17 @@ function cancelOrderNotifyConfirmed(idOrder) {
     if (reason != '' && reason != null) {
         $('#modal-request-cancel').modal('hide');
         $.ajax({
-            url: '/request-cancel-order',
+            url: '/perfume-shop/request-cancel-order',
             data: {
                 idOrder: idOrder,
                 reason: reason
             },
             type: "GET",
             success: function (jsonResult) {
-                if (jsonResult.message == true) {
-                    $('#btn_save').attr("onclick", "");
-                    $('#modalConfirmOderContent').text(
-                        "Chúng tôi đã nhận được yêu cầu hủy đơn hàng của bạn. Vui lòng kiểm tra email thường xuyên để nhận được thông " +
-                        "báo về việc hủy đơn hàng!");
-                    $('#btn_save').hide();
-                    $('#btn_save').text("OK");
-                    $('#btn_close').css({
-                        "background-color": "#007bff",
-                        "border": "1px solid #007bff",
-                        "width": "200px"
-                    })
-                    $('#btn_close').text("OK");
-                    $('#btn_close').show();
-                    $('#btn_save').css({
-                        "background-color": "rgb(255, 66, 78)",
-                        "border": "1px solid rgb(255, 66, 78)",
-                        "width": "200px"
-                    });
-                    $('#modalConfirmOder').modal('show');
+                if (jsonResult == true) {
+                    showConfirm("Chúng tôi đã nhận được yêu cầu hủy đơn hàng của bạn." +
+                        "Vui lòng kiểm tra email thường xuyên để nhận được thông báo về việc hủy đơn hàng!",
+                        "Đóng");
                 } else {
                     showAlertMessage("Gửi yêu cầu thất bại!", false);
                 }

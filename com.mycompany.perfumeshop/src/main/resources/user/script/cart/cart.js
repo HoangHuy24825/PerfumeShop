@@ -39,7 +39,7 @@ function deleteRecord(id_product) {
 function deleteRecordConfirmed(id_product) {
     $("#modalCustomerConfirm").modal("hide");
     $.ajax({
-        url: "/Cart/DeleteCart?id_product=" + id_product,
+        url: "/perfume-shop/Cart/DeleteCart?id_product=" + id_product,
         type: "post",
         data: {},
         dataType: "json",
@@ -262,7 +262,7 @@ function deleteAllRecordConfirmed() {
     var arrIdProduct = arrIdProductStr.split(";");
 
     $.ajax({
-        url: "/Cart/DeleteSelectedCart?id_product=" + arrIdProductStr,
+        url: "/perfume-shop/Cart/DeleteSelectedCart?id_product=" + arrIdProductStr,
         type: "POST",
         dataType: 'json',
         data: {},
@@ -287,7 +287,7 @@ function addProductToCart(id_product, amount) {
         quantity: amount
     }
     $.ajax({
-        url: "/cart/add",
+        url: "/perfume-shop/cart/add",
         type: "post",
         data: JSON.stringify(data),
         dataType: "json",
@@ -309,7 +309,7 @@ function addProductToCartSilent(id_product, amount) {
         quantity: amount
     }
     $.ajax({
-        url: "/cart/add-product",
+        url: "/perfume-shop/cart/add-product",
         type: "post",
         data: JSON.stringify(data),
         dataType: "json",
@@ -365,7 +365,7 @@ function payNow() {
         for (var i = 0; i < arrIdProduct.length; i++) {
             listIdProduct += arrIdProduct[i] + ";";
         }
-        window.location.href = '/bill-cart?strIdProduct=' + listIdProduct;
+        window.location.href = '/perfume-shop/bill-cart?strIdProduct=' + listIdProduct;
     } else {
         showAlertMessage("Chưa có sản phẩm nào được chọn mua!", false);
     }

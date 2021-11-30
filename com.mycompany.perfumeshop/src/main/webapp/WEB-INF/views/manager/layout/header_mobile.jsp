@@ -21,32 +21,32 @@
                 <div class="container-fluid">
                     <ul class="navbar-mobile__list list-unstyled">
                         <li id="menu--dashboard" class="">
-                            <a href="${base}/admin/dashboard">
+                            <a href="${base}/perfume-shop/admin/dashboard.html">
                                 <i class="fas fa-tachometer-alt"></i>Dashboard</a>
                         </li>
                        
                         <li id="menu--category" class="">
-                            <a href="${base}/admin/category">
+                            <a href="${base}/perfume-shop/admin/category.html">
                                 <i class="fas fa-th-large"></i>Danh Mục</a>
                         </li>
                         <li id="menu--product" class="">
-                            <a href="${base}/admin/product">
+                            <a href="${base}/perfume-shop/admin/product.html">
                                 <i class="fas fa-sitemap"></i>Sản Phẩm</a>
                         </li>
                          <li id="menu--order" class="">
-                            <a href="${base}/admin/order">
+                            <a href="${base}/perfume-shop/admin/order.html">
                                <i class="fas fa-money-check"></i>Đơn hàng</a>
                         </li>
                         <li id="menu--category--blog" class="">
-                            <a href="${base}/admin/category-blog">
+                            <a href="${base}/perfume-shop/admin/category-blog.html">
                                 <i class="fas fa-th-list"></i>Danh mục blog</a>
                         </li>
                         <li id="menu--blog" class="">
-                            <a href="${base}/admin/blog">
+                            <a href="${base}/perfume-shop/admin/blog.html">
                                 <i class="fab fa-blogger"></i>Blog</a>
                         </li>
                          <li id="menu--account" class="">
-                            <a href="${base}/admin/account">
+                            <a href="${base}/perfume-shop/admin/account.html">
                                 <i class="fas fa-user-circle"></i>Tài Khoản</a>
                         </li>
                     </ul>

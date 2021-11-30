@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,6 +57,7 @@ public class Product extends BaseEntity {
 	@Column(name = "is_hot", nullable = true)
 	private Boolean isHot = Boolean.FALSE;
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "category_id")
 	private Category category;
@@ -96,6 +99,10 @@ public class Product extends BaseEntity {
 	public void removeReview(Review review) {
 		reviews.remove(review);
 		review.setProduct(null);
+	}
+
+	public Product(Integer id) {
+		super(id);
 	}
 
 }

@@ -43,7 +43,7 @@
 						<div class="login_part_text_iner">
 							<h2>Bạn mới đến với cửa hàng của chúng tôi?</h2>
 							<p>Tạo một tài khoản để tham gia mua sắm được dễ dàng và thuận tiện hơn!</p>
-							<a href="${base }/register" class="btn_3">Tạo một tài khoản</a>
+							<a href="${base }/perfume-shop/register.html" class="btn_3">Tạo một tài khoản</a>
 						</div>
 					</div>
 				</div>
@@ -79,7 +79,7 @@
 									<button type="button" value="submit" class="btn_3" onclick="call_Login()">
 										Đăng nhập
 									</button>
-									<a class="lost_pass" href="${base}/forget-password">Quên mật khẩu?</a>
+									<a class="lost_pass" href="${base}/perfume-shop/forget-password.html">Quên mật khẩu?</a>
 								</div>
 							</form>
 						</div>

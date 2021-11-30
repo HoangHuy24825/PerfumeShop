@@ -42,4 +42,9 @@ public abstract class BaseEntity {
 	@Column(name = "updated_date", nullable = true)
 	private Date updatedDate;
 
+	public BaseEntity(Integer id) {
+		super();
+		this.id = id;
+	}
+
 }

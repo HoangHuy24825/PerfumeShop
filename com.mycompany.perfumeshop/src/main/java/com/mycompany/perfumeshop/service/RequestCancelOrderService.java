@@ -2,46 +2,25 @@ package com.mycompany.perfumeshop.service;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.mycompany.perfumeshop.entities.RequestCancelOrder;
-import com.mycompany.perfumeshop.repository.RequestCancelOrderRepository;
+import com.mycompany.perfumeshop.entities.User;
 
-@Service
-@Transactional
-public class RequestCancelOrderService extends BaseService<RequestCancelOrder> {
+public interface RequestCancelOrderService {
 
-	@PersistenceContext
-	private EntityManager entityManager;
+	List<RequestCancelOrder> getTopThreeContact() throws Exception;
 
-	@Autowired
-	private RequestCancelOrderRepository requestRepository;
+	List<RequestCancelOrder> getUnreadNotify() throws Exception;
 
-	@Override
-	protected Class<RequestCancelOrder> clazz() {
-		return RequestCancelOrder.class;
-	}
+	Integer countUnreadNotify() throws Exception;
 
-	public List<RequestCancelOrder> getTopThreeContact() {
-		return requestRepository.findTop3ByOrderByCreatedDateDesc();
-	}
+	RequestCancelOrder saveOrUpdate(RequestCancelOrder requestCancelOrder) throws Exception;
 
-	public List<RequestCancelOrder> getUnreadNotify() {
-		return requestRepository.findByStatus(false);
-	}
+	RequestCancelOrder saveOrUpdate(RequestCancelOrder requestCancelOrder, User userLogin) throws Exception;
 
-	public Integer countUnreadNotify() {
-		return requestRepository.countByStatus(false);
-	}
+	public Boolean deleteById(Integer id) throws Exception;
 
-	public Boolean deleteNotifyById(Integer idNotify) {
-		requestRepository.deleteById(idNotify);
-		return true;
-	}
+	List<RequestCancelOrder> findAll() throws Exception;
+
+	RequestCancelOrder findById(Integer id) throws Exception;
 
 }

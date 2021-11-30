@@ -49,7 +49,7 @@ $(document).ready(function () {
             quantity: quantity
         }
         $.ajax({
-            url: "/cart/add",
+            url: "/perfume-shop/cart/add",
             type: "post",
             data: JSON.stringify(data),
             dataType: "json",
@@ -67,13 +67,13 @@ $(document).ready(function () {
     $("body").on("click", "#buyNow", function () {
         var maxOrder = parseInt($("#numberProductOrder").data("max-order"));
         var amount = parseInt($("#numberProductOrder").val());
-        var idProduct = $("#numberProductOrder").data("id-product");
+        var idAttr = $("#numberProductOrder").data("id-product");
         if (maxOrder == 0) {
             showAlertMessage("Sản phẩm tạm thời hết hàng!", true);
         } else if (maxOrder < amount) {
             showAlertMessage("Số lượng mua vượt quá số lượng hiện có!", false);
         } else {
-            window.location.href = '/bill?idProduct=' + idProduct + "&&amount=" + amount;
+            window.location.href = '/perfume-shop/bill?idAttr=' + idAttr + "&&amount=" + amount;
         }
     });
 
@@ -85,7 +85,7 @@ $(document).ready(function () {
 function loadData() {
     var id_product = $("#id_detail_product").val();
     $.get({
-        url: "/detail-product-loading",
+        url: "/perfume-shop/detail-product-loading",
         data: {
             id_product: id_product
         },
@@ -210,7 +210,7 @@ function setMenuBanner() {
 
 function loadNewProduct() {
     $.ajax({
-        url: "/new-product",
+        url: "/perfume-shop/new-product",
         type: "GET",
         data: {},
         dataType: "json",

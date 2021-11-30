@@ -8,14 +8,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.mycompany.perfumeshop.conf.GlobalConfig;
 import com.mycompany.perfumeshop.controller.BaseController;
@@ -26,9 +28,11 @@ import com.mycompany.perfumeshop.entities.UserRole;
 import com.mycompany.perfumeshop.service.UserRoleService;
 import com.mycompany.perfumeshop.service.UserService;
 import com.mycompany.perfumeshop.utils.ConvertUtils;
+import com.mycompany.perfumeshop.valueObjects.AdminRequest;
 import com.mycompany.perfumeshop.valueObjects.BaseVo;
 
 @Controller
+@RequestMapping("/perfume-shop/")
 public class ManagerAccounController extends BaseController {
 
 	@Autowired
@@ -43,29 +47,22 @@ public class ManagerAccounController extends BaseController {
 	@Autowired
 	private GlobalConfig globalConfig;
 
-	@RequestMapping(value = { "/admin/my-account" }, method = RequestMethod.GET)
-	public String index(final Model model, final HttpServletRequest request, final HttpServletResponse response)
-			throws IOException {
+	@GetMapping("admin/my-account.html")
+	public String index() throws Exception {
 		getUserLogined();
 		return "manager/account/myAccount";
 	}
 
-	@RequestMapping(value = { "/admin/add-account" }, method = RequestMethod.GET)
-	public String addAccount(final Model model, final HttpServletRequest request, final HttpServletResponse response)
-			throws IOException {
+	@GetMapping("admin/add-account")
+	public String addAccount() {
 		return "manager/account/addAccountStaff";
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/admin/add-update-account" }, method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> addOrUpdate(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response, @ModelAttribute UserDTO userDTO) throws Exception {
-		Integer typeAccount;
-		try {
-			typeAccount = Integer.parseInt(request.getParameter("typeAccount"));
-		} catch (Exception e) {
-			typeAccount = 0;
-		}
+	@PostMapping("admin/add-update-account")
+	public ResponseEntity<JSONObject> addOrUpdate(HttpServletRequest request, @ModelAttribute UserDTO userDTO)
+			throws Exception {
+		Boolean typeAccount = request.getParameter("typeAccount").equals("1");
 		JSONObject result = new JSONObject();
 		User user = mappingModel.mappingModel(userDTO);
 		if (user.getId() == null) {
@@ -80,12 +77,12 @@ public class ManagerAccounController extends BaseController {
 			if (isLogined()) {
 				user.setCreatedBy(getUserLogined().getId());
 			}
-			userService.save(user, userDTO.getAvatar(), typeAccount);
+			userService.saveOrUpdate(user, userDTO.getAvatar(), getUserLogined(), typeAccount);
 		} else {
 			if (isLogined()) {
 				user.setUpdatedBy(getUserLogined().getId());
 			}
-			userService.edit(user, userDTO.getAvatar());
+			userService.saveOrUpdate(user, userDTO.getAvatar(), getUserLogined(), null);
 		}
 		result.put("result", Boolean.TRUE);
 		result.put("message", "Thành công!");
@@ -93,9 +90,8 @@ public class ManagerAccounController extends BaseController {
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/admin/update-password" }, method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> changePassword(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException {
+	@PostMapping("admin/update-password")
+	public ResponseEntity<JSONObject> changePassword(HttpServletRequest request) throws Exception {
 		JSONObject result = new JSONObject();
 		String oldPass = request.getParameter("oldPass");
 		String newPass = request.getParameter("newPass");
@@ -103,7 +99,7 @@ public class ManagerAccounController extends BaseController {
 		User currentUser = getUserLogined();
 		if (passwordEncoder.matches(oldPass, currentUser.getPassword())) {
 			currentUser.setPassword(passwordEncoder.encode(newPass));
-			userService.saveOrUpdate(currentUser);
+			userService.saveOrUpdate(currentUser, null, getUserLogined(), null);
 			getUserLogined();
 			result.put("message", Boolean.TRUE);
 		} else {
@@ -112,57 +108,48 @@ public class ManagerAccounController extends BaseController {
 		return ResponseEntity.ok(result);
 	}
 
-	@RequestMapping(value = { "/admin/account" }, method = RequestMethod.GET)
+	@GetMapping("admin/account.html")
 	public String account(final Model model, final HttpServletRequest request, final HttpServletResponse response)
 			throws IOException {
 		return "manager/account/manageAccount";
 	}
 
-	@RequestMapping(value = { "/admin/list-account" }, method = RequestMethod.GET)
-	public ResponseEntity<BaseVo<User>> findAll(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException {
+	@GetMapping("admin/list-account")
+	public ResponseEntity<BaseVo<User>> findAll(HttpServletRequest request) throws Exception {
 		Integer currentPage = ConvertUtils.convertStringToInt(request.getParameter("page"), globalConfig.getInitPage());
 		Integer typeAccount = ConvertUtils.convertStringToInt(request.getParameter("type"), 0);
-		BaseVo<User> baseVo = userService.getListUserByRoleRepo(typeAccount, currentPage,
-				globalConfig.getSizeManagePage(), getUserLogined().getId());
-		if (baseVo != null) {
-			return ResponseEntity.ok(baseVo);
-		}
-		return null;
+		AdminRequest adminRequest = new AdminRequest(currentPage, globalConfig.getSizeManagePage(),
+				getUserLogined().getId(), typeAccount);
+		Page<User> page = userService.findAllByAdminRequest(adminRequest);
+		BaseVo<User> baseVo = new BaseVo<User>(page.getContent(), page.getNumber() + 1, page.getTotalPages());
+		return ResponseEntity.ok(baseVo);
 	}
 
-	@RequestMapping(value = { "/admin/decentralization-account/{idAccount}" }, method = RequestMethod.GET)
-	public String decentralization(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response, @PathVariable("idAccount") Integer idAccount) throws IOException {
-		model.addAttribute("user", userService.getById(idAccount));
+	@GetMapping("admin/decentralization-account/{idAccount}")
+	public String decentralization(Model model, @PathVariable("idAccount") Integer idAccount) throws Exception {
+		model.addAttribute("user", userService.findById(idAccount));
 		return "manager/account/decentralization";
 	}
 
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/admin/change-status-account" }, method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> chnageStatusAccount(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException {
-		JSONObject result = new JSONObject();
+	@PostMapping("admin/change-status-account")
+	public ResponseEntity<Boolean> chnageStatusAccount(HttpServletRequest request) throws IOException {
 		Integer idAccount = ConvertUtils.convertStringToInt(request.getParameter("id"), null);
 		Boolean status = request.getParameter("status").equals("1");
 		if (idAccount == null) {
-			result.put("message", Boolean.FALSE);
-			return ResponseEntity.ok(result);
+			return ResponseEntity.ok(Boolean.FALSE);
 		}
 		try {
-			User user = userService.getById(idAccount);
+			User user = userService.findById(idAccount);
 			user.setStatus(status);
-			userService.saveOrUpdate(user);
-			result.put("message", Boolean.TRUE);
-			return ResponseEntity.ok(result);
+			userService.saveOrUpdate(user, null, getUserLogined(), null);
+			return ResponseEntity.ok(Boolean.TRUE);
 		} catch (Exception e) {
-			result.put("message", Boolean.FALSE);
-			return ResponseEntity.ok(result);
+			return ResponseEntity.ok(Boolean.FALSE);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/admin/change-status-role" }, method = RequestMethod.POST)
+	@PostMapping("admin/change-status-role")
 	public ResponseEntity<JSONObject> chnageStatusRole(final Model model, final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException {
 		JSONObject result = new JSONObject();
@@ -192,7 +179,7 @@ public class ManagerAccounController extends BaseController {
 
 		try {
 
-			UserRole userRole = userRoleService.getById(idUserRole);
+			UserRole userRole = userRoleService.findById(idUserRole);
 			switch (type) {
 			case 1:
 				userRole.setView(status);
@@ -212,7 +199,7 @@ public class ManagerAccounController extends BaseController {
 			if (status) {
 				userRole.setView(true);
 			}
-			userRoleService.saveOrUpdate(userRole);
+			userRoleService.saveOrUpdate(userRole, getUserLogined());
 			result.put("message", Boolean.TRUE);
 			return ResponseEntity.ok(result);
 		} catch (Exception e) {

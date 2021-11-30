@@ -21,22 +21,26 @@ public class SecureConf extends WebSecurityConfigurerAdapter {
 		http.csrf().disable().authorizeRequests() // bat dau cau hinh security
 
 				// cho phép các request static không bị ràng buộc
+
 				.antMatchers("/user/**", "/manager/**", "/upload/**").permitAll()
 
 				// các request kiểu: "/admin/" phải đăng nhập
-				.antMatchers("/admin/**").hasAnyAuthority("ADMIN_S")
+
+				.antMatchers("/perfume-shop/admin/**").hasAnyAuthority("ADMIN_S")
+				.antMatchers("/perfume-shop/my-account.html").hasAnyAuthority("ADMIN_S", "GUEST")
 				/* .antMatchers("/admin/**").permitAll() */
 				.and()
 
 				// cấu hình trang đăng nhập
-				.formLogin().loginPage("/login").loginProcessingUrl("/perform_login").defaultSuccessUrl("/home", true)
-				.failureUrl("/login?login_error=true").permitAll()
+				.formLogin().loginPage("/perfume-shop/login.html").loginProcessingUrl("/perform_login")
+				.defaultSuccessUrl("/perfume-shop/login-success", true)
+				.failureUrl("/perfume-shop/login.html?login_error=true").permitAll()
 
 				.and()
 
 				// cấu hình cho phần logout
-				.logout().logoutUrl("/logout").logoutSuccessUrl("/login").invalidateHttpSession(true)
-				.deleteCookies("JSESSIONID").permitAll();
+				.logout().logoutUrl("/perfume-shop/logout.html").logoutSuccessUrl("/perfume-shop/login.html")
+				.invalidateHttpSession(true).deleteCookies("JSESSIONID").permitAll();
 	}
 
 	@Autowired

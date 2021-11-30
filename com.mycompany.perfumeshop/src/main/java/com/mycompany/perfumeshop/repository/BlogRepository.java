@@ -14,11 +14,12 @@ import com.mycompany.perfumeshop.entities.Blog;
 @Repository
 public interface BlogRepository extends JpaRepository<Blog, Integer>, JpaSpecificationExecutor<Blog> {
 
-	Page<Blog> findAll(Specification<Blog> spec, Pageable pageable);
-
 	List<Blog> findTop5ByOrderByCreatedDateDescUpdatedDateDesc();
 
 	Blog findBySeo(String seo);
 
 	List<Blog> findByStatus(Boolean status);
+
+	Page<Blog> findAll(Specification<Blog> spec, Pageable pageable);
+
 }

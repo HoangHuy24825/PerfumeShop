@@ -7,21 +7,22 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.mycompany.perfumeshop.entities.CategoryBlog;
-import com.mycompany.perfumeshop.request.UserRequest;
+import com.mycompany.perfumeshop.entities.User;
+import com.mycompany.perfumeshop.valueObjects.UserRequest;
 
 public interface CategoryBlogService {
-
-	CategoryBlog saveOrUpdate(CategoryBlog category, MultipartFile avatar, Integer idUserLogin) throws Exception;
 
 	List<CategoryBlog> getCategorySlider() throws Exception;
 
 	Page<CategoryBlog> findAllByUserRequest(UserRequest userRequest) throws Exception;
 
-	CategoryBlog findBySeo(String seo) throws Exception;
-
 	Optional<CategoryBlog> findById(String id) throws Exception;
 
 	Boolean deleteById(Integer idCategory) throws Exception;
-	
-	List<CategoryBlog> findByStatus(Boolean status) throws Exception;
+
+	public CategoryBlog saveOrUpdate(CategoryBlog category, MultipartFile avatar, User userLogin) throws Exception;
+
+	public List<CategoryBlog> findByStatus(Boolean status) throws Exception;
+
+	public CategoryBlog findBySeo(String seo) throws Exception;
 }

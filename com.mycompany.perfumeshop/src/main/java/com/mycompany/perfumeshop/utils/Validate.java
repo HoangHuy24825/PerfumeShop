@@ -19,4 +19,7 @@ public class Validate {
 		return false;
 	}
 
+	public static boolean isNullOrEmptyString(String str) {
+		return str == null || str.isBlank();
+	}
 }

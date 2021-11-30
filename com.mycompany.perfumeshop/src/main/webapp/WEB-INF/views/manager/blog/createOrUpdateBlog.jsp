@@ -54,7 +54,7 @@
                             <div class="col-md-12">
                                 <!-- DATA TABLE -->
                                 <div class="d-flex ">
-                                    <a href="${base}/admin/blog" class="btn_back_list"><i
+                                    <a href="${base}/perfume-shop/admin/blog.html" class="btn_back_list"><i
                                             class="fa fa-arrow-left"></i></a> &nbsp
                                     <h3 class="title-5 m-b-35" id="title-page-update-add">Thêm blog </h3>
                                 </div>
@@ -138,7 +138,7 @@
                                                         </textarea>
                                                     </div>
                                                     <div class="form-group">
-                                                        <a class="btn btn-secondary" href="${base}/admin/blog">Hủy</a>
+                                                        <a class="btn btn-secondary" href="${base}/perfume-shop/admin/blog.html">Hủy</a>
                                                         <button type="button" class="btn btn-primary"
                                                             onclick="clickSaveBlog()">Lưu</button>
                                                     </div>

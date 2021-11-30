@@ -1,5 +1,7 @@
 package com.mycompany.perfumeshop.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,5 +18,9 @@ public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecifi
 
 	User findByEmail(String email);
 
+	List<User> findByStatus(Boolean status);
+
 	Page<User> findAll(Specification<User> spec, Pageable pageable);
+
+	User findByUsernameAndEmail(String userName, String email);
 }

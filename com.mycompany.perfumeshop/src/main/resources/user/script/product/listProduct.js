@@ -119,7 +119,7 @@ $(document).ready(function () {
 
     function loadData(searchStr, page, id_category, typeOrder, filterType) {
         $.ajax({
-            url: "/all-product",
+            url: "/perfume-shop/all-product",
             type: "GET",
             data: {
                 searchStr: searchStr,
@@ -259,12 +259,12 @@ function setMenuBanner() {
 
 
 function detail(id_product) {
-    window.location.href = '/detail-product/' + $('#view_' + id_product).val();
+    window.location.href = '/perfume-shop/detail-product/' + $('#view_' + id_product).val();
 };
 
 function loadNewProduct() {
     $.ajax({
-        url: "/new-product",
+        url: "/perfume-shop/new-product",
         type: "GET",
         data: {},
         dataType: "json",

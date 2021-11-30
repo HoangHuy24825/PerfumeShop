@@ -80,25 +80,22 @@
 									<!--START TAB LIST NEW ORDER -->
 									<div class="tab-pane fade show active" id="pills-home" role="tabpanel"
 										aria-labelledby="new-orders-tab">
-										<div class="table-responsive table-data">
-											<table class="table table-data2">
-												<thead>
-													<tr>
-														<th>ID</th>
-														<th>Mã đơn</th>
-														<th>Người nhận</th>
-														<th>Địa chỉ</th>
-														<th>Tổng tiền</th>
-														<th>Ngày đặt</th>
-														<th>Hành động</th>
-													</tr>
-												</thead>
-												<tbody id="newBill">
-													<!-- List new order -->
-												</tbody>
-											</table>
-
-										</div>
+										<table class="table table-data2">
+											<thead>
+												<tr>
+													<th>ID</th>
+													<th>Mã đơn</th>
+													<th>Người nhận</th>
+													<th>Địa chỉ</th>
+													<th>Tổng tiền</th>
+													<th>Ngày đặt</th>
+													<th>Hành động</th>
+												</tr>
+											</thead>
+											<tbody id="newBill">
+												<!-- List new order -->
+											</tbody>
+										</table>
 										<div class="my-3">
 											<nav aria-label="Page navigation example">
 												<ul class="pagination justify-content-center "
@@ -113,28 +110,26 @@
 									<!--START TAB LIST ORDER BE PROCESSING-->
 									<div class="tab-pane fade" id="pills-profile" role="tabpanel"
 										aria-labelledby="pills-processing-tab">
-										<div class="table-responsive table-data">
-											<table class="table table-data2">
-												<thead>
-													<tr>
-														<th>ID</th>
-														<th>Mã đơn</th>
-														<th>Người nhận</th>
-														<th>Địa chỉ</th>
-														<th>Tổng tiền</th>
-														<th>Ngày đặt</th>
-														<th>Ngày cập nhật</th>
-														<c:if test="${orderRole.update ==true}">
-															<th>Cập nhật trạng thái</th>
-														</c:if>
-														<th>Hành động</th>
-													</tr>
-												</thead>
-												<tbody id="billProcess">
-													<!-- list order were be processing -->
-												</tbody>
-											</table>
-										</div>
+										<table class="table table-data2">
+											<thead>
+												<tr>
+													<th>ID</th>
+													<th>Mã đơn</th>
+													<th>Người nhận</th>
+													<th>Địa chỉ</th>
+													<th>Tổng tiền</th>
+													<th>Ngày đặt</th>
+													<th>Ngày cập nhật</th>
+													<c:if test="${orderRole.update ==true}">
+														<th>Cập nhật trạng thái</th>
+													</c:if>
+													<th>Hành động</th>
+												</tr>
+											</thead>
+											<tbody id="billProcess">
+												<!-- list order were be processing -->
+											</tbody>
+										</table>
 										<div class="my-3">
 											<nav aria-label="Page navigation example">
 												<ul class="pagination justify-content-center "
@@ -149,25 +144,23 @@
 									<!--START TAB LIST ORDER DELIVERY SUCCESSFUL-->
 									<div class="tab-pane fade" id="pills-contact" role="tabpanel"
 										aria-labelledby="pills-successful-tab">
-										<div class="table-responsive table-data">
-											<table class="table table-data2">
-												<thead>
-													<tr>
-														<th>ID</th>
-														<th>Mã đơn</th>
-														<th>Người nhận</th>
-														<th>Địa chỉ</th>
-														<th>Tổng tiền</th>
-														<th>Ngày đặt</th>
-														<th>Ngày cập nhật</th>
-														<th>Hành động</th>
-													</tr>
-												</thead>
-												<tbody id="billReceived">
-													<!-- list order received -->
-												</tbody>
-											</table>
-										</div>
+										<table class="table table-data2">
+											<thead>
+												<tr>
+													<th>ID</th>
+													<th>Mã đơn</th>
+													<th>Người nhận</th>
+													<th>Địa chỉ</th>
+													<th>Tổng tiền</th>
+													<th>Ngày đặt</th>
+													<th>Ngày cập nhật</th>
+													<th>Hành động</th>
+												</tr>
+											</thead>
+											<tbody id="billReceived">
+												<!-- list order received -->
+											</tbody>
+										</table>
 										<div class="my-3">
 											<nav aria-label="Page navigation example">
 												<ul class="pagination justify-content-center "
@@ -182,25 +175,23 @@
 									<!--START TAB LIST ORDER CANCELLED-->
 									<div class="tab-pane fade" id="pills-delete" role="tabpanel"
 										aria-labelledby="pills-processing-tab">
-										<div class="table-responsive table-data">
-											<table class="table table-data2">
-												<thead>
-													<tr>
-														<th>ID</th>
-														<th>Mã đơn</th>
-														<th>Người nhận</th>
-														<th>Địa chỉ</th>
-														<th>Tổng tiền</th>
-														<th>Ngày đặt</th>
-														<th>Ngày cập nhật</th>
-														<th>Hành động</th>
-													</tr>
-												</thead>
-												<tbody id="billDeleted">
-													<!-- list order deleted -->
-												</tbody>
-											</table>
-										</div>
+										<table class="table table-data2">
+											<thead>
+												<tr>
+													<th>ID</th>
+													<th>Mã đơn</th>
+													<th>Người nhận</th>
+													<th>Địa chỉ</th>
+													<th>Tổng tiền</th>
+													<th>Ngày đặt</th>
+													<th>Ngày cập nhật</th>
+													<th>Hành động</th>
+												</tr>
+											</thead>
+											<tbody id="billDeleted">
+												<!-- list order deleted -->
+											</tbody>
+										</table>
 										<div class="my-3">
 											<nav aria-label="Page navigation example">
 												<ul class="pagination justify-content-center "

@@ -1,13 +1,9 @@
 package com.mycompany.perfumeshop.controller.user;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Random;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,18 +12,21 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mycompany.perfumeshop.controller.BaseController;
 import com.mycompany.perfumeshop.dto.MappingModel;
 import com.mycompany.perfumeshop.dto.UserDTO;
 import com.mycompany.perfumeshop.entities.User;
 import com.mycompany.perfumeshop.service.UserService;
+import com.mycompany.perfumeshop.utils.Validate;
 
 @Controller
+@RequestMapping("/perfume-shop/")
 public class AccountController extends BaseController {
 
 	@Autowired
@@ -39,100 +38,70 @@ public class AccountController extends BaseController {
 	@Autowired
 	private JavaMailSender emailSender;
 
-	@RequestMapping(value = { "/my-account" }, method = RequestMethod.GET)
-	public String getMyCccount(final Model model, final HttpServletRequest request, final HttpServletResponse response)
-			throws IOException {
-
+	@GetMapping("my-account.html")
+	public String getMyCccount() {
 		return "user/account/myAccountUser";
 	}
 
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/update-password" }, method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> changePassword(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException {
-		JSONObject result = new JSONObject();
-		String oldPass = request.getParameter("oldPass");
-		String newPass = request.getParameter("newPass");
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	@PostMapping("update-password")
+	public ResponseEntity<Boolean> changePassword(@RequestParam("newPassword") String newPassword,
+			@RequestParam("oldPassword") String oldPassword) throws Exception {
 		User currentUser = getUserLogined();
-		if (passwordEncoder.matches(oldPass, currentUser.getPassword())) {
-			currentUser.setPassword(passwordEncoder.encode(newPass));
-			userService.saveOrUpdate(currentUser);
-			getUserLogined();
-			result.put("message", Boolean.TRUE);
-		} else {
-			result.put("message", Boolean.FALSE);
-		}
+		Boolean result = userService.changePassword(newPassword, oldPassword, currentUser);
+		getAccountRole();
 		return ResponseEntity.ok(result);
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/add-update-account" }, method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> addOrUpdate(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response, @ModelAttribute UserDTO userDTO) throws Exception {
-		Integer typeAccount;
-		try {
-			typeAccount = Integer.parseInt(request.getParameter("typeAccount"));
-		} catch (Exception e) {
-			typeAccount = 0;
-		}
+	@PostMapping("add-update-account")
+	public ResponseEntity<JSONObject> addOrUpdate(HttpServletRequest request, @ModelAttribute UserDTO userDTO)
+			throws Exception {
+		Boolean typeAccount;
+		typeAccount = request.getParameter("typeAccount") != null && request.getParameter("typeAccount").equals("1");
 		JSONObject result = new JSONObject();
 		User user = mappingModel.mappingModel(userDTO);
 
 		if (user.getId() == null) {
-			List<User> users = userService.findAll();
-			for (User userItem : users) {
-				if (userItem.getUsername().equalsIgnoreCase(user.getUsername())) {
-					result.put("result", Boolean.FALSE);
-					result.put("message", "Tên đăng nhập đã tồn tại!");
-					return ResponseEntity.ok(result);
-				}
+			User userDb = userService.findByUserNameAndEmail(user.getUsername(), user.getEmail());
+			if (!Validate.isNullOrEmptyString(userDb.getUsername())) {
+				result.put("result", Boolean.FALSE);
+				result.put("message", "Tên đăng nhập đã tồn tại!");
+				return ResponseEntity.ok(result);
 			}
-			if (isLogined()) {
-				user.setCreatedBy(getUserLogined().getId());
-			}
-			userService.save(user, userDTO.getAvatar(), typeAccount);
-		} else {
-			if (isLogined()) {
-				user.setUpdatedBy(getUserLogined().getId());
-			}
-			userService.edit(user, userDTO.getAvatar());
+
 		}
+		userService.saveOrUpdate(user, userDTO.getAvatar(), getUserLogined(), typeAccount);
 		result.put("result", Boolean.TRUE);
 		result.put("message", "Thành công!");
 		return ResponseEntity.ok(result);
 	}
 
-	@RequestMapping(value = { "/forget-password" }, method = RequestMethod.GET)
-	public String forgetPassword(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException {
-
+	@GetMapping("forget-password.html")
+	public String forgetPassword() {
 		return "user/login/forgetPassword";
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/change-password-forget" }, method = RequestMethod.GET)
-	public ResponseEntity<JSONObject> changePasswordForget(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException {
+	@GetMapping("change-password-forget")
+	public ResponseEntity<JSONObject> changePasswordForget(HttpServletRequest request) throws Exception {
 		String email = request.getParameter("email");
 		email = email.replace("-", "@");
 		String password = request.getParameter("password");
-		User user = userService.getUserByEmail(email);
+		User user = userService.findUserByEmail(email);
 		user.setPassword(new BCryptPasswordEncoder().encode(password));
-		userService.saveOrUpdate(user);
+		userService.saveOrUpdate(user, null, getUserLogined(), null);
 		JSONObject result = new JSONObject();
 		result.put("message", Boolean.TRUE);
 		return ResponseEntity.ok(result);
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/code-request-forget-password" }, method = RequestMethod.GET)
-	public ResponseEntity<JSONObject> checkEmail(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException, MessagingException {
+	@GetMapping("code-request-forget-password")
+	public ResponseEntity<JSONObject> checkEmail(HttpServletRequest request) throws Exception {
 		JSONObject result = new JSONObject();
 		String emailReceiver = request.getParameter("email");
 		emailReceiver = emailReceiver.replace("-", "@");
-		User user = userService.getUserByEmail(emailReceiver);
+		User user = userService.findUserByEmail(emailReceiver);
 		if (user != null) {
 			result.put("result", Boolean.TRUE);
 			return ResponseEntity.ok(result);
@@ -144,13 +113,12 @@ public class AccountController extends BaseController {
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/send-email-code-confirm" }, method = RequestMethod.GET)
-	public ResponseEntity<JSONObject> sendEmail(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException, MessagingException {
+	@GetMapping("send-email-code-confirm")
+	public ResponseEntity<JSONObject> sendEmail(HttpServletRequest request) throws Exception {
 		JSONObject result = new JSONObject();
 		String emailReceiver = request.getParameter("email");
 		emailReceiver = emailReceiver.replace("-", "@");
-		User user = userService.getUserByEmail(emailReceiver);
+		User user = userService.findUserByEmail(emailReceiver);
 		String fullname = user.getFullname();
 
 		Random random = new Random();

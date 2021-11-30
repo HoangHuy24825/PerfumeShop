@@ -338,99 +338,13 @@
 	<jsp:include page="/WEB-INF/views/user/layout/footer.jsp"></jsp:include>
 	<!--::footer_part end::-->
 
-	<!-- modal orders -->
-	<div class="modal fade" id="modal-bill-detail" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel"
-		aria-hidden="true">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="mediumModalLabel">
-						Đơn hàng : <span id="id-orders">
-
-						</span> - <span id="status-orders" style="color:green;font-weight:bold">
-
-						</span>
-					</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div id="bill-product">
-						<div id="infor-time" class="p-4"></div>
-						<h4>Thông tin người nhận</h4>
-						<br>
-						<table class="table table-bordered">
-							<tr>
-								<td>Họ tên người nhận</td>
-								<td id="FullRecieverName"></td>
-							</tr>
-							<tr>
-								<td>Email</td>
-								<td id="RecieverEmail"></td>
-							</tr>
-							<tr>
-								<td>Số điện thoại</td>
-								<td id="RecieverPhone"></td>
-							</tr>
-							<tr>
-								<td>Địa chỉ</td>
-								<td id="RecieverAddress"></td>
-							</tr>
-							<tr>
-								<td>Tổng tiền thanh toán</td>
-								<td id="SumPrice"></td>
-							</tr>
-						</table>
-						<hr>
-						<h4 id="detail">Chi tiết sản phẩm</h4>
-						<div id="list-product-detail"></div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<!-- <button type="button" class="btn btn-warning" onclick="ReceiveBill()">Hủy đơn hàng</button> -->
-				</div>
-			</div>
-		</div>
-	</div>
-
+	<!--::message to client part start::-->
+	<jsp:include page="/WEB-INF/views/user/layout/modal-cancel-order.jsp"></jsp:include>
+	<!-- Message to client part end-->
 
 	<!--::message to client part start::-->
 	<jsp:include page="/WEB-INF/views/user/layout/message-to-user.jsp"></jsp:include>
 	<!-- Message to client part end-->
-
-
-	<!--::START MODAL CONFIRM::-->
-	<div class="modal fade" id="modal-request-cancel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-		aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="modal-confirm-title">Gửi yêu cầu hủy đơn hàng</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<form>
-						<div class="form-group">
-							<label for="code-confirm" class="col-form-label">Lý do hủy đơn hàng:</label>
-							<textarea class="form-control" id="input-request-cancel" name="input-request-cancel"
-								rows="3">
-
-	            </textarea>
-							<p class="form-control text-danger" style="display: none" id="request-cancel-message"></p>
-						</div>
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
-					<button type="button" class="btn btn-primary" id="btn_request-cancel">Gửi yêu cầu</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!--::END MODAL CONFIRM::-->
 
 	<!-- jquery plugins here-->
 	<jsp:include page="/WEB-INF/views/user/layout/script.jsp"></jsp:include>

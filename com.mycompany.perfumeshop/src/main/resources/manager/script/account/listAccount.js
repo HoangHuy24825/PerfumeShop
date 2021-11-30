@@ -12,14 +12,14 @@ $(document).ready(function () {
         console.log("enter");
         var id = $(this).data("id-item");
         $.post({
-            url: "/admin/change-status-account",
+            url: "/perfume-shop/admin/change-status-account",
             data: {
                 status: status,
                 id: id
             },
             dataType: "json",
             success: function (response) {
-                if (response.message == true) {
+                if (response == true) {
                     showAlertMessage("Cập nhật trạng thái thành công!", true);
                 } else {
                     showAlertMessage("Cập nhật trạng thái thất bại!", false);
@@ -44,7 +44,7 @@ function loadStaff(page) {
     var update_role = $("#update_role").val();
     var type = 0;
     $.ajax({
-        url: '/admin/list-account',
+        url: '/perfume-shop/admin/list-account',
         type: "GET",
         data: {
             type: type,
@@ -131,7 +131,7 @@ function loadCustomer(page) {
     var update_role = $("#update_role").val();
     var type = 1;
     $.ajax({
-        url: '/admin/list-account',
+        url: '/perfume-shop/admin/list-account',
         type: "GET",
         data: {
             type: type,
@@ -213,5 +213,5 @@ $("body").on("click", "#paged--list--customer li a", function (event) {
 });
 
 function decentralization(idAccount) {
-    window.location.href = '/admin/decentralization-account/' + idAccount;
+    window.location.href = '/perfume-shop/admin/decentralization-account/' + idAccount;
 }

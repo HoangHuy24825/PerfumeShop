@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    loadProduct(null, 1); //load page 1
+    loadProduct(null, 1, null, null); //load page 1
     loadCategory(); //load category to filter
     setActiveMenu();
 
@@ -9,7 +9,7 @@ $(document).ready(function () {
         var type = 0;
         var id = $(this).data("id-item");
         $.post({
-            url: "/admin/change-detail-product",
+            url: "/perfume-shop/admin/change-detail-product",
             data: {
                 status: status,
                 id: id,
@@ -17,7 +17,7 @@ $(document).ready(function () {
             },
             dataType: "json",
             success: function (response) {
-                if (response.message == true) {
+                if (response == true) {
                     showAlertMessage("Cập nhật trạng thái thành công!", true);
                 } else {
                     showAlertMessage("Cập nhật trạng thái thất bại!", false);
@@ -32,7 +32,7 @@ $(document).ready(function () {
         var id = $(this).data("id-item");
         var type = 1;
         $.post({
-            url: "/admin/change-detail-product",
+            url: "/perfume-shop/admin/change-detail-product",
             data: {
                 isHot: isHot,
                 id: id,
@@ -40,7 +40,7 @@ $(document).ready(function () {
             },
             dataType: "json",
             success: function (response) {
-                if (response.message == true) {
+                if (response == true) {
                     showAlertMessage("Cập nhật sản phẩm thành công!", true);
                 } else {
                     showAlertMessage("Cập nhật sản phẩm thất bại!", false);
@@ -90,17 +90,14 @@ $(document).ready(function () {
         event.preventDefault();
         var currentPage = $(this).attr('data-page');
         var txtSearch = $("#input-search-header").val();
-        var filterType = $("#filter-status").val();
+        var status = $("#filter-status").val();
         var id_category = $("#select-category").val();
-        console.log(txtSearch);
-        console.log(filterType);
-        console.log(id_category);
         //load event pagination
-        loadProduct(txtSearch, currentPage, id_category, filterType);
+        loadProduct(txtSearch, currentPage, id_category, status);
     });
     /* PAGING CLICK END */
-    
-    $("body").on("keydown","#input-search-header", function (e) {
+
+    $("body").on("keydown", "#input-search-header", function (e) {
         if (e.keyCode == 13) {
             $('#btn_search_header').click();
         }
@@ -110,11 +107,9 @@ $(document).ready(function () {
 });
 
 function loadCategory() {
-    $.ajax({
-        url: "/admin/all-category-active",
-        type: "get",
+    $.get({
+        url: "/perfume-shop/admin/all-category-active",
         contentType: "application/json",
-        data: "",
         dataType: "json", // kieu du lieu tra ve tu controller la json
         success: function (result) {
             var html = '';
@@ -134,10 +129,8 @@ function loadCategory() {
 function loadProduct(keySearch, currentPage, idCategory, status) {
     var update_role = $("#update_role").val();
     var delete_role = $("#delete_role").val();
-    $.ajax({
-        url: "/admin/all-product",
-        type: "get",
-        contentType: "application/json",
+    $.get({
+        url: "/perfume-shop/admin/all-product",
         data: {
             currentPage: currentPage,
             idCategory: idCategory,
@@ -147,91 +140,103 @@ function loadProduct(keySearch, currentPage, idCategory, status) {
         dataType: "json", // kieu du lieu tra ve tu controller la json
         success: function (result) {
             var html = '';
-            $.each(result.products, function (index, value) {
-                html += `<tr class="tr-shadow">
-                            <td class="block-image">
-                                <img src="/upload/${value.avatar}" alt="Hình Ảnh Sản Phẩm" />
-                            </td>
-                            <td>
-                                 <span class="block-name-product">${value.title}</span>
-                            </td>
-                            <td>
-                                <span class="text-primary font-weight-bold">${value.trademark}</span>
-                            </td>
-                            <td>
-                                 <span class="text-primary font-weight-bold">${value.fragrant}</span>
-                            </td>
-                            <td>
-                                <span>
-                                    <!-- Rounded switch -->
-                                    <label class="switch">
-                                        <input type="checkbox" class="btnChangeStatus" data-id-item="${value.id}" ${value.status==true? "checked" : ""}>
-                                        <span class="slider round"></span>
-                                    </label>    
-                                </span>
-                            </td>
-                            <td>
-                                <span>
-                                    <!-- Rounded switch -->
-                                    <label class="switch">
-                                        <input type="checkbox" class="btnChangeHot" data-id-item="${value.id}" ${value.isHot==true? "checked" : ""}>
-                                        <span class="slider round"></span>
-                                    </label>    
-                                </span>
-                            </td>
-                            <td>
-                                <div class="table-data-feature">
-                                    <button class="item" title="Xem" onclick="detail(${value.id})">
-                                        <input type="hidden" id="view_${value.id}" name="custId" value="${value.seo}">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="item" title="Sửa" hide="${update_role}">
-                                        <i class="fas fa-pencil-alt" onclick="edit(${value.id})"></i>
-                                        <input type="hidden" id="edit_${value.id}" name="custId" value="${value.seo}">
-                                    </button>
-                                    <button class="item" title="Xóa" onclick="deleteProduct(${value.id})" hide="${delete_role}">
-                                        <i class="fas fa-trash-alt"></i>';
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="spacer"></tr>`;
-            });
-            var totalPage = result.totalPage;
-            var currentPage = result.currentPage;
-            var pagination_string = '';
-            if (currentPage > 1) {
-                var previousPage = currentPage - 1;
-                pagination_string += `  <li class="page-item">
-                                            <a href="" class="page-link" data-page="${previousPage}">
-                                                <i class="fas fa-angle-double-left" style="font-size:18px"></i>
-                                            </a>
-                                        </li>`;
-            }
+            if (result.products.length == 0) {
+                $('#table_data').html(
+                    `
+                    <tr class="tr-shadow">
+                        <td colspan="7"><h4 class="text-primary">Danh sách sản phẩm trống!</h4></td>
+                    </tr>
 
-            for (i = 1; i <= totalPage; i++) {
-                if (i == currentPage) {
-                    pagination_string += `  <li class="page-item active">
-                                                <a href="" class="page-link" data-page="${i}">${currentPage}</a>
-                                            </li>`;
-                } else if (i >= currentPage - 3 && i <= currentPage + 4) {
+                    `
+                );
+                $("#paged--list").html("");
+            } else {
+                $.each(result.products, function (index, value) {
+                    html += `<tr class="tr-shadow">
+                                <td class="block-image">
+                                    <img src="/upload/${value.avatar}" alt="Hình Ảnh Sản Phẩm" />
+                                </td>
+                                <td>
+                                     <span class="block-name-product">${value.title}</span>
+                                </td>
+                                <td>
+                                    <span class="text-primary font-weight-bold">${value.trademark}</span>
+                                </td>
+                                <td>
+                                     <span class="text-primary font-weight-bold">${value.fragrant}</span>
+                                </td>
+                                <td>
+                                    <span>
+                                        <!-- Rounded switch -->
+                                        <label class="switch">
+                                            <input type="checkbox" class="btnChangeStatus" data-id-item="${value.id}" ${value.status==true? "checked" : ""}>
+                                            <span class="slider round"></span>
+                                        </label>    
+                                    </span>
+                                </td>
+                                <td>
+                                    <span>
+                                        <!-- Rounded switch -->
+                                        <label class="switch">
+                                            <input type="checkbox" class="btnChangeHot" data-id-item="${value.id}" ${value.isHot==true? "checked" : ""}>
+                                            <span class="slider round"></span>
+                                        </label>    
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="table-data-feature">
+                                        <button class="item" title="Xem" onclick="detail(${value.id})">
+                                            <input type="hidden" id="view_${value.id}" name="custId" value="${value.seo}">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="item" title="Sửa" hide="${update_role}">
+                                            <i class="fas fa-pencil-alt" onclick="edit(${value.id})"></i>
+                                            <input type="hidden" id="edit_${value.id}" name="custId" value="${value.seo}">
+                                        </button>
+                                        <button class="item" title="Xóa" onclick="deleteProduct(${value.id})" hide="${delete_role}">
+                                            <i class="fas fa-trash-alt"></i>';
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="spacer"></tr>`;
+                });
+                var totalPage = result.totalPage;
+                var currentPage = result.currentPage;
+                var pagination_string = '';
+                if (currentPage > 1) {
+                    var previousPage = currentPage - 1;
                     pagination_string += `  <li class="page-item">
-                                                <a href="" class="page-link" data-page="${i}">${i}</a>
+                                                <a href="" class="page-link" data-page="${previousPage}">
+                                                    <i class="fas fa-angle-double-left" style="font-size:18px"></i>
+                                                </a>
                                             </li>`;
                 }
-            }
 
-            if (currentPage > 0 && currentPage < totalPage) {
-                var nextPage = currentPage + 1;
-                pagination_string += `  <li class="page-item">
-                                            <a href="" class="page-link"  data-page=${nextPage}>
-                                                <i class="fas fa-angle-double-right" style="font-size:18px"></i>
-                                            </a>
-                                        </li>`;
+                for (i = 1; i <= totalPage; i++) {
+                    if (i == currentPage) {
+                        pagination_string += `  <li class="page-item active">
+                                                    <a href="" class="page-link" data-page="${i}">${currentPage}</a>
+                                                </li>`;
+                    } else if (i >= currentPage - 3 && i <= currentPage + 4) {
+                        pagination_string += `  <li class="page-item">
+                                                    <a href="" class="page-link" data-page="${i}">${i}</a>
+                                                </li>`;
+                    }
+                }
+
+                if (currentPage > 0 && currentPage < totalPage) {
+                    var nextPage = currentPage + 1;
+                    pagination_string += `  <li class="page-item">
+                                                <a href="" class="page-link"  data-page=${nextPage}>
+                                                    <i class="fas fa-angle-double-right" style="font-size:18px"></i>
+                                                </a>
+                                            </li>`;
+                }
+                $("#input-search-header").val(keySearch);
+                $("#paged--list").html(pagination_string);
+                $('#table_data').html(html);
             }
-            $("#input-search-header").val(keySearch);
-            $("#paged--list").html(pagination_string);
-            $('#table_data').html(html);
         },
         error: function (jqXhr, textStatus, errorMessage) { // error callback 
 
@@ -243,11 +248,11 @@ function loadProduct(keySearch, currentPage, idCategory, status) {
 
 
 function detail(id) {
-    window.location.href = '/admin/product-detail/' + $('#view_' + id).val();
+    window.location.href = '/perfume-shop/admin/product-detail/' + $('#view_' + id).val();
 }
 
 function edit(id) {
-    window.location.href = '/admin/edit-product/' + $('#edit_' + id).val();
+    window.location.href = '/perfume-shop/admin/edit-product/' + $('#edit_' + id).val();
 }
 
 function setActiveMenu() {
@@ -269,13 +274,10 @@ function deleteProduct(idProduct) {
 function deleteConfirmed(idProduct) {
     $('#modalCustomerConfirm').modal('hide');
     $.ajax({
-        url: '/admin/delete-product?idProduct=' + idProduct,
-        type: "POST",
-        data: {},
-        dataType: "json",
-        contentType: "application/json",
+        url: '/perfume-shop/product/' + idProduct,
+        type: "DELETE",
         success: function (result) {
-            if (result.message == true) {
+            if (result == true) {
                 showAlertMessage("Xóa sản phẩm thành công!", true);
                 loadProduct(null, 1, null, null);
             } else {

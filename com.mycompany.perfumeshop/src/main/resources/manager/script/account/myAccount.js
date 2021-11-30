@@ -158,22 +158,18 @@ function validateFormInfor() {
 function clickUpdateInfo() {
     if (validateFormInfor()) {
         var form = $('#form-infor')[0];
-        var data = new FormData(form);
-        for (var value of data.values()) {
-            console.log(value);
-        }
         $.ajax({
             type: "POST",
             enctype: 'multipart/form-data',
-            url: "/admin/add-update-account",
-            data: data,
+            url: "/perfume-shop/admin/add-update-account",
+            data: new FormData(form),
             processData: false, //prevent jQuery from automatically transforming the data into a query string
             contentType: false,
             cache: false,
             timeout: 600000,
             success: function (data) {
                 showAlertMessage("Đổi thông tin thành công!", true);
-                window.location.href = '/admin/my-account';
+                window.location.href = '/perfume-shop/admin/my-account.html';
             },
             error: function (e) {
                 console.log("ERROR : ", e);
@@ -224,7 +220,7 @@ function changePassword() {
             $.ajax({
                 type: "POST",
                 enctype: 'multipart/form-data',
-                url: "/admin/update-password?oldPass=" + oldPassword + "&&newPass=" + newPassword,
+                url: "/perfume-shop/admin/update-password?oldPass=" + oldPassword + "&&newPass=" + newPassword,
                 data: {},
                 processData: false, //prevent jQuery from automatically transforming the data into a query string
                 contentType: false,
@@ -233,7 +229,7 @@ function changePassword() {
                 success: function (jsonResult) {
                     if (jsonResult.message == true) {
                         showAlertMessage("Đổi mật khẩu thành công!", true);
-                        window.location.href = '/admin/my-account';
+                        window.location.href = '/perfume-shop/admin/my-account.html';
                     } else {
                         $('#error_old_password').text("Sai mật khẩu!");
                         $('#error_old_password').show();

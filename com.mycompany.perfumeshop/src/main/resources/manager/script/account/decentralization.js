@@ -44,7 +44,7 @@ function setStatus(idUserRole, type, status) {
     $("#onloadImage").show();
     /*$(".permission").click(false); */
     $.ajax({
-        url: '/admin/change-status-role?idUserRole=' + idUserRole + "&&status=" + status + "&&type=" + type,
+        url: '/perfume-shop/admin/change-status-role?idUserRole=' + idUserRole + "&&status=" + status + "&&type=" + type,
         type: "POST",
         data: {},
         dataType: "json",

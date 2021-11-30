@@ -7,6 +7,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,8 +37,9 @@ public class RequestCancelOrder extends BaseEntity {
 	@Column(name = "reason", length = 1000, nullable = false)
 	private String reason;
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id_order")
+	@JoinColumn(name = "id_order", referencedColumnName = "id")
 	private Order order;
 
 }

@@ -44,7 +44,7 @@
                                         <div class="account-dropdown js-dropdown rounded mt-2">
                                             <div class="info clearfix">
                                                 <div class="image rounded-circle">
-	                                               <a href="${base }/admin/my-account">
+	                                               <a href="${base }/perfume-shop/admin/my-account.html">
 	                                                 <c:if test="${userLogined.avatar!=null }">
 	                                                 	<img src="${base}/upload/${userLogined.avatar}" alt="${userLogined.fullname }" />
 	                                                  </c:if>
@@ -63,18 +63,18 @@
                                             </div>
                                             <div class="account-dropdown__body">
                                                 <div class="account-dropdown__item">
-                                                    <a href="${base}/admin/my-account">
+                                                    <a href="${base}/perfume-shop/admin/my-account.html">
                                                         <i class="zmdi zmdi-account"></i>Tài Khoản</a>
                                                 </div>
                                             </div>
                                              <div class="account-dropdown__body">
                                                 <div class="account-dropdown__item">
-                                                    <a href="${base}/home">
+                                                    <a href="${base}/perfume-shop/home.html">
                                                         <i class="fas fa-pager"></i>Website</a>
                                                 </div>
                                             </div>
                                             <div class="account-dropdown__footer">
-                                                <a href="${base}/logout">
+                                                <a href="${base}/perfume-shop/logout.html">
                                                     <i class="zmdi zmdi-power"></i>Đăng Xuất</a>
                                             </div>
                                         </div>

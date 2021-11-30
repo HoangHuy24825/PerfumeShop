@@ -16,14 +16,14 @@ $(document).ready(function () {
 		var status = $(this).prop("checked") == true ? 1 : 0;
 		var id = $(this).data("id-item");
 		$.post({
-			url: "/admin/change-status-category",
+			url: "/perfume-shop/admin/change-status-category",
 			data: {
 				status: status,
 				id: id
 			},
 			dataType: "json",
 			success: function (response) {
-				if (response.message == true) {
+				if (response == true) {
 					showAlertMessage("Cập nhật trạng thái thành công!", true);
 				} else {
 					showAlertMessage("Cập nhật trạng thái thất bại!", false);
@@ -72,11 +72,11 @@ function setActiveMenu() {
 
 
 function detail(id) {
-	window.location.href = '/admin/category-detail/' + $('#view_' + id).val();
+	window.location.href = '/perfume-shop/admin/category-detail/' + $('#view_' + id).val();
 }
 
 function edit(id) {
-	window.location.href = '/admin/edit-category/' + $('#edit_' + id).val();
+	window.location.href = '/perfume-shop/admin/edit-category/' + $('#edit_' + id).val();
 }
 
 function deleteCategory(idCategory) {
@@ -86,14 +86,15 @@ function deleteCategory(idCategory) {
 
 function deleteConfirmed(idCategory) {
 	$('#modalCustomerConfirm').modal('hide');
-	$.ajax({
-		url: '/admin/delete-category?idCategory=' + idCategory,
-		type: "POST",
-		data: {},
+	$.post({
+		url: '/perfume-shop/admin/delete-category',
+		data: {
+			idCategory: idCategory,
+		},
 		dataType: "json",
 		contentType: "application/json",
 		success: function (result) {
-			if (result.message == true) {
+			if (result == true) {
 				showAlertMessage("Xóa danh mục thành công!", true);
 				loadCategory(null, 1);
 			} else {
@@ -109,15 +110,13 @@ function deleteConfirmed(idCategory) {
 function loadCategory(keySearch, currentPage) {
 	var update_role = $("#update_role").val();
 	var delete_role = $("#delete_role").val();
-	$.ajax({
-		url: "/admin/all-category",
-		type: "get",
+	$.get({
+		url: "/perfume-shop/admin/all-category",
 		contentType: "application/json", // kieu du lieu gui len server la json
 		data: {
 			currentPage: currentPage,
 			keySearch: keySearch
 		},
-		dataType: "json", // kieu du lieu tra ve tu controller la json
 		success: function (result) {
 			var html = '';
 			$.each(result.categories, function (index, value) {

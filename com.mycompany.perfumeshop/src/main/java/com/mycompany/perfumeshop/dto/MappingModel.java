@@ -340,10 +340,6 @@ public class MappingModel {
 		productJson.put("description", category.getDescription());
 		productJson.put("seo", category.getSeo());
 		productJson.put("avatar", category.getAvatar());
-		/*
-		 * if (category.getParent().getId()!=null) { productJson.put("parent",
-		 * category.getParent().getId()); }
-		 */
 		productJson.put("status", category.getStatus());
 		productJson.put("createdBy", category.getCreatedBy());
 		productJson.put("updatedBy", category.getUpdatedBy());

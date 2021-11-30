@@ -48,7 +48,7 @@ $(document).ready(function () {
 /* NOTIFY CONTENT START */
 function showNotifyHeader() {
     $.ajax({
-        url: "/admin/load-top-three-notify",
+        url: "/perfume-shop/admin/load-top-three-notify",
         type: "get",
         contentType: "application/json",
         data: "",
@@ -91,7 +91,7 @@ function showNotifyHeader() {
 function showAllNotify() {
     $('.modal-backdrop').show();
     $.ajax({
-        url: "/admin/load-all-notify",
+        url: "/perfume-shop/admin/load-all-notify",
         type: "get",
         contentType: "application/json",
         data: "",
@@ -156,7 +156,7 @@ function closeDeleteConfirm() {
 
 function deleteNotifyConfirmed(idNotify) {
     $.ajax({
-        url: "/admin/delete-notify?id-notify=" + idNotify,
+        url: "/perfume-shop/admin/delete-notify?id-notify=" + idNotify,
         type: "POST",
         data: {},
         dataType: "json",
@@ -205,7 +205,7 @@ function changeStyleStatusNotify(status) {
 
 function viewOrderNotify(idNotify, idOrder, status_all_notify_modal_1) {
     $.ajax({
-        url: '/admin/detail-order-notify',
+        url: '/perfume-shop/admin/detail-order-notify',
         type: "GET",
         data: {
             idOrder: idOrder,
@@ -306,7 +306,7 @@ function cancelOrderFromRequest(idOrder) {
 function cacelOrderRequestConfirmed(idOrder) {
     var idOrder1 = parseInt(idOrder);
     $.ajax({
-        url: '/admin/cancel-order-request?idOrder=' + idOrder,
+        url: '/perfume-shop/admin/cancel-order-request?idOrder=' + idOrder,
         type: "POST",
         data: {},
         dataType: "json",
@@ -324,7 +324,7 @@ function cacelOrderRequestConfirmed(idOrder) {
 
 function sentEmailConfirm(idOrder, status, content) {
     $.ajax({
-        url: '/admin/sent-email-confirm?idOrder=' + idOrder + '&&status=' + status + '&&content=' + content,
+        url: '/perfume-shop/admin/sent-email-confirm?idOrder=' + idOrder + '&&status=' + status + '&&content=' + content,
         type: "POST",
         data: {},
         dataType: "json",
@@ -357,7 +357,7 @@ function LoadNewOrder(page) {
     var delete_role = $("#delete_role").val();
     var status = 0;
     $.ajax({
-        url: '/admin/list-order',
+        url: '/perfume-shop/admin/list-order',
         type: "GET",
         data: {
             status: status,
@@ -451,7 +451,7 @@ function LoadOrderProcess(page) {
     var update_role = $("#update_role").val();
     var delete_role = $("#delete_role").val();
     $.ajax({
-        url: '/admin/list-order',
+        url: '/perfume-shop/admin/list-order',
         type: "GET",
         data: {
             status: status,
@@ -570,7 +570,7 @@ function LoadOrderSuccessOrDeleted(status, page) {
     var update_role = $("#update_role").val();
     var delete_role = $("#delete_role").val();
     $.ajax({
-        url: '/admin/list-order',
+        url: '/perfume-shop/admin/list-order',
         type: "GET",
         data: {
             status: status,
@@ -668,7 +668,7 @@ function LoadOrderSuccessOrDeleted(status, page) {
 
 function viewOrder(idOrder) {
     $.ajax({
-        url: '/admin/detail-order',
+        url: '/perfume-shop/admin/detail-order',
         type: "GET",
         data: {
             idOrder: idOrder
@@ -740,7 +740,7 @@ function changeStatusOrder(idOrder, status, previousStatus) {
     var status1 = parseInt(status);
     var idOrder1 = parseInt(idOrder);
     $.ajax({
-        url: '/admin/status-order?status=' + status + '&&idOrder=' + idOrder,
+        url: '/perfume-shop/admin/status-order?status=' + status + '&&idOrder=' + idOrder,
         type: "POST",
         data: {},
         dataType: "json",

@@ -88,7 +88,7 @@
                         <h3 id="totalPay">Tổng tiền phải trả:
                             <span style="color: #ff3368">
                                 <fmt:formatNumber
-                                    value="${((attr.priceSale!=null && attr.priceSale!=null)? attr.priceSale: attr.price)*amount}"
+                                    value="${((attr.priceSale!='' && attr.priceSale!=null)? attr.priceSale: attr.price)*amount}"
                                     minFractionDigits="0" type="currency" currencySymbol="VND" />
                             </span>
                         </h3>

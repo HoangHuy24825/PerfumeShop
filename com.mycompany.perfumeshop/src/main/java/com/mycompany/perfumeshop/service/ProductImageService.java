@@ -9,6 +9,6 @@ public interface ProductImageService {
 
 	List<ProductImage> findByProduct(Product product);
 
-	boolean delete(ProductImage image);
+	public Boolean deleteById(Integer id) throws Exception;
 
 }

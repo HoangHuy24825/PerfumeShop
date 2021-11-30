@@ -1,16 +1,13 @@
 package com.mycompany.perfumeshop.controller.user;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
@@ -20,10 +17,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mycompany.perfumeshop.controller.BaseController;
@@ -34,25 +33,26 @@ import com.mycompany.perfumeshop.entities.AttributeProduct;
 import com.mycompany.perfumeshop.entities.Order;
 import com.mycompany.perfumeshop.entities.OrderDetail;
 import com.mycompany.perfumeshop.entities.User;
+import com.mycompany.perfumeshop.service.AttributeProductService;
 import com.mycompany.perfumeshop.service.OrderService;
-import com.mycompany.perfumeshop.service.ProductAttributeService;
 
 @Controller
+@RequestMapping("/perfume-shop/")
 public class CartController extends BaseController {
 
 	@Autowired
 	private OrderService orderService;
 
 	@Autowired
-	private ProductAttributeService attrService;
+	private AttributeProductService attrService;
 
 	@Autowired
 	private JavaMailSender emailSender;
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/cart/add", method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> addCart(final Model model, final HttpServletRequest request,
-			final HttpServletResponse respond, @RequestBody CartItemDTO newCartItem) {
+	@PostMapping("cart/add")
+	public ResponseEntity<JSONObject> addCart(HttpServletRequest request, @RequestBody CartItemDTO newCartItem)
+			throws Exception {
 		JSONObject result = new JSONObject();
 		HttpSession session = request.getSession();
 		CartDTO cartDTO;
@@ -74,7 +74,7 @@ public class CartController extends BaseController {
 		}
 
 		if (!isExist) {
-			AttributeProduct attributeProduct = attrService.getById(newCartItem.getAttrProductId());
+			AttributeProduct attributeProduct = attrService.findById(newCartItem.getAttrProductId());
 			newCartItem.setAvatarProduct(attributeProduct.getProduct().getAvatar());
 			newCartItem.setProductName(attributeProduct.getProduct().getTitle());
 			newCartItem.setPriceUnit((attributeProduct.getPriceSale() != null
@@ -94,9 +94,9 @@ public class CartController extends BaseController {
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/cart/add-product", method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> addProductCart(final Model model, final HttpServletRequest request,
-			final HttpServletResponse respond, @RequestBody CartItemDTO newCartItem) {
+	@PostMapping("cart/add-product")
+	public ResponseEntity<JSONObject> addProductCart(HttpServletRequest request, @RequestBody CartItemDTO newCartItem)
+			throws Exception {
 
 		JSONObject result = new JSONObject();
 		HttpSession session = request.getSession();
@@ -121,7 +121,7 @@ public class CartController extends BaseController {
 		}
 
 		if (!isExist) {
-			AttributeProduct attributeProduct = attrService.getById(newCartItem.getAttrProductId());
+			AttributeProduct attributeProduct = attrService.findById(newCartItem.getAttrProductId());
 			newCartItem.setAvatarProduct(attributeProduct.getProduct().getAvatar());
 			newCartItem.setProductName(attributeProduct.getProduct().getTitle());
 
@@ -155,15 +155,15 @@ public class CartController extends BaseController {
 		return total;
 	}
 
-	@RequestMapping(value = "cart", method = RequestMethod.GET)
-	public String cart(final Model model, final HttpServletRequest request, final HttpServletResponse respond) {
+	@GetMapping("cart.html")
+	public String cart() {
 		return "user/cart/cart";
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/Cart/DeleteCart", method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> deleteCart(final Model model, final HttpServletRequest request,
-			final HttpServletResponse respond, @RequestParam("id_product") Integer idProduct) {
+	@PostMapping("Cart/DeleteCart")
+	public ResponseEntity<JSONObject> deleteCart(HttpServletRequest request,
+			@RequestParam("id_product") Integer idProduct) {
 		HttpSession session = request.getSession();
 		CartDTO cartDTO = (CartDTO) session.getAttribute("cart");
 		List<CartItemDTO> cartItems = cartDTO.getCartItems();
@@ -175,9 +175,9 @@ public class CartController extends BaseController {
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/Cart/DeleteSelectedCart", method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> deleteChosedCart(final Model model, final HttpServletRequest request,
-			final HttpServletResponse respond, @RequestParam("id_product") String idAttr) {
+	@PostMapping("Cart/DeleteSelectedCart")
+	public ResponseEntity<JSONObject> deleteChosedCart(HttpServletRequest request,
+			@RequestParam("id_product") String idAttr) {
 
 		HttpSession session = request.getSession();
 		CartDTO cartDTO = (CartDTO) session.getAttribute("cart");
@@ -202,10 +202,10 @@ public class CartController extends BaseController {
 		return ResponseEntity.ok(result);
 	}
 
-	@RequestMapping(value = "/bill", method = RequestMethod.GET)
-	public String bill(final Model model, final HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("idProduct") Integer idProduct, @RequestParam("amount") Integer amount) {
-		model.addAttribute("attr", attrService.getById(idProduct));
+	@GetMapping("bill")
+	public String bill(Model model, @RequestParam("idAttr") Integer idAttr, @RequestParam("amount") Integer amount)
+			throws Exception {
+		model.addAttribute("attr", attrService.findById(idAttr));
 		model.addAttribute("amount", amount);
 		model.addAttribute("cartItems", null);
 		model.addAttribute("totalMoney", null);
@@ -213,9 +213,9 @@ public class CartController extends BaseController {
 		return "user/cart/pay";
 	}
 
-	@RequestMapping(value = "/bill-cart", method = RequestMethod.GET)
-	public String billCart(final Model model, final HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("strIdProduct") String strIdProduct) {
+	@GetMapping("bill-cart")
+	public String billCart(Model model, HttpServletRequest request, @RequestParam("strIdProduct") String strIdProduct)
+			throws Exception {
 		HttpSession session = request.getSession();
 
 		CartDTO cart = (CartDTO) session.getAttribute("cart");
@@ -253,9 +253,8 @@ public class CartController extends BaseController {
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/order" }, method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> order(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response, @ModelAttribute SaleOrderDTO saleOrderDTO,
+	@PostMapping("order")
+	public ResponseEntity<JSONObject> order(HttpServletRequest request, @ModelAttribute SaleOrderDTO saleOrderDTO,
 			@RequestParam("strIdProduct") String strIdProduct, @RequestParam("amount") Integer amount)
 			throws Exception {
 		HttpSession session = request.getSession();
@@ -279,7 +278,7 @@ public class CartController extends BaseController {
 		if (amount != 0) {
 			if (arrStrIdProduct[0] != "" || arrStrIdProduct[0] != null) {
 				OrderDetail orderDetail = new OrderDetail();
-				AttributeProduct attributeProduct = attrService.getById(Integer.parseInt(arrStrIdProduct[0]));
+				AttributeProduct attributeProduct = attrService.findById(Integer.parseInt(arrStrIdProduct[0]));
 				BigDecimal currentPrice = (attributeProduct.getPriceSale() != null
 						&& attributeProduct.getPriceSale() != BigDecimal.valueOf(0)) ? attributeProduct.getPriceSale()
 								: attributeProduct.getPrice();
@@ -289,7 +288,7 @@ public class CartController extends BaseController {
 				order.setTotal(new BigDecimal(amount * currentPrice.doubleValue()));
 
 				attributeProduct.setAmount(attributeProduct.getAmount() - amount);
-				attrService.saveOrUpdate(attributeProduct);
+				attrService.saveOrUpdate(attributeProduct, getUserLogined());
 				order.addOrderDetail(orderDetail);
 
 				CartDTO cart = (CartDTO) session.getAttribute("cart");
@@ -313,7 +312,7 @@ public class CartController extends BaseController {
 
 			for (CartItemDTO cartItem : cartItemsBuy) {
 				OrderDetail orderDetail = new OrderDetail();
-				AttributeProduct attributeProduct = attrService.getById(Integer.parseInt(arrStrIdProduct[0]));
+				AttributeProduct attributeProduct = attrService.findById(Integer.parseInt(arrStrIdProduct[0]));
 				BigDecimal currentPrice = (attributeProduct.getPriceSale() != null
 						&& attributeProduct.getPriceSale() != BigDecimal.valueOf(0)) ? attributeProduct.getPriceSale()
 								: attributeProduct.getPrice();
@@ -321,7 +320,7 @@ public class CartController extends BaseController {
 				orderDetail.setQuantity(cartItem.getQuantity());
 				orderDetail.setPrice(currentPrice);
 				attributeProduct.setAmount(attributeProduct.getAmount() - cartItem.getQuantity());
-				attrService.saveOrUpdate(attributeProduct);
+				attrService.saveOrUpdate(attributeProduct, getUserLogined());
 				cart.getCartItems().remove(cartItem);
 				total += cartItem.getQuantity() * cartItem.getPriceUnit().doubleValue();
 				order.addOrderDetail(orderDetail);
@@ -330,7 +329,7 @@ public class CartController extends BaseController {
 			session.setAttribute("cart", cart);
 		}
 
-		orderService.saveOrUpdate(order);
+		orderService.saveOrUpdate(order, getUserLogined());
 		JSONObject result = new JSONObject();
 		result.put("message", "Đặt hàng thành công!");
 		result.put("idOrder", order.getId());
@@ -338,42 +337,40 @@ public class CartController extends BaseController {
 		return ResponseEntity.ok(result);
 	}
 
-	@RequestMapping(value = { "/recent-order" }, method = RequestMethod.GET)
-	public String getRecentOrder(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response, @RequestParam("idSaleOrder") Integer idSaleOrder) throws IOException {
-		model.addAttribute("saleOrder", orderService.getById(idSaleOrder));
+	@GetMapping("recent-order")
+	public String getRecentOrder(final Model model, @RequestParam("idSaleOrder") String idSaleOrder) throws Exception {
+		model.addAttribute("saleOrder", orderService.findById(idSaleOrder));
 		return "user/cart/bill";
 	}
 
-	@RequestMapping(value = { "/search-order" }, method = RequestMethod.GET)
-	public String searchOrder(final Model model, final HttpServletRequest request, final HttpServletResponse response)
-			throws IOException {
+	@GetMapping("search-order.html")
+	public String searchOrder() {
 		return "user/cart/searchOrder";
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/get-code-cancel-bill" }, method = RequestMethod.GET)
-	public ResponseEntity<JSONObject> sendCode(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException, MessagingException {
-		String emailReceiver = request.getParameter("email");
-		String fullname = request.getParameter("fullname");
-
+	@GetMapping("get-code-cancel-bill/{email}/{fullname}")
+	public ResponseEntity<JSONObject> sendCode(@PathVariable String email, @PathVariable String fullname)
+			throws Exception {
+		String fullNameReceiver = fullname;
+		String emailReceiver = email;
+		if (isLogined()) {
+			fullNameReceiver = getUserLogined().getFullname();
+			emailReceiver = getUserLogined().getEmail();
+		}
 		Random random = new Random();
 		Integer code = random.nextInt(900000) + 100000;
-
 		MimeMessage message = emailSender.createMimeMessage();
+		message.setContent(message, "text/plain; charset=UTF-8");
 		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-		String htmlMsg = "<div>Dear " + fullname + " !</div> <br/><br/>";
-		htmlMsg += "<div>Cảm ơn bạn đã sử dụng dịch vụ tại <b>Electronic Device Shop</b>!</div> <br/>";
-		htmlMsg += "<div>Mã xác nhận hủy đơn hàng của bạn là: <b>" + code + "</b>!</div><br/>";
+		String htmlMsg = "<div>Dear " + fullNameReceiver + " !</div> <br/><br/>";
+		htmlMsg += "<div>Thank you for using the service at <b>Perfume Shop</b>!</div> <br/>";
+		htmlMsg += "<div>Your order cancellation confirmation code is: <b>" + code + "</b>!</div><br/>";
 		htmlMsg += "<div>Thanks & regards,</div><br/>";
-		htmlMsg += "<div style=\"color: chartreuse;\"><b>Electronic Device</b></div><br/>";
-
+		htmlMsg += "<div style=\"color: chartreuse;\"><b>Perfume Shop</b></div><br/>";
 		message.setContent(htmlMsg, "text/html");
 		helper.setTo(emailReceiver);
-		helper.setSubject("[Electronic Device Shop] Mã xác nhận hủy đơn hàng.");
-
+		helper.setSubject("[Perfume Shop] Order cancellation confirmation code.");
 		emailSender.send(message);
 		JSONObject result = new JSONObject();
 		result.put("result", Boolean.TRUE);

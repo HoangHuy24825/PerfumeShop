@@ -60,9 +60,9 @@
                                         </div>
                                         <div class="rs-select2--light rs-select2--md">
                                             <select class="js-select2" name="status" id="filter-status">
-                                                <option selected="selected" value="0">Trạng Thái</option>
+                                                <option selected="selected" value="null">Trạng Thái</option>
                                                 <option value="1">Hiển Thị</option>
-                                                <option value="2">Ẩn</option>
+                                                <option value="0">Ẩn</option>
                                             </select>
                                             <div class="dropDownSelect2"></div>
                                         </div>
@@ -70,7 +70,7 @@
                                     <div class="table-data__tool-right">
                                         <c:if test="${productRole.insert ==true}">
                                             <button class="au-btn au-btn-icon au-btn--green au-btn--small"
-                                                onclick="location.href='${base}/admin/add-product'">
+                                                onclick="location.href='${base}/perfume-shop/admin/add-product'">
                                                 <i class="fas fa-plus"></i>Thêm mới
                                             </button>
                                         </c:if>
@@ -80,26 +80,23 @@
                                             style="display: none" />
                                     </div>
                                 </div>
-                                <div class="table-responsive table-data">
-                                    <table class="table table-data2">
-                                        <thead>
-                                            <tr>
-                                                <th>Ảnh</th>
-                                                <th>Tên</th>
-                                                <th>Thương hiệu</th>
-                                                <th>Mùi hương</th>
-                                                <th>Trạng thái</th>
-                                                <th>Thịnh hành</th>
-                                                <th>Hành động</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="table_data">
+                                <table class="table table-data2">
+                                    <thead>
+                                        <tr>
+                                            <th>Ảnh</th>
+                                            <th>Tên</th>
+                                            <th>Thương hiệu</th>
+                                            <th>Mùi hương</th>
+                                            <th>Trạng thái</th>
+                                            <th>Thịnh hành</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table_data">
 
 
-                                        </tbody>
-                                    </table>
-                                </div>
-
+                                    </tbody>
+                                </table>
                                 <div class="my-3">
                                     <nav aria-label="Page navigation example">
                                         <ul class="pagination justify-content-center " id="paged--list">

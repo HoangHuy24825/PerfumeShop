@@ -52,7 +52,7 @@
 							<div class="col-md-12">
 								<!-- CONTENT PAGE -->
 								<div class="d-flex">
-									<a href="${base }/admin/account" class="btn_back_list"><i
+									<a href="${base }/perfume-shop/admin/account.html" class="btn_back_list"><i
 											class="fa fa-arrow-left"></i></a> &nbsp
 									<h3 class="title-5 m-b-35">Phân quyền nhân viên</h3>
 								</div>

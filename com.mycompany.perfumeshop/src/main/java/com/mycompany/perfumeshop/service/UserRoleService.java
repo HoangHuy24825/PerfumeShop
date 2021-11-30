@@ -1,15 +1,14 @@
 package com.mycompany.perfumeshop.service;
 
-import org.springframework.stereotype.Service;
-
+import com.mycompany.perfumeshop.entities.User;
 import com.mycompany.perfumeshop.entities.UserRole;
 
-@Service
-public class UserRoleService extends BaseService<UserRole> {
+public interface UserRoleService {
 
-	@Override
-	protected Class<UserRole> clazz() {
-		return UserRole.class;
-	}
+	UserRole saveOrUpdate(UserRole userRole, User userLogin) throws Exception;
+
+	Boolean deleteById(Integer id) throws Exception;
+
+	UserRole findById(Integer id) throws Exception;
 
 }

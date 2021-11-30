@@ -41,10 +41,9 @@ $(document).ready(function () {
             $('#usernameMessage').show();
         } else {
             var username = $("#username").val();
-            console.log(username);
             $.ajax({
                 type: "GET",
-                url: "/check-username",
+                url: "/perfume-shop/check-username",
                 data: {
                     username: username
                 },
@@ -52,7 +51,7 @@ $(document).ready(function () {
                 contentType: "application/json;charset=utf-8",
                 timeout: 600000,
                 success: function (jsonResult) {
-                    if (jsonResult.result == false) {
+                    if (jsonResult == true) {
                         $('#usernameMessage').find('.message-content').text("Tên đăng nhập đã tồn tại. Vui lòng chọn tên khác!");
                         $('#usernameMessage').show();
                     } else {
@@ -65,6 +64,7 @@ $(document).ready(function () {
             });
         }
     });
+
     $('#password').focusout(function () {
         if ($(this).val() == "" || $(this).val() == null) {
             $('#passwordMessage').find('.message-content').text("Mật khẩu không được trống!");
@@ -90,6 +90,7 @@ $(document).ready(function () {
             $('#fullnameMessage').hide();
         }
     });
+
     $('#email').focusout(function () {
         if ($(this).val() == "" || $(this).val() == null) {
             $('#emailMessage').find('.message-content').text("Vui lòng nhập email!");
@@ -100,9 +101,32 @@ $(document).ready(function () {
                 $('#emailMessage').show();
             } else {
                 $('#emailMessage').hide();
+                var email = $(this).val();
+                $.ajax({
+                    type: "GET",
+                    url: "/perfume-shop/check-email",
+                    data: {
+                        email: email
+                    },
+                    dataType: "json",
+                    contentType: "application/json;charset=utf-8",
+                    timeout: 600000,
+                    success: function (jsonResult) {
+                        if (jsonResult == true) {
+                            $('#emailMessage').find('.message-content').text("Email đã tồn tại. Vui lòng nhập một email khác!");
+                            $('#emailMessage').show();
+                        } else {
+                            $('#emailMessage').hide();
+                        }
+                    },
+                    error: function (e) {
+                        console.log("ERROR : ", e);
+                    }
+                });
             }
         }
     });
+
     $('#phone').focusout(function () {
         if ($(this).val() == "" || $(this).val() == null) {
             $('#phoneMessage').find('.message-content').text("Vui lòng nhập số điện thoại!");
@@ -244,7 +268,7 @@ function register() {
         $.ajax({
             type: "GET",
             enctype: 'multipart/form-data',
-            url: "/code-confirm",
+            url: "/perfume-shop/code-confirm",
             data: {
                 email: email,
                 fullname: fullname
@@ -272,7 +296,7 @@ function sendCodeConfirm() {
         $.ajax({
             type: "POST",
             enctype: 'multipart/form-data',
-            url: "/register-account",
+            url: "/perfume-shop/register-account",
             data: data,
             processData: false, //prevent jQuery from automatically transforming the data into a query string
             contentType: false,
@@ -280,11 +304,11 @@ function sendCodeConfirm() {
             timeout: 600000,
             success: function (jsonResult) {
                 if (jsonResult.message == true) {
-                    alert("Đăng ký tài khoản thành thông!");
-                    $(location).attr('href', "/login");
+                    showAlertMessage("Đăng ký tài khoản thành công!", true);
+                    $(location).attr('href', "/perfume-shop/login.html");
                 } else {
-                    alert("Đăng ký tài khoản thất bại!");
-                    $(location).attr('href', "/register");
+                    showAlertMessage("Đăng ký tài khoản thất bại!", false);
+                    $(location).attr('href', "/perfume-shop/register.html");
                 }
             },
             error: function (e) {
@@ -296,4 +320,3 @@ function sendCodeConfirm() {
         $("#code-confirm-message").show();
     }
 }
-

@@ -16,7 +16,7 @@ function clickSaveCategory() {
     $.ajax({
         type: "POST",
         enctype: 'multipart/form-data',
-        url: "/admin/add-update-category-blog",
+        url: "/perfume-shop/admin/add-update-category-blog",
         data: data,
         processData: false, //prevent jQuery from automatically transforming the data into a query string
         contentType: false,
@@ -24,7 +24,7 @@ function clickSaveCategory() {
         timeout: 600000,
         success: function (data) {
             showAlertMessage("Thành công!", true);
-            $(location).attr('href', "/admin/category-blog");
+            $(location).attr('href', "/perfume-shop/admin/category-blog.html");
         },
         error: function (e) {
             console.log("ERROR : ", e);
@@ -34,7 +34,7 @@ function clickSaveCategory() {
 
 function loadDetailForEdit(idCategory) {
     $.ajax({
-        url: "/admin/detail-category-blog",
+        url: "/perfume-shop/admin/detail-category-blog",
         type: "get",
         contentType: "application/json", //set data send to server is json
         data: {

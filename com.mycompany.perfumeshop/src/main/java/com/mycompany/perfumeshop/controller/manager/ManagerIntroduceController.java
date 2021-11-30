@@ -1,33 +1,31 @@
 package com.mycompany.perfumeshop.controller.manager;
 
-import java.io.IOException;
 import java.util.Calendar;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.mycompany.perfumeshop.controller.BaseController;
 import com.mycompany.perfumeshop.dto.IntroduceDTO;
 import com.mycompany.perfumeshop.entities.Introduce;
-import com.mycompany.perfumeshop.service.IntroduceSevice;
+import com.mycompany.perfumeshop.service.IntroduceService;
 
 @Controller
+@RequestMapping("/perfume-shop/")
 public class ManagerIntroduceController extends BaseController {
-	@Autowired
-	private IntroduceSevice introduceSevice;
 
-	@RequestMapping(value = { "/admin/introduce" }, method = RequestMethod.GET)
-	public String index(final Model model, final HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	@Autowired
+	private IntroduceService introduceSevice;
+
+	@GetMapping("admin/introduce.html")
+	public String index(Model model) throws Exception {
 		model.addAttribute("introduce",
 				(introduceSevice.findAll() != null && introduceSevice.findAll().size() > 0)
 						? introduceSevice.findAll().get(0)
@@ -35,9 +33,8 @@ public class ManagerIntroduceController extends BaseController {
 		return "manager/introduce/managerIntroduce";
 	}
 
-	@RequestMapping(value = { "/admin/edit-introduce" }, method = RequestMethod.GET)
-	public String getUpdatePage(final Model model, final HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	@GetMapping("admin/edit-introduce")
+	public String getUpdatePage(Model model) throws Exception {
 		model.addAttribute("id_introduce",
 				(introduceSevice.findAll() != null && introduceSevice.findAll().size() > 0)
 						? introduceSevice.findAll().get(0).getId()
@@ -46,25 +43,23 @@ public class ManagerIntroduceController extends BaseController {
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/admin/introduce-detail" }, method = RequestMethod.GET)
-	public ResponseEntity<JSONObject> getDetail(final Model model, final HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+	@GetMapping("/admin/introduce-detail")
+	public ResponseEntity<JSONObject> getDetail() throws Exception {
 		JSONObject result = new JSONObject();
-		result.put("introduce", introduceSevice.getById(1));
+		result.put("introduce", introduceSevice.findById(1));
 		return ResponseEntity.ok(result);
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/admin/update-introduce" }, method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> update(final Model model, final HttpServletRequest request,
-			HttpServletResponse response, @ModelAttribute IntroduceDTO introduceDTO) throws IOException {
+	@PostMapping("admin/update-introduce")
+	public ResponseEntity<JSONObject> update(@ModelAttribute IntroduceDTO introduceDTO) throws Exception {
 		Introduce introduce = (introduceSevice.findAll() != null && introduceSevice.findAll().size() > 0)
 				? introduceSevice.findAll().get(0)
 				: new Introduce();
 		introduce.setDetail(introduceDTO.getDetail().replaceFirst(",", " ").trim());
 		introduce.setUpdatedBy(getUserLogined().getId());
 		introduce.setUpdatedDate(Calendar.getInstance().getTime());
-		introduceSevice.saveOrUpdate(introduce);
+		introduceSevice.saveOrUpdate(introduce, getUserLogined());
 		JSONObject result = new JSONObject();
 		result.put("message", Boolean.TRUE);
 		return ResponseEntity.ok(result);

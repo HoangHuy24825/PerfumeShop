@@ -19,7 +19,7 @@ public interface CategoryBlogRepository
 
 	CategoryBlog findBySeo(String seo);
 
-	Page<CategoryBlog> findAll(Specification<CategoryBlog> spec, Pageable pageable);
-	
 	List<CategoryBlog> findByStatus(Boolean status);
+
+	Page<CategoryBlog> findAll(Specification<CategoryBlog> spec, Pageable pageable);
 }

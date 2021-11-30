@@ -59,7 +59,7 @@
 									<div class="table-data__tool-right">
 										<c:if test="${categoryBlogRole.insert ==true}">
 											<button class="au-btn au-btn-icon au-btn--green au-btn--small"
-												onclick="location.href='${base}/admin/add-category-blog'">
+												onclick="location.href='${base}/perfume-shop/admin/add-category-blog'">
 												<i class="fas fa-plus"></i>Thêm mới</button>
 										</c:if>
 										<input id="update_role" value="${categoryBlogRole.update}" type="text"
@@ -68,23 +68,20 @@
 											style="display: none" />
 									</div>
 								</div>
-								<div class="table-responsive table-data">
-									<table class="table table-data2">
-										<thead>
-											<tr>
-												<th>Ảnh</th>
-												<th>Tên</th>
-												<th>Seo</th>
-												<th>Trạng thái</th>
-												<th>Hành động</th>
-											</tr>
-										</thead>
-										<tbody id="table_data">
-											<!--List of category-->
-										</tbody>
-									</table>
-
-								</div>
+								<table class="table table-data2">
+									<thead>
+										<tr>
+											<th>Ảnh</th>
+											<th>Tên</th>
+											<th>Seo</th>
+											<th>Trạng thái</th>
+											<th>Hành động</th>
+										</tr>
+									</thead>
+									<tbody id="table_data">
+										<!--List of category-->
+									</tbody>
+								</table>
 								<!-- END DATA TABLE -->
 								<div class="my-3">
 									<nav aria-label="Page navigation example">

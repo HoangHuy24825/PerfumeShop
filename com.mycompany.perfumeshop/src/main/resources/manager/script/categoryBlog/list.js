@@ -15,7 +15,7 @@ function loadCategory(keySearch, currentPage) {
     var update_role = $("#update_role").val();
     var delete_role = $("#delete_role").val();
     $.ajax({
-        url: "/admin/all-category-blog",
+        url: "/perfume-shop/admin/all-category-blog",
         type: "get",
         contentType: "application/json", // kieu du lieu gui len server la json
         data: {

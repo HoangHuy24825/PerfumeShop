@@ -83,7 +83,7 @@ function requestCode() {
         $.ajax({
             type: "GET",
             enctype: 'multipart/form-data',
-            url: "/code-request-forget-password",
+            url: "/perfume-shop/code-request-forget-password",
             data: {
                 email: email
             },
@@ -111,7 +111,7 @@ function sendEmailCode() {
     $.ajax({
         type: "GET",
         enctype: 'multipart/form-data',
-        url: "/send-email-code-confirm",
+        url: "/perfume-shop/send-email-code-confirm",
         data: {
             email: email
         },
@@ -135,7 +135,7 @@ function changePassword() {
             $.ajax({
                 type: "GET",
                 enctype: 'multipart/form-data',
-                url: "/change-password-forget",
+                url: "/perfume-shop/change-password-forget",
                 data: {
                     email: email,
                     password: password

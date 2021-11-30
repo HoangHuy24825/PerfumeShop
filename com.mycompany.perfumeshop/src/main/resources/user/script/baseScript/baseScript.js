@@ -42,7 +42,7 @@ function addProductToCartAfterConfirm(idAttr, quantity) {
         quantity: parseInt(quantity)
     }
     $.ajax({
-        url: "/cart/add",
+        url: "/perfume-shop/cart/add",
         type: "post",
         data: JSON.stringify(data),
         dataType: "json",
@@ -91,9 +91,17 @@ function showConfirm(message, btnConfirm, btnClose, danger) {
     $('#modalCustomerConfirm').modal('show');
 }
 
+function showConfirm(message, btnClose) {
+    $('#modalCustomerConfirmContent').text(message);
+    $('#btnCloseConfirm').text(btnClose);
+    $('#btnAgree').hide();
+    $('#btnCloseConfirm').addClass("btn btn-primary");
+    $('#modalCustomerConfirm').modal('show');
+}
+
 function addProductToCart(id_product) {
     $.get({
-        url: "/detail-product-loading",
+        url: "/perfume-shop/detail-product-loading",
         data: {
             id_product: parseInt(id_product)
         },

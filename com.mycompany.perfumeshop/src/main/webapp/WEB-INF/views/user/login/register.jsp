@@ -38,15 +38,6 @@
 	<section class="login_part mt-3">
 		<div class="container p-4 bg-white">
 			<div class="row align-items-center">
-				<!-- <div class="col-lg-6 col-md-6">
-					<div class="login_part_text text-center" style="height: 700px">
-						<div class="login_part_text_iner">
-							<h2>Bạn đã có tài khoản?</h2>
-							<p>Đăng nhập ngay để có thể mua sắp một cách thuận tiên hơn!</p>
-							<a href="${base }/login" class="btn_3">Đăng nhập</a>
-						</div>
-					</div>
-				</div> -->
 				<div class="col-lg-12 col-md-12">
 					<div class="login_part_form col-12">
 						<div class="login_part_form_iner">
@@ -132,7 +123,7 @@
 										<button type="button" value="submit" class="btn_3" onclick="register()">
 											Đăng ký
 										</button>
-										<a class="lost_pass" href="${base }/login">Tôi đã có tài khoản!</a>
+										<a class="lost_pass" href="${base }/perfume-shop/login.html">Tôi đã có tài khoản!</a>
 									</div>
 								</div>
 							</form>

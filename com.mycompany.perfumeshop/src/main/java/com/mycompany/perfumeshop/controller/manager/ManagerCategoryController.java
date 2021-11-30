@@ -1,20 +1,21 @@
 package com.mycompany.perfumeshop.controller.manager;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,10 +27,10 @@ import com.mycompany.perfumeshop.dto.MappingModel;
 import com.mycompany.perfumeshop.entities.Category;
 import com.mycompany.perfumeshop.service.CategoryService;
 import com.mycompany.perfumeshop.service.UserService;
-import com.mycompany.perfumeshop.utils.ConvertUtils;
-import com.mycompany.perfumeshop.valueObjects.BaseVo;
+import com.mycompany.perfumeshop.valueObjects.UserRequest;
 
 @Controller
+@RequestMapping("/perfume-shop/")
 public class ManagerCategoryController extends BaseController {
 
 	@Autowired
@@ -44,19 +45,17 @@ public class ManagerCategoryController extends BaseController {
 	@Autowired
 	private MappingModel mappingModel;
 
-	@RequestMapping(value = { "/admin/category/index", "/admin/category" }, method = RequestMethod.GET)
-	public String index(final Model model, final HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	@GetMapping("admin/category.html")
+	public String index() {
 		return "manager/category/index";
 	}
 
-	@RequestMapping(value = { "/admin/category-detail/{seo}" }, method = RequestMethod.GET)
-	public String detail(final Model model, final HttpServletRequest request, HttpServletResponse response,
-			@PathVariable("seo") String seo) throws IOException {
-		Category category = categoryService.getBySeo(seo);
-		model.addAttribute("createdBy", userService.getById(category.getCreatedBy()));
+	@GetMapping("admin/category-detail/{seo}")
+	public String detail(final Model model, @PathVariable("seo") String seo) throws Exception {
+		Category category = categoryService.findBySeo(seo);
+		model.addAttribute("createdBy", userService.findById(category.getCreatedBy()));
 		if (category.getUpdatedBy() != null) {
-			model.addAttribute("updatedBy", userService.getById(category.getUpdatedBy()));
+			model.addAttribute("updatedBy", userService.findById(category.getUpdatedBy()));
 		} else {
 			model.addAttribute("updatedBy", null);
 		}
@@ -64,128 +63,62 @@ public class ManagerCategoryController extends BaseController {
 		return "manager/category/detail";
 	}
 
-	@RequestMapping(value = { "/admin/add-category" }, method = RequestMethod.GET)
-	public String add(final Model model, final HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	@GetMapping("admin/add-category")
+	public String add(final Model model) {
 		model.addAttribute("id_category", null);
 		return "manager/category/createOrUpdate";
 	}
 
-	@RequestMapping(value = { "/admin/edit-category/{seo}" }, method = RequestMethod.GET)
-	public String edit(final Model model, final HttpServletRequest request, HttpServletResponse response,
-			@PathVariable("seo") String seo) throws IOException {
-		model.addAttribute("id_category", categoryService.getBySeo(seo).getId());
+	@GetMapping("admin/edit-category/{seo}")
+	public String edit(final Model model, @PathVariable("seo") String seo) throws Exception {
+		model.addAttribute("id_category", categoryService.findBySeo(seo).getId());
 		return "manager/category/createOrUpdate";
 	}
 
-	@RequestMapping(value = { "/admin/add-update-category" }, method = RequestMethod.POST)
-	public ResponseEntity<Object> addOrUpdate(final Model model, final HttpServletRequest request,
+	@PostMapping("admin/add-update-category")
+	public ResponseEntity<Boolean> addOrUpdate(final Model model, final HttpServletRequest request,
 			HttpServletResponse response, @ModelAttribute("category") CategoryDTO categoryDTO) throws Exception {
 		Category category = mappingModel.mappingModel(categoryDTO);
-		if (category.getId() == null) {
-			if (isLogined()) {
-				category.setCreatedBy(getUserLogined().getId());
-			}
-			category.setStatus(true);
-			categoryService.save(category, categoryDTO.getAvatar());
-		} else {
-			if (isLogined()) {
-				category.setUpdatedBy(getUserLogined().getId());
-			}
-			categoryService.edit(category, categoryDTO.getAvatar());
-		}
-		return ResponseEntity.ok(null);
+		categoryService.saveOrUpdate(category, categoryDTO.getAvatar(), getUserLogined());
+		return ResponseEntity.ok(Boolean.TRUE);
 	}
 
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/admin/change-status-category" }, method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> changeStatus(final Model model, final HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		boolean status = request.getParameter("status").equals("1");
-		Integer id = ConvertUtils.convertStringToInt(request.getParameter("id"), null);
-		JSONObject result = new JSONObject();
-		if (id != null) {
-			Category category = categoryService.getById(id);
-			category.setStatus(status);
-			if (isLogined()) {
-				category.setUpdatedBy(getUserLogined().getId());
-			}
-			category.setUpdatedDate(Calendar.getInstance().getTime());
-			categoryService.saveOrUpdate(category);
-			result.put("message", true);
-		} else {
-			result.put("message", false);
-		}
+	@PostMapping("admin/change-status-category")
+	public ResponseEntity<Boolean> changeStatus(@RequestParam("id") Integer id,
+			@RequestParam("status") String statusStr) throws Exception {
+		boolean status = statusStr.equals("1");
+		Category category = categoryService.findById(id);
+		category.setStatus(status);
+		categoryService.saveOrUpdate(category, null, getUserLogined());
+		return ResponseEntity.ok(Boolean.TRUE);
+	}
+
+	@GetMapping("admin/all-category-active")
+	public ResponseEntity<List<Category>> getAllActive() throws Exception {
+		return ResponseEntity.ok(categoryService.findByStatus(true));
+	}
+
+	@GetMapping("admin/all-category")
+	public ResponseEntity<Map<String, Object>> getAll(@RequestParam("keySearch") String keySearch,
+			@RequestParam("currentPage") Integer currentPage) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		UserRequest userRequest = new UserRequest(currentPage, globalConfig.getSizeManagePage(), keySearch, null, null);
+		Page<Category> page = categoryService.findAllByUserRequest(userRequest);
+		result.put("categories", page.getContent());
+		result.put("currentPage", page.getNumber() + 1);
+		result.put("totalPage", page.getTotalPages());
 		return ResponseEntity.ok(result);
 	}
 
-	@RequestMapping(value = { "/admin/all-category-active" }, method = RequestMethod.GET)
-	public ResponseEntity<List<JSONObject>> getAllActive(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException {
-
-		List<Category> categories = categoryService.findAllActive();
-		List<JSONObject> listCategory = new ArrayList<>();
-		for (Category category : categories) {
-			listCategory.add(mappingModel.mappingModel(category));
-		}
-		return ResponseEntity.ok(listCategory);
+	@GetMapping("admin/detail-category")
+	public ResponseEntity<Category> detailCategory(@RequestParam("idCategory") Integer idCategory) throws Exception {
+		Category category = categoryService.findById(idCategory);
+		return ResponseEntity.ok(category);
 	}
 
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/admin/all-category" }, method = RequestMethod.GET)
-	public ResponseEntity<JSONObject> getAll(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException {
-
-		JSONObject result = new JSONObject();
-		Integer currentPage = ConvertUtils.convertStringToInt(request.getParameter("currentPage"),
-				globalConfig.getInitPage());
-		String keySearch = request.getParameter("keySearch");
-
-		BaseVo<Category> baseVo = categoryService.getListCategoryByFilter(currentPage, globalConfig.getSizeManagePage(),
-				keySearch);
-		if (baseVo != null) {
-			List<JSONObject> listCategory = new ArrayList<>();
-			List<Category> categories = baseVo.getListEntity();
-			if (categories != null && categories.size() > 0) {
-				for (Category category : categories) {
-					listCategory.add(mappingModel.mappingModel(category));
-				}
-			}
-			result.put("categories", listCategory);
-			result.put("currentPage", baseVo.getCurrentPage());
-			result.put("totalPage", baseVo.getTotalPage());
-			return ResponseEntity.ok(result);
-		}
-		return null;
-	}
-
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/admin/detail-category" }, method = RequestMethod.GET)
-	public ResponseEntity<JSONObject> detailCategory(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response, @RequestParam("idCategory") Integer idCategory) throws IOException {
-		JSONObject result = new JSONObject();
-		Category category = categoryService.getById(idCategory);
-		result.put("category", mappingModel.mappingModel(category));
-		return ResponseEntity.ok(result);
-	}
-
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = { "/admin/delete-category" }, method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> delete(final Model model, final HttpServletRequest request,
-			final HttpServletResponse response) throws IOException {
-		try {
-			JSONObject result = new JSONObject();
-			Integer idCategory = Integer.parseInt(request.getParameter("idCategory"));
-			if (categoryService.deleteCategoryById(idCategory)) {
-				result.put("message", Boolean.TRUE);
-				return ResponseEntity.ok(result);
-			} else {
-				result.put("message", Boolean.FALSE);
-				return ResponseEntity.ok(result);
-			}
-		} catch (Exception e) {
-			return ResponseEntity.ok(null);
-		}
+	@RequestMapping(value = { "admin/delete-category" }, method = RequestMethod.POST)
+	public ResponseEntity<Boolean> delete(@RequestParam("idCategory") Integer id) throws Exception {
+		return ResponseEntity.ok(categoryService.deleteById(id));
 	}
 
 }

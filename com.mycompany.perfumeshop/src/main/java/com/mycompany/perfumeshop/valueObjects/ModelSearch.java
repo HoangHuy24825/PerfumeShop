@@ -1,4 +1,4 @@
-package com.mycompany.perfumeshop.request;
+package com.mycompany.perfumeshop.valueObjects;
 
 public class ModelSearch {
 	private String keySearch;
