@@ -50,7 +50,7 @@
 					<div class="container-fluid">
 						<div class="row">
 							<div class="col-md-12" id="content_page">
-								<h3 class="title-5 m-b-35">Danh sách người dùng</h3>
+								<h3 class="title-5">Danh sách người dùng</h3>
 								<div class="table-data__tool">
 									<div class="table-data__tool-left">
 

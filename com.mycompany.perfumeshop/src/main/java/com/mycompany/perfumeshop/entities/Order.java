@@ -7,9 +7,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -69,7 +67,6 @@ public class Order extends BaseEntity {
 
 	public Order(Integer id) {
 		super(id);
-		// TODO Auto-generated constructor stub
 	}
 
 }

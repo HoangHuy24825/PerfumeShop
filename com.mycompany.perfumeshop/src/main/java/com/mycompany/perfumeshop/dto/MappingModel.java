@@ -1,6 +1,7 @@
 package com.mycompany.perfumeshop.dto;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +69,26 @@ public class MappingModel {
 		attributeProduct.setUpdatedDate(attributeProductDTO.getUpdatedDate());
 		attributeProduct.setAmount(attributeProductDTO.getAmount());
 		return attributeProduct;
+	}
+
+	public Review mappingModel(ReviewDTO reviewDto) {
+		Review review = new Review();
+		if (reviewDto.getId() != null) {
+			review.setId(reviewDto.getId());
+		}
+		review.setCustomerAddress(reviewDto.getCustomerAddress());
+		review.setCustomerName(reviewDto.getCustomerName());
+		review.setCustomerEmail(reviewDto.getCustomerEmail());
+		review.setCustomerPhone(reviewDto.getCustomerPhone());
+		review.setContent(reviewDto.getContent());
+		review.setNumberStar(reviewDto.getNumberStar());
+		review.setProduct(reviewDto.getIdProduct() != null ? new Product(reviewDto.getIdProduct()) : null);
+		review.setStatus(reviewDto.getStatus());
+		review.setCreatedBy(reviewDto.getCreatedBy());
+		review.setUpdatedBy(reviewDto.getUpdatedBy());
+		review.setCreatedDate(reviewDto.getCreatedDate());
+		review.setUpdatedDate(reviewDto.getUpdatedDate());
+		return review;
 	}
 
 	public Category mappingModel(CategoryDTO categoryDTO) {
@@ -206,6 +227,12 @@ public class MappingModel {
 		return blogJsons;
 	}
 
+	public List<JSONObject> mappingModelViewList(List<Review> reviews) {
+		List<JSONObject> reviewJsons = new ArrayList<JSONObject>();
+		reviews.forEach(r -> reviewJsons.add(mappingModel(r)));
+		return reviewJsons;
+	}
+
 	@SuppressWarnings("unchecked")
 	public JSONObject mappingModel(RequestCancelOrder requestCancelOrder) {
 		JSONObject requestJson = new JSONObject();
@@ -223,6 +250,7 @@ public class MappingModel {
 		requestJson.put("customerName", requestCancelOrder.getCustomerName());
 		requestJson.put("email", requestCancelOrder.getEmail());
 
+		requestJson.put("processingStatus", requestCancelOrder.getProcessingStatus());
 		requestJson.put("requestType", requestCancelOrder.getRequestType());
 		requestJson.put("reason", requestCancelOrder.getReason());
 		requestJson.put("message", requestCancelOrder.getMessage());
@@ -252,7 +280,7 @@ public class MappingModel {
 		productJson.put("createdDate", product.getCreatedDate());
 		productJson.put("updatedDate", product.getUpdatedDate());
 		productJson.put("seo", product.getSeo());
-		productJson.put("reviews", product.getReviews());
+		productJson.put("reviews", mappingModelViewList(product.getReviews()));
 		productJson.put("attrs", product.getAttributeProducts());
 		productJson.put("images", product.getProductImages());
 		productJson.put("maxPrice", maxPriceOfProduct(product.getAttributeProducts()));
@@ -294,27 +322,50 @@ public class MappingModel {
 	private Double averageStar(List<Review> reviews) {
 		Double totalStar = 0.0;
 		Double result = 0.0;
+		Integer totalReviewActive = 0;
 		for (Review review : reviews) {
-			totalStar += review.getNumberStar();
+			if (review.getStatus() != null && review.getStatus()) {
+				totalStar += review.getNumberStar();
+				totalReviewActive++;
+			}
 		}
 		if (totalStar != 0) {
-			result = (double) Math.round((totalStar / reviews.size() * 10) / 10);
+			result = totalStar / totalReviewActive;
 		}
 		return result;
 	}
 
 	@SuppressWarnings("unchecked")
 	public JSONObject mappingModel(ProductImage productImage) {
-		JSONObject productJson = new JSONObject();
-		productJson.put("id", productImage.getId());
-		productJson.put("title", productImage.getTitle());
-		productJson.put("path", productImage.getPath());
-		productJson.put("status", productImage.getStatus());
-		productJson.put("createdBy", productImage.getCreatedBy());
-		productJson.put("updatedBy", productImage.getUpdatedBy());
-		productJson.put("createdDate", productImage.getCreatedDate());
-		productJson.put("updatedDate", productImage.getUpdatedDate());
-		return productJson;
+		JSONObject imageJson = new JSONObject();
+		imageJson.put("id", productImage.getId());
+		imageJson.put("title", productImage.getTitle());
+		imageJson.put("path", productImage.getPath());
+		imageJson.put("status", productImage.getStatus());
+		imageJson.put("createdBy", productImage.getCreatedBy());
+		imageJson.put("updatedBy", productImage.getUpdatedBy());
+		imageJson.put("createdDate", productImage.getCreatedDate());
+		imageJson.put("updatedDate", productImage.getUpdatedDate());
+		return imageJson;
+	}
+
+	@SuppressWarnings("unchecked")
+	public JSONObject mappingModel(Review review) {
+		JSONObject reviewJson = new JSONObject();
+		reviewJson.put("id", review.getId());
+		reviewJson.put("status", review.getStatus());
+		reviewJson.put("createdBy", review.getCreatedBy());
+		reviewJson.put("updatedBy", review.getUpdatedBy());
+		reviewJson.put("createdDate", review.getCreatedDate());
+		reviewJson.put("updatedDate", review.getUpdatedDate());
+		reviewJson.put("customerName", review.getCustomerName());
+		reviewJson.put("customerAddress", review.getCustomerAddress());
+		reviewJson.put("customerPhone", review.getCustomerPhone());
+		reviewJson.put("customerEmail", review.getCustomerEmail());
+		reviewJson.put("content", review.getContent());
+		reviewJson.put("numberStar", review.getNumberStar());
+		reviewJson.put("user", review.getUser() != null ? mappingModel(review.getUser()) : null);
+		return reviewJson;
 	}
 
 	@SuppressWarnings("unchecked")

@@ -1,6 +1,7 @@
 $(document).ready(function () {
     loadCategory(null, 1);
     setActiveMenu('#menu--category--blog');
+    showNotifyHeader();
 });
 
 /* ENVENT KEY ENTER INPUT SEARCH START */

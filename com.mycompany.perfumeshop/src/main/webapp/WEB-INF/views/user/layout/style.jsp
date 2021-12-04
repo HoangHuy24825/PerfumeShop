@@ -27,6 +27,8 @@
  
     <link rel="stylesheet" href="${base }/user/css/my-style-product.css">
     
+      <link rel="stylesheet" href="${base }/user/css/rating-star.css">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <link href="${base }/user/css/my-style-account.css" rel="stylesheet" />
     <link href="${base }/user/css/my-style-cart.css" rel="stylesheet" />

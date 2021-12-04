@@ -1,6 +1,7 @@
 $(document).ready(function () {
     loadBlog(null, 1);
     setActiveMenu();
+    showNotifyHeader();
 });
 
 /* ENVENT KEY ENTER INPUT SEARCH START */

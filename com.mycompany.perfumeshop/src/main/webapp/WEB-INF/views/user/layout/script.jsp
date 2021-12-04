@@ -26,7 +26,7 @@
 <script src="${base }/user/js/jquery.counterup.min.js"></script>
 <script src="${base }/user/js/contact.js"></script>
 <script src="${base }/user/js/jquery.ajaxchimp.min.js"></script>
-<script src="${base }/user/js/jquery.form.js"></script>
+<!-- <script src="${base }/user/js/jquery.form.js"></script> -->
 <script src="${base }/user/js/jquery.validate.min.js"></script>
 <script src="${base }/user/js/mail-script.js"></script>
 <script src="${base }/user/js/stellar.js"></script>
@@ -35,3 +35,4 @@
 <script src="${base }/user/js/custom.js"></script>
 
 <script src="${base }/user/script/baseScript/baseScript.js"></script>
+

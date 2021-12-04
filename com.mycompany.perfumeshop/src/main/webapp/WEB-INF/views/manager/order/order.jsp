@@ -50,7 +50,7 @@
 					<div class="container-fluid">
 						<div class="row">
 							<div class="col-md-12" id="content_page">
-								<h3 class="title-5 m-b-35">Danh sách đơn hàng</h3>
+								<h3 class="title-5">Danh sách đơn hàng</h3>
 								<input id="update_role" value="${orderRole.update}" type="text" style="display: none" />
 								<input id="delete_role" value="${orderRole.delete}" type="text" style="display: none" />
 								<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">

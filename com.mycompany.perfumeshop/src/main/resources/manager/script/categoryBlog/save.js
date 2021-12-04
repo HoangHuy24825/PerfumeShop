@@ -1,5 +1,6 @@
 $(document).ready(function () {
     var id_category = $('#id').val();
+    showNotifyHeader();
 
     if (id_category != null && id_category != "") {
         loadDetailForEdit(id_category);

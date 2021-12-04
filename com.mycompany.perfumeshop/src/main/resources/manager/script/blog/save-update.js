@@ -14,6 +14,8 @@ $(document).ready(function () {
 
     loadCategory();
 
+    showNotifyHeader();
+
 });
 
 function setActiveMenu() {

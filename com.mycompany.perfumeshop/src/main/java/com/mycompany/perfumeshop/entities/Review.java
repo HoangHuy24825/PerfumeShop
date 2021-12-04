@@ -23,22 +23,22 @@ import lombok.Setter;
 public class Review extends BaseEntity {
 
 	@Column(name = "customer_name", length = 100, nullable = false)
-	private String customer_name;
+	private String customerName;
 
 	@Column(name = "customer_address", length = 255, nullable = false)
-	private String customer_address;
+	private String customerAddress;
 
 	@Column(name = "customer_phone", length = 20, nullable = false)
-	private String customer_phone;
+	private String customerPhone;
 
 	@Column(name = "customer_email", length = 255, nullable = false)
-	private String customer_email;
+	private String customerEmail;
 
 	@Column(name = "content", length = 1000, nullable = false)
 	private String content;
 
 	@Column(name = "number_star", nullable = false)
-	private int numberStar;
+	private Integer numberStar;
 	
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)

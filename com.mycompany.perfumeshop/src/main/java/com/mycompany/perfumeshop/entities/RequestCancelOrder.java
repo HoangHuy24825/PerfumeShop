@@ -37,6 +37,9 @@ public class RequestCancelOrder extends BaseEntity {
 	@Column(name = "reason", length = 1000, nullable = false)
 	private String reason;
 
+	@Column(name = "processing_status", nullable = true)
+	private Boolean processingStatus = Boolean.FALSE;
+
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_order", referencedColumnName = "id")

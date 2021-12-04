@@ -55,7 +55,7 @@
                                 <!-- DATA TABLE -->
                                 <div class="d-flex">
                                     <a href="${base}/perfume-shop/admin/category.html" class="btn_back_list"><i class="fa fa-arrow-left"></i></a> &nbsp
-                                    <h3 class="title-5 m-b-35">Chi tiết danh mục</h3>
+                                    <h3 class="title-5">Chi tiết danh mục</h3>
                                 </div>
                                <div class="">
                                 <div class="bg-light p-4">

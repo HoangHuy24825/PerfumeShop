@@ -1,7 +1,6 @@
 package com.mycompany.perfumeshop.controller.manager;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.mail.internet.MimeMessage;
@@ -15,6 +14,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,9 +25,12 @@ import com.mycompany.perfumeshop.dto.MappingModel;
 import com.mycompany.perfumeshop.entities.AttributeProduct;
 import com.mycompany.perfumeshop.entities.Order;
 import com.mycompany.perfumeshop.entities.OrderDetail;
+import com.mycompany.perfumeshop.entities.RequestCancelOrder;
 import com.mycompany.perfumeshop.service.AttributeProductService;
 import com.mycompany.perfumeshop.service.OrderService;
+import com.mycompany.perfumeshop.service.RequestCancelOrderService;
 import com.mycompany.perfumeshop.utils.ConvertUtils;
+import com.mycompany.perfumeshop.utils.Validate;
 
 @Controller
 @RequestMapping("/perfume-shop/")
@@ -41,6 +44,9 @@ public class ManagerOrderController extends BaseController {
 
 	@Autowired
 	private AttributeProductService attrService;
+
+	@Autowired
+	private RequestCancelOrderService reqService;
 
 	@Autowired
 	private MappingModel mappingModel;
@@ -111,20 +117,14 @@ public class ManagerOrderController extends BaseController {
 	}
 
 	@SuppressWarnings("unchecked")
-	@PostMapping("admin/cancel-order-request")
-	public ResponseEntity<JSONObject> cancelOrderRequest(HttpServletRequest request) throws Exception {
+	@PostMapping("admin/cancel-order-request/{idOrder}")
+	public ResponseEntity<JSONObject> cancelOrderRequest(@PathVariable String idOrder) throws Exception {
 		JSONObject result = new JSONObject();
-		String idOrder = request.getParameter("idOrder");
 		Order saleOrder = orderService.findById(idOrder);
-		if (isLogined()) {
-			saleOrder.setUpdatedBy(getUserLogined().getId());
-		}
-		saleOrder.setUpdatedDate(Calendar.getInstance().getTime());
 		List<OrderDetail> orderDetails = saleOrder.getOrderDetails();
 		for (OrderDetail orderDetail : orderDetails) {
 			AttributeProduct attributeProduct = orderDetail.getAttributeProduct();
 			attributeProduct.setAmount(attributeProduct.getAmount() + orderDetail.getQuantity());
-			attrService.saveOrUpdate(attributeProduct, getUserLogined());
 		}
 		saleOrder.setProcessingStatus(4);
 		orderService.saveOrUpdate(saleOrder, getUserLogined());
@@ -132,68 +132,37 @@ public class ManagerOrderController extends BaseController {
 		return ResponseEntity.ok(result);
 	}
 
-	@SuppressWarnings("unchecked")
 	@PostMapping("admin/sent-email-confirm")
-	public ResponseEntity<JSONObject> sentEmailConfirm(HttpServletRequest request) throws Exception {
-		JSONObject result = new JSONObject();
+	public ResponseEntity<Boolean> sentEmailConfirm(HttpServletRequest request) throws Exception {
 		String idOrder = request.getParameter("idOrder");
 		Integer status;
-		try {
-			status = Integer.parseInt(request.getParameter("status"));
-		} catch (Exception e) {
-			return ResponseEntity.ok(null);
+		if (!Validate.isNumber(request.getParameter("status"))) {
+			return ResponseEntity.ok(Boolean.FALSE);
 		}
-
+		status = Integer.parseInt(request.getParameter("status"));
+		Order order = orderService.findById(idOrder);
+		RequestCancelOrder cancelOrder = reqService.findByOrder(order);
+		cancelOrder.setProcessingStatus(true);
+		reqService.saveOrUpdate(cancelOrder);
+		MimeMessage message = emailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+		String htmlMsg = "<div>Dear " + order.getCustomerName() + " !</div> <br/><br/>";
+		htmlMsg += "<div>Thank you for making transactions at <b>Perfume Shop</b>!</div> <br/>";
 		if (status == 1) {
-			Order saleOrder = orderService.findById(idOrder);
-			/* send email to customer */
-
-			String emailReceiver = saleOrder.getCustomerEmail();
-			String fullname = saleOrder.getCustomerName();
-
-			MimeMessage message = emailSender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-			String htmlMsg = "<div>Dear " + fullname + " !</div> <br/><br/>";
-			htmlMsg += "<div>Cảm ơn bạn thực hiện giao dịch trên <b>Electronic Device Shop</b>!</div> <br/>";
-			htmlMsg += "<div>Yêu cầu hủy đơn hàng mã: <b>" + saleOrder.getCode() + "</b> đã được phê duyệt!</div><br/>";
-			htmlMsg += "<div>Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi!</div><br/>";
-			htmlMsg += "<div>Thanks & regards,</div><br/>";
-			htmlMsg += "<div style=\"color: chartreuse;\"><b>Electronic Device</b></div><br/>";
-
-			message.setContent(htmlMsg, "text/html");
-			helper.setTo(emailReceiver);
-			helper.setSubject("[Electronic Device Shop] Hủy đơn hàng.");
-
-			emailSender.send(message);
+			htmlMsg += "<div>Request order cancellation code: <b>" + order.getCode() + "</b> is approved!</div><br/>";
 		} else {
-			Order saleOrder = orderService.findById(idOrder);
-			/* send email to customer */
-
-			String emailReceiver = saleOrder.getCustomerEmail();
-			String fullname = saleOrder.getCustomerName();
-			String reason = request.getParameter("content").trim();
-
-			MimeMessage message = emailSender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-			String htmlMsg = "<div>Dear " + fullname + " !</div> <br/><br/>";
-			htmlMsg += "<div>Cảm ơn bạn thực hiện giao dịch trên <b>Electronic Device Shop</b>!</div> <br/>";
-			htmlMsg += "<div>Yêu cầu hủy đơn hàng mã: <b>" + saleOrder.getCode()
-					+ "</b> không được phê duyệt!</div><br/>";
-			htmlMsg += "<div>Lý do: " + reason + "</div><br/>";
-			htmlMsg += "<div>Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi!</div><br/>";
-			htmlMsg += "<div>Thanks & regards,</div><br/>";
-			htmlMsg += "<div style=\"color: chartreuse;\"><b>Electronic Device</b></div><br/>";
-
-			message.setContent(htmlMsg, "text/html");
-			helper.setTo(emailReceiver);
-			helper.setSubject("[Electronic Device Shop] Hủy đơn hàng.");
-			emailSender.send(message);
+			htmlMsg += "<div>Request order cancellation code: <b>" + order.getCode()
+					+ "</b>is not approved!</div><br/>";
+			htmlMsg += "<div>Reason: " + request.getParameter("content").trim() + "</div><br/>";
 		}
-
-		result.put("message", "Thành công!");
-		return ResponseEntity.ok(result);
+		htmlMsg += "<div>Thank you for using our service!</div><br/>";
+		htmlMsg += "<div>Thanks & regards,</div><br/>";
+		htmlMsg += "<div style=\"color: chartreuse;\"><b>Electronic Device</b></div><br/>";
+		message.setContent(htmlMsg, "text/html");
+		helper.setTo(order.getCustomerEmail());
+		helper.setSubject("[Perfume Shop] Cancel order.");
+		emailSender.send(message);
+		return ResponseEntity.ok(Boolean.TRUE);
 	}
 
 }

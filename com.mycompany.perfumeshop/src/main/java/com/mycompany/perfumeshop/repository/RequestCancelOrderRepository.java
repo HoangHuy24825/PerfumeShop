@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import com.mycompany.perfumeshop.entities.Order;
 import com.mycompany.perfumeshop.entities.RequestCancelOrder;
 
 @Repository
@@ -22,4 +23,6 @@ public interface RequestCancelOrderRepository
 	List<RequestCancelOrder> findByStatus(Boolean status);
 
 	Page<RequestCancelOrder> findAll(Specification<RequestCancelOrder> spec, Pageable pageable);
+
+	RequestCancelOrder findByOrder(Order order);
 }

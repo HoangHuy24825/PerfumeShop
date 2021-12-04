@@ -77,8 +77,67 @@ $(document).ready(function () {
         }
     });
 
-
-
+    $("#formReview").validate({
+        rules: {
+            content: {
+                required: true,
+            },
+            customerName: {
+                required: true,
+            },
+            customerEmail: {
+                required: true,
+            },
+            customerPhone: {
+                required: true,
+            },
+        },
+        messages: {
+            content: {
+                required: "Vui lòng nhập đánh giá",
+            },
+            customerName: {
+                required: "Vui lòng nhập họ tên",
+            },
+            customerEmail: {
+                required: "Vui lòng nhập Email",
+            },
+            customerPhone: {
+                required: "Vui lòng nhập số điện thoại",
+            },
+        },
+        submitHandler: function (form) {
+            var formData = new FormData(form);
+            var numberStar = $(".rating-star:checked").val();
+            if (typeof numberStar === "undefined") {
+                $("#errMsgReview").html("Vui lòng chọn số sao bạn muốn đánh giá!");
+                return false;
+            }
+            formData.append('numberStar', numberStar);
+            formData.append('idProduct', $("#id_detail_product").val());
+            for (var pair of formData.entries()) {
+                console.log(pair[0], pair[1]);
+            }
+            $.post({
+                url: '/perfume-shop/reviews-product',
+                enctype: "multipart/form-data",
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function (responseData) {
+                    if (responseData.code == 200 && responseData.success == true) {
+                        showConfirm("Đánh giá của bạn đã được ghi nhận! Vui lòng đợi phê duyệt của shop!", "Đóng");
+                        $(form).trigger('reset');
+                        // $(form).find("input").val("");
+                        // $(form).find("textarea").val("");
+                        $(".rating-star:checked").removeAttr("checked");
+                    } else if (responseData.code == 200 && responseData.success == false) {
+                        $("#errMsgReview").html("Bạn chưa thực hiện mua sản phẩm! Vui lòng mua sản phẩm trước khi gửi đánh giá!");
+                    }
+                }
+            });
+        }
+    });
 
 });
 
@@ -94,7 +153,7 @@ function loadData() {
         success: function (jsonResult) {
             $(".front-stars").css("width", (jsonResult.product.starReviews == 0 ? 5 : jsonResult.product.starReviews) / 5 * 100 + "%");
             $(".back-stars").attr("title", (jsonResult.product.starReviews == 0 ? 5 : jsonResult.product.starReviews) + "/5");
-            $(".rating-title").html((jsonResult.product.starReviews == 0 ? 5 : jsonResult.product.starReviews) + "/5 sao");
+            $(".rating-title").html((jsonResult.product.starReviews == 0 ? 5 : jsonResult.product.starReviews.toFixed(1)) + "/5 sao");
             $("#name-product").html(jsonResult.product.title);
             $("#trademark-product").html(jsonResult.product.trademark);
             $("#manufactureYear-product").html(jsonResult.product.manufactureYear);
@@ -180,6 +239,73 @@ function loadData() {
             }
             $('#ol-img-slide').html(ol_image_slide);
             $('#img-slide').html(image_slide);
+
+
+            var count1Star = 0;
+            var count2Star = 0;
+            var count3Star = 0;
+            var count4Star = 0;
+            var count5Star = 0;
+            var listReviewHtml = '';
+            var numberReview = 0;
+            $.each(jsonResult.product.reviews, function (index, review) {
+                if (review.status == true) {
+                    if (numberReview == 31) {
+                        return false;
+                    }
+                    switch (review.numberStar) {
+                        case 1:
+                            count1Star++;
+                            break;
+                        case 2:
+                            count2Star++;
+                            break;
+                        case 3:
+                            count3Star++;
+                            break;
+                        case 4:
+                            count4Star++;
+                            break;
+                        case 5:
+                            count5Star++;
+                            break;
+                    }
+                    listReviewHtml +=
+                        `
+                        <div class="review_item px-5">
+                            <div class="media">
+                                <div class="d-flex">
+                                    <img class="rounded-circle" width="60" height="60" 
+                                    src="${(review.user == null) ? '/user/img/no-avatar.png' : '/upload/'+review.user.avatar}" 
+                                    alt="" />
+                                </div>
+                                <div class="media-body">
+                                    <h4>${review.user==null?review.customerName:review.user.fullname}</h4>
+                                    <i class="fa fa-star ${review.numberStar<1?'text-secondary':''} "></i>
+                                    <i class="fa fa-star ${review.numberStar<2?'text-secondary':''}"></i>
+                                    <i class="fa fa-star ${review.numberStar<3?'text-secondary':''}"></i>
+                                    <i class="fa fa-star ${review.numberStar<4?'text-secondary':''}"></i>
+                                    <i class="fa fa-star ${review.numberStar<5?'text-secondary':''}"></i>
+                                    <p>
+                                    ${review.content}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        `
+                    numberReview++;
+                }
+            });
+            if (jsonResult.product.reviews.length > 30) {
+                listReviewHtml += `<div class="text-center text-primary" type="button">Xem thêm...</div>`
+            }
+            $("#numstar1").html(`(${count1Star})`);
+            $("#numstar2").html(`(${count2Star})`);
+            $("#numstar3").html(`(${count3Star})`);
+            $("#numstar4").html(`(${count4Star})`);
+            $("#numstar5").html(`(${count5Star})`);
+            $(".review_list").html(listReviewHtml);
         }
     });
 }
@@ -206,7 +332,6 @@ function setMenuBanner() {
 
     $("#menu-product").addClass("my-menu-active");
 }
-
 
 function loadNewProduct() {
     $.ajax({

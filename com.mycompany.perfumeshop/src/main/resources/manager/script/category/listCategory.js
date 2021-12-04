@@ -1,6 +1,7 @@
 $(document).ready(function () {
 	loadCategory(null, 1);
 	setActiveMenu();
+	showNotifyHeader();
 
 	if ($("#update_role").val() == 'false') {
 		$(".update_category").each(function () {

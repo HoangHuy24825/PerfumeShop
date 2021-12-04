@@ -62,7 +62,7 @@ public class Product extends BaseEntity {
 	@JoinColumn(name = "category_id")
 	private Category category;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
 	private List<ProductImage> productImages = new ArrayList<>();
 
 	public void addImage(ProductImage image) {
@@ -75,7 +75,7 @@ public class Product extends BaseEntity {
 		image.setProduct(null);
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
 	private List<AttributeProduct> attributeProducts = new ArrayList<>();
 
 	public void addAttribute(AttributeProduct attributeProduct) {
@@ -88,7 +88,7 @@ public class Product extends BaseEntity {
 		attributeProduct.setProduct(null);
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "product")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
 	private List<Review> reviews = new ArrayList<>();
 
 	public void addReview(Review review) {

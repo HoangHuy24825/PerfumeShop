@@ -56,7 +56,7 @@
                                 <div class="d-flex ">
                                     <a href="${base}/perfume-shop/admin/introduce.html" class="btn_back_list"><i
                                             class="fa fa-arrow-left"></i></a> &nbsp
-                                    <h3 class="title-5 m-b-35" id="title-page-update-add">Cập nhật giới thiệu công ty
+                                    <h3 class="title-5" id="title-page-update-add">Cập nhật giới thiệu công ty
                                     </h3>
                                 </div>
                                 <div class="">

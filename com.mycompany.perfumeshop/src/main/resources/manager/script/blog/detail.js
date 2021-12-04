@@ -1,5 +1,6 @@
 $(document).ready(function () {
     setActiveMenu();
+    showNotifyHeader();
 });
 
 function setActiveMenu() {

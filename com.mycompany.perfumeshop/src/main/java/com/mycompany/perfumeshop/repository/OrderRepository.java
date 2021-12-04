@@ -21,4 +21,6 @@ public interface OrderRepository extends JpaRepository<Order, Integer>, JpaSpeci
 	List<Order> findByStatus(Boolean status);
 
 	Page<Order> findAll(Specification<Order> spec, Pageable pageable);
+
+	List<Order> findByCustomerEmailAndCustomerPhoneAndCustomerName(String email, String phone, String name);
 }

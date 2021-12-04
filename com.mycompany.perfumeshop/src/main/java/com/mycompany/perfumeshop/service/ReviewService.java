@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mycompany.perfumeshop.entities.Product;
 import com.mycompany.perfumeshop.entities.Review;
+import com.mycompany.perfumeshop.entities.User;
 
 public interface ReviewService {
 
@@ -11,4 +12,5 @@ public interface ReviewService {
 
 	public Boolean deleteById(Integer id) throws Exception;
 
+	Review saveOrUpdate(Review review, User userLogin) throws Exception;
 }

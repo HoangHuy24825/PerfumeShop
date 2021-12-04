@@ -1,7 +1,9 @@
 package com.mycompany.perfumeshop.controller.user;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,12 +16,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.mycompany.perfumeshop.conf.GlobalConfig;
 import com.mycompany.perfumeshop.controller.BaseController;
 import com.mycompany.perfumeshop.dto.MappingModel;
+import com.mycompany.perfumeshop.dto.ReviewDTO;
 import com.mycompany.perfumeshop.entities.Product;
+import com.mycompany.perfumeshop.entities.Review;
 import com.mycompany.perfumeshop.service.AttributeProductService;
 import com.mycompany.perfumeshop.service.CategoryService;
 import com.mycompany.perfumeshop.service.ProductImageService;
@@ -125,9 +130,6 @@ public class ProductController extends BaseController {
 	public ResponseEntity<JSONObject> getProductDetail(final HttpServletRequest request) throws Exception {
 		JSONObject result = new JSONObject();
 		Product product = productService.findById(request.getParameter("id_product"));
-		product.setAttributeProducts(attributeService.findAllByProduct(product));
-		product.setReviews(reviewService.findByProduct(product));
-		product.setProductImages(productImageService.findByProduct(product));
 		result.put("product", mappingModel.mappingModel(product));
 		return ResponseEntity.ok(result);
 	}
@@ -144,4 +146,15 @@ public class ProductController extends BaseController {
 		result.put("products", products);
 		return ResponseEntity.ok(result);
 	}
+	
+	@PostMapping("reviews-product")
+	public ResponseEntity<Map<String, Object>> review(@ModelAttribute ReviewDTO reviewDto) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Review review = reviewService.saveOrUpdate(mappingModel.mappingModel(reviewDto), getUserLogined());
+		System.err.println((review != null && review.getId() != null));
+		result.put("success", (review != null && review.getId() != null));
+		result.put("code", 200);
+		return ResponseEntity.ok(result);
+	}
+
 }

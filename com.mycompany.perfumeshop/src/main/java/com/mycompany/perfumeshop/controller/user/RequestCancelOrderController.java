@@ -39,8 +39,9 @@ public class RequestCancelOrderController extends BaseController {
 		requestCancelOrder.setStatus(false);
 		requestCancelOrder.setOrder(saleOrder);
 		requestCancelOrder.setReason(reason);
+		requestCancelOrder.setProcessingStatus(false);
 		requestCancelOrderService.saveOrUpdate(requestCancelOrder);
-		return ResponseEntity.ok( Boolean.TRUE);
+		return ResponseEntity.ok(Boolean.TRUE);
 	}
 
 }

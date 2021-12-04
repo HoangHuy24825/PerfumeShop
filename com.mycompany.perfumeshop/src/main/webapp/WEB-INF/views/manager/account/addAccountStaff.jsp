@@ -56,7 +56,7 @@
                                 <div class="d-flex">
                                     <a href="${base}/perfume-shop/admin/account.html" class="btn_back_list"><i
                                             class="fa fa-arrow-left"></i></a> &nbsp
-                                    <h3 class="title-5 m-b-35">Thêm tài khoản nhân viên</h3>
+                                    <h3 class="title-5">Thêm tài khoản nhân viên</h3>
                                 </div>
                                 <div class="">
                                     <div class="bg-light p-4">

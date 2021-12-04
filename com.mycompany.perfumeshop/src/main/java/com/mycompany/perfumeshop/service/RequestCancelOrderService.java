@@ -2,6 +2,7 @@ package com.mycompany.perfumeshop.service;
 
 import java.util.List;
 
+import com.mycompany.perfumeshop.entities.Order;
 import com.mycompany.perfumeshop.entities.RequestCancelOrder;
 import com.mycompany.perfumeshop.entities.User;
 
@@ -21,6 +22,8 @@ public interface RequestCancelOrderService {
 
 	List<RequestCancelOrder> findAll() throws Exception;
 
-	RequestCancelOrder findById(Integer id) throws Exception;
+	RequestCancelOrder findById(String id) throws Exception;
+
+	RequestCancelOrder findByOrder(Order order) throws Exception;
 
 }

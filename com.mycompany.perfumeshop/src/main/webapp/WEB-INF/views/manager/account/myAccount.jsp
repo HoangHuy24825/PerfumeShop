@@ -52,7 +52,7 @@
 							<div class="col-md-12">
 								<!-- CONTENT PAGE -->
 								<!-- DATA TABLE -->
-								<h3 class="title-5 m-b-35">Tài khoản của tôi</h3>
+								<h3 class="title-5">Tài khoản của tôi</h3>
 								<div class="row p-2">
 									<div class="col-md-4 bg-white p-4 border-right">
 										<aside class="profile-nav alt ">

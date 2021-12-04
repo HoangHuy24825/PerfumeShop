@@ -8,11 +8,13 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mycompany.perfumeshop.entities.Order;
 import com.mycompany.perfumeshop.entities.RequestCancelOrder;
 import com.mycompany.perfumeshop.entities.User;
 import com.mycompany.perfumeshop.exceptions.EntityNotFoundCustomException;
 import com.mycompany.perfumeshop.repository.RequestCancelOrderRepository;
 import com.mycompany.perfumeshop.service.RequestCancelOrderService;
+import com.mycompany.perfumeshop.utils.Validate;
 
 @Service
 @Transactional
@@ -67,9 +69,20 @@ public class RequestCancelOrderServiceImpl implements RequestCancelOrderService 
 	}
 
 	@Override
-	public RequestCancelOrder findById(Integer id) throws Exception {
-		return requestRepository.findById(id)
+	public RequestCancelOrder findById(String id) throws Exception {
+		if (!Validate.isNumber(id)) {
+			return new RequestCancelOrder();
+		}
+		return requestRepository.findById(Integer.parseInt(id))
 				.orElseThrow(() -> new EntityNotFoundCustomException("Not found request cancel order"));
+	}
+
+	@Override
+	public RequestCancelOrder findByOrder(Order order) throws Exception {
+		if (order == null || order.getId() == null) {
+			return null;
+		}
+		return requestRepository.findByOrder(order);
 	}
 
 }

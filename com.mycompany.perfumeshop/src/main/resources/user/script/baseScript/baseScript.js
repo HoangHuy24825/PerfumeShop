@@ -94,8 +94,8 @@ function showConfirm(message, btnConfirm, btnClose, danger) {
 function showConfirm(message, btnClose) {
     $('#modalCustomerConfirmContent').text(message);
     $('#btnCloseConfirm').text(btnClose);
-    $('#btnAgree').hide();
     $('#btnCloseConfirm').addClass("btn btn-primary");
+    $('#btnAgree').hide();
     $('#modalCustomerConfirm').modal('show');
 }
 

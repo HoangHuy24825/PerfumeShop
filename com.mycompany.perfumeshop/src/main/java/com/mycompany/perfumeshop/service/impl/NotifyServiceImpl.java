@@ -7,17 +7,21 @@ import org.springframework.stereotype.Service;
 
 import com.mycompany.perfumeshop.repository.NotifyRepository;
 import com.mycompany.perfumeshop.service.NotifyService;
+import com.mycompany.perfumeshop.utils.Validate;
 
 @Service
 @Transactional
-public class NotifyServiceImpl  implements NotifyService {
+public class NotifyServiceImpl implements NotifyService {
 
 	@Autowired
 	private NotifyRepository notifyRepository;
 
 	@Override
-	public Boolean deleteById(Integer id) throws Exception {
-		notifyRepository.deleteById(id);
+	public Boolean deleteById(String id) throws Exception {
+		if (!Validate.isNumber(id)) {
+			return false;
+		}
+		notifyRepository.deleteById(Integer.parseInt(id));
 		return true;
 	}
 

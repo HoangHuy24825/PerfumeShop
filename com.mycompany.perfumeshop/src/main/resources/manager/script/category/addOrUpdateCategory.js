@@ -6,6 +6,8 @@ $(document).ready(function () {
 		$("#title-page-update-add").text("Cập nhật danh mục");
 	}
 	setActiveMenu();
+
+	showNotifyHeader();
 });
 
 function setActiveMenu() {
