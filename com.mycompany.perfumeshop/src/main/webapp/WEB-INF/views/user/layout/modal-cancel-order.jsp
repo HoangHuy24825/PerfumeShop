@@ -124,3 +124,77 @@
     </div>
 </div>
 <!--::END MODAL CONFIRM::-->
+
+<!--START MODAL DETAIL -->
+<div class="modal fade" id="detail-modal-client" tabindex="-1" role="dialog" aria-labelledby="mediumModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mediumModalLabel">
+                    Đơn hàng mã: <span id="code-order"></span> - <span id="status-orders"> Chưa xác nhận
+                    </span><br /> ID: <span id="id-order"></span>
+                </h5>
+                <br />
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="order--information">
+                    <div class="p-4">
+                        <h4 style="margin-left: -25px;">Trạng thái đơn hàng</h4>
+                        <br />
+                        <ul class="text-muted" id="status--order">
+                            <li style="list-style-type:none" id="status--4" class="d-none text-danger"><i
+                                    class="fas fa-hand-point-right"></i> Đơn hàng đã bị hủy</li>
+                            <li style="list-style-type:none" id="status--3"><i class="fas fa-hand-point-right"></i>
+                                Giao hàng thành công</li>
+                            <li style="list-style-type:none" id="status--2"><i class="fas fa-hand-point-right"></i>
+                                Đang giao hàng</li>
+                            <li style="list-style-type:none" id="status--1"><i class="fas fa-hand-point-right"></i>
+                                Đã tiếp nhận đơn hàng</li>
+                            <li style="list-style-type:none" id="status--0"><i class="fas fa-hand-point-right"></i>
+                                Chưa tiếp nhận đơn hàng</li>
+                        </ul>
+                        <hr />
+                    </div>
+                    <h4>Thông tin người nhận</h4>
+                    <br>
+                    <table class="table table-bordered font-weight-bold">
+                        <tr>
+                            <td>Họ tên</td>
+                            <td id="fullnameDetailOrder" class="text-primary"></td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td id="emailDetailOrder" class="text-primary"></td>
+                        </tr>
+                        <tr>
+                            <td>Số điện thoại</td>
+                            <td id="phoneDetailOrder" class="text-primary"></td>
+                        </tr>
+                        <tr>
+                            <td>Địa chỉ</td>
+                            <td id="addressDetailOrder" class="text-primary"></td>
+                        </tr>
+                        <tr>
+                            <td>Ngày mua</td>
+                            <td id="createdDateDetailOrder" class="text-primary"></td>
+                        </tr>
+                        <tr>
+                            <td>Tổng tiền thanh toán</td>
+                            <td id="totalDetailOrder" class="text-primary"></td>
+                        </tr>
+                    </table>
+                    <hr />
+                    <h4 class="mb-3">Chi tiết sản phẩm</h4>
+                    <div id="list--product--order">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--END MODAL DETAIL -->

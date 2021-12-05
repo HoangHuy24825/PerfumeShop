@@ -113,6 +113,7 @@
 	<!-- jquery plugins here-->
 	<jsp:include page="/WEB-INF/views/user/layout/script.jsp"></jsp:include>
 	<script src="${base }/user/script/cart/search-order.js"></script>
+	<script src="${base }/user/script/cart/view-detail-order.js"></script>
 </body>
 
 </html>

@@ -109,9 +109,8 @@ $(document).ready(function () {
                             html += '<div class=" float-right">';
                             html += '<div class="checkout_btn_inner float-right">';
                             html +=
-                                '<button style="border:unset" type="button" class="btn_1 btn_billAccount" onclick="LoadBillModal(' +
-                                order.id +
-                                ')" value="Chi tiết" data-toggle="modal" data-target="#modal-bill-detail">Chi tiết đơn hàng</button>';
+                                `<button style="border:unset" type="button" class="btn_1 btn_billAccount" 
+                                    onclick="viewOrder(${order.id})" value="Chi tiết" >Chi tiết đơn hàng</button>`;
                             html +=
                                 `<button style="border:unset" type="button" class="btn_1 btn_billAccount btn_pay" data-id-order="${order.id}" >Hủy đơn hàng</button>`;
                             html += '</div>';
@@ -217,95 +216,6 @@ function setMenuBanner() {
 
 }
 
-function LoadBillModal(idOrder) {
-    $.ajax({
-        url: '/perfume-shop/order',
-        data: {
-            idOrder: idOrder
-        },
-        type: "GET",
-        success: function (jsonResult) {
-            $('#id-orders').text(jsonResult.id);
-            switch (jsonResult.processingStatus) {
-                case 0:
-                    $('#status-orders').text("Chưa tiếp nhận");
-                    break;
-                case 1:
-                    $('#status-orders').text("Đã tiếp nhận");
-                    break;
-                case 2:
-                    $('#status-orders').text("Đang giao hàng");
-                    break;
-                default:
-                    break;
-            }
-            $('#FullRecieverName').text(jsonResult.customerName);
-            $('#RecieverEmail').text(jsonResult.customerEmail);
-            $('#RecieverPhone').text(jsonResult.customerPhone);
-            $('#RecieverAddress').text(jsonResult.customerAddress);
-            $('#SumPrice').text(jsonResult.total.toLocaleString('it-IT', {
-                style: 'currency',
-                currency: 'VND'
-            }));
-            /* ID_Bill_Modal = ID_Bill; */
-            loadSaleOrderProduct(idOrder, true);
-        }
-    });
-};
-
-function loadSaleOrderProduct(idOrder, status) {
-    $.ajax({
-        url: '/perfume-shop/oder-detail',
-        data: {
-            idOrder: idOrder
-        },
-        type: "GET",
-        success: function (jsonResult) {
-            if (status) {
-                $('.sp').remove();
-            }
-            var html1 = '';
-            var html2 = '';
-            $.each(jsonResult.orderDetails, function (i, order) {
-                if (status) {
-                    html1 += '<div class="sp">';
-                    html1 += '<br>';
-                    html1 += '<div class="d-flex flex-row">';
-                    html1 += '<img class="border" src="/upload/' + order.avatar +
-                        '" alt="" width="100" height="100">';
-                    html1 += '<div class="ml-4">';
-                    html1 += '<h5>' + order.productName + '</h5>';
-                    html1 += '<p>Giá: ' + order.price.toLocaleString('it-IT', {
-                        style: 'currency',
-                        currency: 'VND'
-                    }) + '</p>';
-                    html1 += '<p>Số lượng: ' + order.quality + '</p>';
-                    html1 += '</div>';
-                    html1 += '</div>';
-                    html1 += '</div>';
-                    $('#list-product-detail').html(html1);
-                } else {
-                    html2 += '<div class="sp_bill">';
-                    html2 += '<br>';
-                    html2 += '<div class="d-flex flex-row">';
-                    html2 += '<img class="border" src="/upload/' + order.avatar +
-                        '" alt="" width="100" height="100">';
-                    html2 += '<div class="ml-2">';
-                    html2 += '<h5>' + order.productName + '</h5>';
-                    html2 += '<p>Giá: ' + order.price.toLocaleString('it-IT', {
-                        style: 'currency',
-                        currency: 'VND'
-                    }) + '</p>';
-                    html2 += '<p>Số lượng: ' + order.quality + '</p>';
-                    html2 += '</div>';
-                    html2 += '</div>';
-                    html2 += '</div>';
-                    $('#' + idOrder).html(html2);
-                }
-            });
-        }
-    });
-}
 
 
 function cancelOrder(idOrder) {

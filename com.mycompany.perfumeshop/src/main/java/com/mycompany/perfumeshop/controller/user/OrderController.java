@@ -58,17 +58,13 @@ public class OrderController extends BaseController {
 		return ResponseEntity.ok(result);
 	}
 
+	@SuppressWarnings("unchecked")
 	@GetMapping("oder-detail")
-	public ResponseEntity<Map<String, Object>> getDetailOrder(@RequestParam("idOrder") String idOrder)
-			throws Exception {
-		Map<String, Object> result = new HashMap<String, Object>();
+	public ResponseEntity<JSONObject> getDetailOrder(@RequestParam("idOrder") String idOrder) throws Exception {
+		JSONObject result = new JSONObject();
 		Order order = orderService.findById(idOrder);
-		List<JSONObject> orderDetailJson = new ArrayList<JSONObject>();
-		for (OrderDetail saleOrderProduct : order.getOrderDetails()) {
-			orderDetailJson.add(mappingModel.mappingModel(saleOrderProduct));
-		}
-		result.put("order", mappingModel.mappingModel(order));
-		result.put("orderDetails", orderDetailJson);
+		JSONObject orderJson = mappingModel.mappingModel(order);
+		result.put("order", orderJson);
 		return ResponseEntity.ok(result);
 	}
 

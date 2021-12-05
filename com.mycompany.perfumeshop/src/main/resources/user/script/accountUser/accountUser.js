@@ -258,97 +258,6 @@ const loadFile = (event) => {
     image.src = URL.createObjectURL(event.target.files[0]);
 };
 
-function LoadBillModal(idOrder) {
-    $.ajax({
-        url: '/perfume-shop/order',
-        data: {
-            idOrder: idOrder
-        },
-        type: "GET",
-        success: function (jsonResult) {
-            $('#id-orders').text(jsonResult.saleOrder.id);
-            switch (jsonResult.saleOrder.processingStatus) {
-                case 0:
-                    $('#status-orders').text("Chưa tiếp nhận");
-                    break;
-                case 1:
-                    $('#status-orders').text("Đã tiếp nhận");
-                    break;
-                case 2:
-                    $('#status-orders').text("Đang giao hàng");
-                    break;
-                default:
-                    break;
-            }
-            $('#FullRecieverName').text(jsonResult.saleOrder.customerName);
-            $('#RecieverEmail').text(jsonResult.saleOrder.customerEmail);
-            $('#RecieverPhone').text(jsonResult.saleOrder.customerPhone);
-            $('#RecieverAddress').text(jsonResult.saleOrder.customerAddress);
-            $('#SumPrice').text(jsonResult.saleOrder.total.toLocaleString('it-IT', {
-                style: 'currency',
-                currency: 'VND'
-            }));
-            /* ID_Bill_Modal = ID_Bill; */
-            loadSaleOrderProduct(idOrder, true);
-        }
-    });
-};
-
-function loadSaleOrderProduct(idOrder, status) {
-    $.ajax({
-        url: '/perfume-shop/sale-order-product-id-order',
-        data: {
-            idOrder: idOrder
-        },
-        type: "GET",
-        success: function (jsonResult) {
-            if (status) {
-                $('.sp').remove();
-            }
-            var html1 = '';
-            var html2 = '';
-            $.each(jsonResult.orderDetails, function (i, item) {
-                if (status) {
-                    html1 += '<div class="sp">';
-                    html1 += '<br>';
-                    html1 += '<div class="d-flex flex-row">';
-                    html1 += '<img class="border" src="/upload/' + item.avatar +
-                        '" alt="" width="100" height="100">';
-                    html1 += '<div class="ml-2">';
-                    html1 += '<h5>' + item.productName + '</h5>';
-                    html1 += '<p>Giá: ' + item.price.toLocaleString('it-IT', {
-                        style: 'currency',
-                        currency: 'VND'
-                    }) + '</p>';
-                    html1 += '<p>Số lượng: ' + item.quantity + '</p>';
-                    html1 += '</div>';
-                    html1 += '</div>';
-                    html1 += '</div>';
-                    $('#list-product-detail').html(html1);
-                } else {
-                    html2 += '<div class="sp_bill">';
-                    html2 += '<br>';
-                    html2 += '<div class="d-flex flex-row">';
-                    html2 += '<img class="border" src="/upload/' + item.avatar +
-                        '" alt="" width="100" height="100">';
-                    html2 += '<div class="ml-2">';
-                    html2 += '<h5>' + item.productName + '</h5>';
-                    html2 += '<p>Giá: ' + item.price.toLocaleString('it-IT', {
-                        style: 'currency',
-                        currency: 'VND'
-                    }) + '</p>';
-                    html2 += '<p>Số lượng: ' + item.quantity + '</p>';
-                    html2 += '</div>';
-                    html2 += '</div>';
-                    html2 += '</div>';
-                    $('#' + idOrder).html(html2);
-                }
-            });
-        }
-    });
-}
-
-
 function loadSaleOrder(idAccount) {
     $.ajax({
         url: '/perfume-shop/order-by-account',
@@ -416,9 +325,8 @@ function loadSaleOrder(idAccount) {
                     html += '<div class=" float-right">';
                     html += '<div class="checkout_btn_inner float-right">';
                     html +=
-                        '<button style="border:unset" type="button" class="btn_1 btn_billAccount" onclick="LoadBillModal(' +
-                        order.id +
-                        ')" value="Chi tiết" data-toggle="modal" data-target="#modal-bill-detail">Chi tiết đơn hàng</button>';
+                        `<button style="border:unset" type="button" class="btn_1 btn_billAccount" 
+                            onclick="viewOrder(${order.id})" value="Chi tiết">Chi tiết đơn hàng</button>`;
                     html +=
                         `<button style="border:unset" type="button" class="btn_1 btn_billAccount btn_pay" data-id-order="${order.id}" >Hủy đơn hàng</button>`;
                     html += '</div>';
