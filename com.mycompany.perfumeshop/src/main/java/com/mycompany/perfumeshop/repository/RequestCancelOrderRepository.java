@@ -18,7 +18,7 @@ public interface RequestCancelOrderRepository
 
 	Integer countByStatus(Boolean status);
 
-	List<RequestCancelOrder> findTop3ByOrderByCreatedDateDesc();
+	List<RequestCancelOrder> findAllByOrderByCreatedDateDesc();
 
 	List<RequestCancelOrder> findByStatus(Boolean status);
 

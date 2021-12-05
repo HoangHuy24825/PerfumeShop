@@ -6,19 +6,6 @@ var status_all_notify_modal = false;
 $(document).ready(function () {
     setActiveMenu();
     LoadNewOrder(1);
-    // showNotifyHeader();
-
-    /*  FUNCTION WHEN MODAL NOTIFY CLOSING */
-    // $("#notify-detail-modal").on('hide.bs.modal', function () {
-    //     showNotifyHeader();
-    //     if (status_all_notify_modal) {
-    //         showAllNotify();
-    //     } else {
-    //         showAllNotify;
-    //         $('#notify-modal').modal('hide');
-    //     }
-    // });
-
 
     $("body").on("click", "#paged--list--new--order li a", function (event) {
         event.preventDefault();
@@ -49,12 +36,8 @@ $(document).ready(function () {
 /* NOTIFY CONTENT END */
 
 function setActiveMenu() {
-    $(".navbar__list li").each(function () {
-        $(this).removeClass("active");
-    });
-    $(".list-unstyled li").each(function () {
-        $(this).removeClass("active");
-    });
+    $(".navbar__list li").removeClass("active");
+    $(".list-unstyled li").removeClass("active");
     $('.list-unstyled #menu--order').addClass("active");
     $('.navbar__list #menu--order').addClass("active");
 }
@@ -371,8 +354,6 @@ function LoadOrderSuccessOrDeleted(status, page) {
     });
 }
 
-
-
 function viewOrder(idOrder) {
     $.ajax({
         url: '/perfume-shop/admin/detail-order',
@@ -478,33 +459,6 @@ function changeStatusOrder(idOrder, status, previousStatus) {
             showAlertMessage("Thay đổi trạng thái đơn hàng thất bại!", false);
         }
     });
-}
-
-function changeStyleStatus(status) {
-    for (var i = 0; i <= 4; i++) {
-        $('#status--' + i).removeClass("text-success");
-        $('#status-orders').removeClass("text-dark");
-        $('#status-orders').removeClass("text-success");
-        $('#status-orders').removeClass("text-danger");
-    }
-    if (status != 4) {
-        $('#status--4').addClass("d-none");
-        for (var i = 0; i <= status; i++) {
-            $('#status--' + i).removeClass("d-none");
-            $('#status--' + i).addClass("text-success");
-        }
-        if (status == 3) {
-            $('#status-orders').addClass("text-success");
-        } else {
-            $('#status-orders').addClass("text-dark");
-        }
-    } else {
-        for (var i = 0; i < status; i++) {
-            $('#status--' + i).addClass("d-none");
-        }
-        $('#status--4').removeClass("d-none");
-        $('#status-orders').addClass("text-danger");
-    }
 }
 
 function cancelBill(id_bill) {

@@ -73,7 +73,7 @@ public class BlogServiceImpl implements BlogService {
 			userRequest.setKeySearch(Constants.STR_EMPTY);
 		}
 		Pageable pageable = PageRequest.of(userRequest.getCurrentPage() - 1, userRequest.getSizeOfPage(),
-				Sort.by("createdDate").descending().and(Sort.by("updatedDate").descending()));
+				Sort.by("createdDate", "updatedDate").descending());
 		return blogRepository.findAll(blogSprecification.findBlog(userRequest), pageable);
 	}
 

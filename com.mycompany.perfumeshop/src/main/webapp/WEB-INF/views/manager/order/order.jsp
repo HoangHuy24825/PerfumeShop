@@ -304,7 +304,8 @@
 	<!-- JS-->
 	<jsp:include page="/WEB-INF/views/manager/layout/script.jsp"></jsp:include>
 	<script type="text/javascript" src="${base }/manager/script/order/list-order.js"></script>
-
+	<script type="text/javascript" src="${base }/manager/script/order/order.js"></script>
+	
 </body>
 
 </html>

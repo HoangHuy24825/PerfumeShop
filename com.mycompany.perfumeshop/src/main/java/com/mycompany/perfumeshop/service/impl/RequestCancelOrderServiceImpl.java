@@ -23,8 +23,8 @@ public class RequestCancelOrderServiceImpl implements RequestCancelOrderService 
 	@Autowired
 	private RequestCancelOrderRepository requestRepository;
 
-	public List<RequestCancelOrder> getTopThreeContact() throws Exception {
-		return requestRepository.findTop3ByOrderByCreatedDateDesc();
+	public List<RequestCancelOrder> findAllRequestCancelOrder() throws Exception {
+		return requestRepository.findAllByOrderByCreatedDateDesc();
 	}
 
 	public List<RequestCancelOrder> getUnreadNotify() throws Exception {
@@ -83,6 +83,15 @@ public class RequestCancelOrderServiceImpl implements RequestCancelOrderService 
 			return null;
 		}
 		return requestRepository.findByOrder(order);
+	}
+
+	@Override
+	public Boolean deleteById(String idRequest) throws Exception {
+		if (!Validate.isNumber(idRequest)) {
+			return false;
+		}
+		requestRepository.deleteById(Integer.parseInt(idRequest));
+		return true;
 	}
 
 }

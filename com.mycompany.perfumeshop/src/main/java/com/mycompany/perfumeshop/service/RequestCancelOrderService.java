@@ -8,7 +8,7 @@ import com.mycompany.perfumeshop.entities.User;
 
 public interface RequestCancelOrderService {
 
-	List<RequestCancelOrder> getTopThreeContact() throws Exception;
+	List<RequestCancelOrder> findAllRequestCancelOrder() throws Exception;
 
 	List<RequestCancelOrder> getUnreadNotify() throws Exception;
 
@@ -25,5 +25,7 @@ public interface RequestCancelOrderService {
 	RequestCancelOrder findById(String id) throws Exception;
 
 	RequestCancelOrder findByOrder(Order order) throws Exception;
+
+	Boolean deleteById(String idRequest) throws Exception;
 
 }

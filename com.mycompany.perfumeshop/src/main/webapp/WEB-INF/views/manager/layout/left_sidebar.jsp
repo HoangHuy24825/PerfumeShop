@@ -32,9 +32,18 @@
 				</c:if>
 
 				<c:if test="${orderRole.view==true}">
-					<li id="menu--order" class=""><a href="${base}/perfume-shop/admin/order.html">
-							<i class="fas fa-money-check"></i>Đơn hàng
-						</a></li>
+					<li class="has-sub">
+						<a class="js-arrow" href="#">
+							<i class="fas fa-money-check"></i>Đơn hàng</a>
+						<ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+							<li id="menu--order" class=""><a href="${base}/perfume-shop/admin/order.html">
+									<i class="far fa-list-alt"></i>Danh sách
+								</a></li>
+							<li id="menu--cancel-order" class=""><a href="${base}/perfume-shop/admin/request-cancel-order.html">
+									<i class="fas fa-ban"></i>Yêu cầu hủy đơn
+								</a></li>
+						</ul>
+					</li>
 				</c:if>
 
 				<c:if test="${categoryBlogRole.view==true}">
@@ -60,6 +69,7 @@
 							<i class="fas fa-info"></i>Giới thiệu
 						</a></li>
 				</c:if>
+
 			</ul>
 		</nav>
 	</div>

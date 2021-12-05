@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Page<User> findAllByAdminRequest(AdminRequest adminRequest) throws Exception {
 		Pageable pageable = PageRequest.of(adminRequest.getCurrentPage() - 1, adminRequest.getTotalPage(),
-				Sort.by("createdDate").descending().and(Sort.by("updatedDate").descending()));
+				Sort.by("createdDate", "updatedDate").descending());
 		return userRepository.findAll(userSpecification.findByRole(adminRequest), pageable);
 	}
 

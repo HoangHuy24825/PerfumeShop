@@ -33,7 +33,7 @@ public class OrderServiceImpl implements OrderService {
 	private OrderSpecification orderSpecification;
 
 	public Order getNewestOrderByCustomer(CustomerOrder customerOrder) {
-		Pageable pageable = PageRequest.of(0, 1, Sort.by("createdDate", "updatedDate"));
+		Pageable pageable = PageRequest.of(0, 1, Sort.by("createdDate", "updatedDate").descending());
 		return orderRepository.findAll(orderSpecification.findByCustomerOrder(customerOrder), pageable).getContent()
 				.get(0);
 	}
@@ -43,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
 		if (idAccount == null) {
 			return new ArrayList<Order>();
 		}
-		return orderRepository.findByUserID(idAccount);
+		return orderRepository.findByUserIDOrderByCreatedDateDescUpdatedDateDesc(idAccount);
 	}
 
 	@Autowired
@@ -60,7 +60,8 @@ public class OrderServiceImpl implements OrderService {
 		if (status == null) {
 			return null;
 		}
-		Pageable pageable = PageRequest.of(currentPage - 1, pageSize, Sort.by("createdDate", "updatedDate"));
+		Pageable pageable = PageRequest.of(currentPage - 1, pageSize,
+				Sort.by("createdDate", "updatedDate").descending());
 		return orderRepository.findAll(orderSpecification.findByProcessStatus(status), pageable);
 	}
 

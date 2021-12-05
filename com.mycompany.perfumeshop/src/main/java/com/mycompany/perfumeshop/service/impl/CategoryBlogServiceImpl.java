@@ -40,8 +40,7 @@ public class CategoryBlogServiceImpl implements CategoryBlogService {
 	private CategoryBlogSpecification categoryBlogSpecification;
 
 	@Override
-	public CategoryBlog saveOrUpdate(CategoryBlog category, MultipartFile avatar, User userLogin)
-			throws Exception {
+	public CategoryBlog saveOrUpdate(CategoryBlog category, MultipartFile avatar, User userLogin) throws Exception {
 		Integer idUserLogin = userLogin != null ? userLogin.getId() : null;
 		category.setSeo(new Slugify().slugify(category.getName()));
 		category.setUpdatedDate(Calendar.getInstance().getTime());
@@ -88,7 +87,7 @@ public class CategoryBlogServiceImpl implements CategoryBlogService {
 			userRequest.setKeySearch(Constants.STR_EMPTY);
 		}
 		Pageable pageable = PageRequest.of(userRequest.getCurrentPage() - 1, userRequest.getSizeOfPage(),
-				Sort.by("createdDate").descending().and(Sort.by("updatedDate").descending()));
+				Sort.by("createdDate", "updatedDate").descending());
 		return categoryBlogRepository.findAll(categoryBlogSpecification.findByUserRequest(userRequest), pageable);
 	}
 

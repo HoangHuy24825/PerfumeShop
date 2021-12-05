@@ -14,13 +14,14 @@ import com.mycompany.perfumeshop.entities.Order;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer>, JpaSpecificationExecutor<Order> {
 
-	List<Order> findByUserID(Integer userID);
+	List<Order> findByUserIDOrderByCreatedDateDescUpdatedDateDesc(Integer userID);
 
 	Order findBySeo(String seo);
 
-	List<Order> findByStatus(Boolean status);
+	List<Order> findByStatusOrderByCreatedDateDescUpdatedDateDesc(Boolean status);
 
 	Page<Order> findAll(Specification<Order> spec, Pageable pageable);
 
-	List<Order> findByCustomerEmailAndCustomerPhoneAndCustomerName(String email, String phone, String name);
+	List<Order> findByCustomerEmailAndCustomerPhoneAndCustomerNameOrderByCreatedDateDescUpdatedDateDesc(String email,
+			String phone, String name);
 }
