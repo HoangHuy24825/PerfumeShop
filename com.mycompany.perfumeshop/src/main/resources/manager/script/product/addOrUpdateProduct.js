@@ -142,18 +142,6 @@ function loadDetailForEdit(id_product) {
 			$('#fragrant').val(result.fragrant);
 			editor.setData(result.detail);
 
-			if (result.isHot == true) {
-				$('#isHot1').attr("checked", true);
-			} else {
-				$('#isHot2').attr("checked", true);
-			}
-
-			if (result.status == true) {
-				$("#status").attr("checked", true);
-			} else {
-				$("#status").attr("checked", false);
-			}
-
 			$('i.del').parent().remove();
 
 			$.each(result.productImages, function (index, value) {

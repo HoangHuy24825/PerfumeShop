@@ -93,7 +93,6 @@
 														<th>Số điện thoại</th>
 														<th>Địa chỉ</th>
 														<th>Trạng thái</th>
-														<th>Hành động</th>
 													</tr>
 												</thead>
 												<tbody id="staff-list">

@@ -204,21 +204,18 @@
 														<input class="form-control col-md-12 text-box single-line valid"
 															type="text" name="fullname" id="fullname"
 															placeholder="Họ tên" value="${userLogined.fullname }">
-														<span class="text-danger hide" id="error_full_name"></span>
 													</div>
 													<div class="form-group">
 														<label class="col-md-3">Địa chỉ</label>
 														<input class="form-control col-md-12 text-box single-line valid"
 															type="text" name="address" id="address"
 															placeholder="Địa chỉ" value="${userLogined.address}">
-														<span class="text-danger hide" id="error_address"></span>
 													</div>
 													<div class="form-group">
 														<label class="col-md-3">Email</label>
 														<input class="form-control col-md-12 text-box single-line valid"
 															type="text" name="email" id="email" placeholder="Email"
-															value="${userLogined.email}">
-														<span class="text-danger hide" id="error_email"></span>
+															disabled value="${userLogined.email}">
 													</div>
 													<div class="form-group">
 														<label class="col-md-3">Số Điện Thoại</label>
@@ -226,13 +223,11 @@
 															id="phone"
 															class="form-control col-md-12 text-box single-line valid"
 															placeholder="Số điện thoại" />
-														<span class="text-danger hide" id="error_phone"></span>
 													</div>
 													<input hidden="true" id="Pasword" name="password"
 														value="${userLogined.password}" />
 													<div class="form-group">
-														<button type="button" class="btn btn-outline-primary"
-															onclick="clickUpdateInfo()">
+														<button type="submit" class="btn btn-outline-primary">
 															<i class="ace-icon fa fa-check bigger-110"></i> Cập Nhật
 														</button>
 													</div>
@@ -241,19 +236,19 @@
 											<!-- /.tab-pane -->
 											<!-- Cập nhật mật khẩu -->
 											<div class="tab-pane" id="change-password">
-												<form class="form-horizontal" action="" method="post">
+												<form class="form-horizontal" action="" method="post"
+													id="changePasswordForm">
 													<div class="space-10"></div>
+
 													<div class="form-group">
 														<label class="col-sm-3 control-label no-padding-right"
 															for="oldPassword">Mật khẩu hiện tại</label>
-
 														<div class="col-sm-9">
 															<div class="input-group">
 																<input class="form-control" type="password"
 																	id="OldPassword" name="OldPassword" />
 															</div>
-															<span id="error_old_password"
-																class="text-danger hide"></span>
+															<span style="color:red" id="errMsg"></span>
 														</div>
 													</div>
 													<div class="form-group">
@@ -264,10 +259,7 @@
 															<div class="input-group">
 																<input class="form-control" type="password"
 																	id="NewPassword" name="NewPassword" />
-
 															</div>
-															<span id="error_new_password"
-																class="text-danger hide"></span>
 														</div>
 													</div>
 													<div class="form-group">
@@ -278,14 +270,11 @@
 																<input class="form-control" type="password"
 																	id="ConfirmPassword" name="ConfirmPassword" />
 															</div>
-															<span class="hide text-danger"
-																id="error_confirm_password"></span>
 														</div>
 													</div>
 													<div class="clearfix form-actions">
 														<div class="col-md-offset-3 col-md-9">
-															<button class="btn btn-outline-primary" type="button"
-																onclick="changePassword()">
+															<button class="btn btn-outline-primary" type="submit">
 																<i class="ace-icon fa fa-check bigger-110"></i> Cập nhật
 															</button>
 														</div>

@@ -1,7 +1,6 @@
 package com.mycompany.perfumeshop.controller.manager;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,7 +9,6 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mycompany.perfumeshop.conf.GlobalConfig;
 import com.mycompany.perfumeshop.controller.BaseController;
@@ -62,49 +61,27 @@ public class ManagerAccounController extends BaseController {
 	@PostMapping("admin/add-update-account")
 	public ResponseEntity<JSONObject> addOrUpdate(HttpServletRequest request, @ModelAttribute UserDTO userDTO)
 			throws Exception {
-		Boolean typeAccount = request.getParameter("typeAccount").equals("1");
+		Boolean typeAccount = userDTO.getTypeAccount() == null ? false : userDTO.getTypeAccount().equals("1");
 		JSONObject result = new JSONObject();
-		User user = mappingModel.mappingModel(userDTO);
-		if (user.getId() == null) {
-			List<User> users = userService.findAll();
-			for (User userItem : users) {
-				if (userItem.getUsername().equalsIgnoreCase(user.getUsername())) {
-					result.put("result", Boolean.FALSE);
-					result.put("message", "Tên đăng nhập đã tồn tại!");
-					return ResponseEntity.ok(result);
-				}
+		if (userDTO.getId() == null) {
+			if (userService.findByUserNameAndEmail(userDTO.getUsername(), userDTO.getEmail()) != null) {
+				result.put("result", Boolean.FALSE);
+				result.put("message", "Tên đăng nhập hoặc email đã tồn tại!");
+				return ResponseEntity.ok(result);
 			}
-			if (isLogined()) {
-				user.setCreatedBy(getUserLogined().getId());
-			}
-			userService.saveOrUpdate(user, userDTO.getAvatar(), getUserLogined(), typeAccount);
-		} else {
-			if (isLogined()) {
-				user.setUpdatedBy(getUserLogined().getId());
-			}
-			userService.saveOrUpdate(user, userDTO.getAvatar(), getUserLogined(), null);
 		}
+		User user = mappingModel.mappingModel(userDTO);
+		userService.saveOrUpdate(user, userDTO.getAvatar(), getUserLogined(), typeAccount);
 		result.put("result", Boolean.TRUE);
 		result.put("message", "Thành công!");
 		return ResponseEntity.ok(result);
 	}
 
-	@SuppressWarnings("unchecked")
 	@PostMapping("admin/update-password")
-	public ResponseEntity<JSONObject> changePassword(HttpServletRequest request) throws Exception {
-		JSONObject result = new JSONObject();
-		String oldPass = request.getParameter("oldPass");
-		String newPass = request.getParameter("newPass");
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		User currentUser = getUserLogined();
-		if (passwordEncoder.matches(oldPass, currentUser.getPassword())) {
-			currentUser.setPassword(passwordEncoder.encode(newPass));
-			userService.saveOrUpdate(currentUser, null, getUserLogined(), null);
-			getUserLogined();
-			result.put("message", Boolean.TRUE);
-		} else {
-			result.put("message", Boolean.FALSE);
-		}
+	public ResponseEntity<Boolean> changePassword(@RequestParam String OldPassword, @RequestParam String NewPassword)
+			throws Exception {
+		Boolean result = userService.changePassword(NewPassword, OldPassword, getUserLogined());
+		getUserLogined();
 		return ResponseEntity.ok(result);
 	}
 

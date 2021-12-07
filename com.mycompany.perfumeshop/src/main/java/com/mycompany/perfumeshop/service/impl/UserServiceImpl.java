@@ -65,7 +65,6 @@ public class UserServiceImpl implements UserService {
 				user.setAvatar(oldUser.getAvatar());
 			}
 			user.setStatus(oldUser.getStatus());
-
 		} else {
 			user.setCreatedDate(Calendar.getInstance().getTime());
 			user.setCreatedBy(idUserLogin);

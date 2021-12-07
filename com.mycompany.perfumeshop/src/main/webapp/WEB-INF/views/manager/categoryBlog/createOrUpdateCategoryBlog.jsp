@@ -91,29 +91,6 @@
                                                         </div>
                                                     </div>
 
-
-                                                    <div class="form-group">
-                                                        <label>Danh mục hot</label>&nbsp;&nbsp;&nbsp;
-                                                        <input type="radio" name="isHot" id="hot1" value="true"
-                                                            class="radio-button-form" />
-                                                        <label for="hot1"
-                                                            class="label-radio-button">Hot</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                        <input type="radio" name="isHot" id="hot2" value="false"
-                                                            class="radio-button-form" />
-                                                        <label for="hot2" class="label-radio-button">Bình thường</label>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Trạng thái <span
-                                                                class="required_field">*</span></label>&nbsp;&nbsp;&nbsp;
-                                                        <input type="radio" name="status" id="status1" value="true"
-                                                            class="radio-button-form" />
-                                                        <label for="status1" class="label-radio-button">Hiển
-                                                            thị</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                        <input type="radio" name="status" id="status2" value="false"
-                                                            class="radio-button-form" />
-                                                        <label for="status2" class="label-radio-button">Ẩn</label>
-                                                    </div>
-
                                                     <div class="form-group">
                                                         <a class="btn btn-secondary"
                                                             href="${base}/perfume-shop/admin/category.html">Hủy</a>

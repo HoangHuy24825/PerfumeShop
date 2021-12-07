@@ -60,20 +60,12 @@ function loadDetailForEdit(idCategory) {
 			idCategory: idCategory
 		},
 		dataType: "json", //set data return is json
-		success: function (result) {
-			$('#id').val(result.category.id);
-			$('#name').val(result.category.name);
-			$('.img--avatar').css("background-image", "url(/upload/" + result.category.avatar + ")");
-			$('#seo').val(result.category.seo);
-			$('#description').val(result.category.description);
-			if (result.category.status == true) {
-				$('#status').attr("checked", true);
-			}
-			if (result.category.isHot == true) {
-				$('#isHot1').attr("checked", true);
-			} else {
-				$('#isHot2').attr("checked", true);
-			}
+		success: function (category) {
+			$('#id').val(category.id);
+			$('#name').val(category.name);
+			$('.img--avatar').css("background-image", "url(/upload/" + category.avatar + ")");
+			$('#seo').val(category.seo);
+			$('#description').val(category.description);
 		},
 		error: function (jqXhr, textStatus, errorMessage) {
 			//show error

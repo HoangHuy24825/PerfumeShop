@@ -89,7 +89,6 @@
                                             <th>Mùi hương</th>
                                             <th>Trạng thái</th>
                                             <th>Thịnh hành</th>
-                                            <th>Hành động</th>
                                         </tr>
                                     </thead>
                                     <tbody id="table_data">

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
+
 <!-- SPRING FORM -->
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 
@@ -22,10 +22,10 @@
     <!-- Title Page-->
     <title>Dashboard | ${tileWebsite}</title>
     <link rel="icon" href="${base}/manager/images/logo-asp.net.png">
-    
+
     <jsp:include page="/WEB-INF/views/common/variable.jsp"></jsp:include>
-	<jsp:include page="/WEB-INF/views/manager/layout/style.jsp"></jsp:include>
-	
+    <jsp:include page="/WEB-INF/views/manager/layout/style.jsp"></jsp:include>
+
 </head>
 
 <body class="">
@@ -41,11 +41,11 @@
         <!-- PAGE CONTAINER-->
         <div class="page-container">
             <!-- HEADER DESKTOP-->
-              <jsp:include page="/WEB-INF/views/manager/layout/header.jsp"></jsp:include>
+            <jsp:include page="/WEB-INF/views/manager/layout/header.jsp"></jsp:include>
             <!-- HEADER DESKTOP-->
 
             <!-- MAIN CONTENT-->
-          	 <div class="main-content">
+            <div class="main-content">
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
                         <div class="row">
@@ -342,12 +342,14 @@
                                                         <div class="au-message__item-text">
                                                             <div class="avatar-wrap">
                                                                 <div class="avatar">
-                                                                    <img src="images/icon/avatar-02.jpg" alt="John Smith">
+                                                                    <img src="images/icon/avatar-02.jpg"
+                                                                        alt="John Smith">
                                                                 </div>
                                                             </div>
                                                             <div class="text">
                                                                 <h5 class="name">TranNgoc112</h5>
-                                                                <p>Đã Đánh Giá Sản Phẩm Quạt Trần Điều Khiển Model 1112</p>
+                                                                <p>Đã Đánh Giá Sản Phẩm Quạt Trần Điều Khiển Model 1112
+                                                                </p>
                                                             </div>
                                                         </div>
                                                         <div class="au-message__item-time">
@@ -360,7 +362,8 @@
                                                         <div class="au-message__item-text">
                                                             <div class="avatar-wrap online">
                                                                 <div class="avatar">
-                                                                    <img src="images/icon/avatar-03.jpg" alt="Nicholas Martinez">
+                                                                    <img src="images/icon/avatar-03.jpg"
+                                                                        alt="Nicholas Martinez">
                                                                 </div>
                                                             </div>
                                                             <div class="text">
@@ -378,7 +381,8 @@
                                                         <div class="au-message__item-text">
                                                             <div class="avatar-wrap online">
                                                                 <div class="avatar">
-                                                                    <img src="images/icon/avatar-04.jpg" alt="Michelle Sims">
+                                                                    <img src="images/icon/avatar-04.jpg"
+                                                                        alt="Michelle Sims">
                                                                 </div>
                                                             </div>
                                                             <div class="text">
@@ -396,7 +400,8 @@
                                                         <div class="au-message__item-text">
                                                             <div class="avatar-wrap">
                                                                 <div class="avatar">
-                                                                    <img src="images/icon/avatar-05.jpg" alt="Michelle Sims">
+                                                                    <img src="images/icon/avatar-05.jpg"
+                                                                        alt="Michelle Sims">
                                                                 </div>
                                                             </div>
                                                             <div class="text">
@@ -414,7 +419,8 @@
                                                         <div class="au-message__item-text">
                                                             <div class="avatar-wrap online">
                                                                 <div class="avatar">
-                                                                    <img src="images/icon/avatar-04.jpg" alt="Michelle Sims">
+                                                                    <img src="images/icon/avatar-04.jpg"
+                                                                        alt="Michelle Sims">
                                                                 </div>
                                                             </div>
                                                             <div class="text">
@@ -432,7 +438,8 @@
                                                         <div class="au-message__item-text">
                                                             <div class="avatar-wrap">
                                                                 <div class="avatar">
-                                                                    <img src="images/icon/avatar-05.jpg" alt="Michelle Sims">
+                                                                    <img src="images/icon/avatar-05.jpg"
+                                                                        alt="Michelle Sims">
                                                                 </div>
                                                             </div>
                                                             <div class="text">
@@ -471,8 +478,10 @@
                                                             <img src="images/icon/avatar-02.jpg" alt="John Smith">
                                                         </div>
                                                         <div class="recei-mess-list">
-                                                            <div class="recei-mess">Lorem ipsum dolor sit amet, consectetur adipiscing elit non iaculis</div>
-                                                            <div class="recei-mess">Donec tempor, sapien ac viverra</div>
+                                                            <div class="recei-mess">Lorem ipsum dolor sit amet,
+                                                                consectetur adipiscing elit non iaculis</div>
+                                                            <div class="recei-mess">Donec tempor, sapien ac viverra
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -480,14 +489,16 @@
                                                     <span class="mess-time">30 giây trước</span>
                                                     <div class="send-mess__inner">
                                                         <div class="send-mess-list">
-                                                            <div class="send-mess">Lorem ipsum dolor sit amet, consectetur adipiscing elit non iaculis</div>
+                                                            <div class="send-mess">Lorem ipsum dolor sit amet,
+                                                                consectetur adipiscing elit non iaculis</div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="au-chat-textfield">
                                                 <form class="au-form-icon">
-                                                    <input class="au-input au-input--full au-input--h65" type="text" placeholder="Type a message">
+                                                    <input class="au-input au-input--full au-input--h65" type="text"
+                                                        placeholder="Type a message">
                                                     <button class="au-input-icon">
                                                         <i class="zmdi zmdi-camera"></i>
                                                     </button>
@@ -508,31 +519,20 @@
                     </div>
                 </div>
             </div>
-          	<!-- END MAIN CONTENT-->
+            <!-- END MAIN CONTENT-->
         </div>
     </div>
-    
+
     <!-- START NOTIFY MODAL -->
-	 <jsp:include page="/WEB-INF/views/manager/layout/notify.jsp"></jsp:include>
-	<!-- START NOTIFI MODAL -->
-        <!-- END PAGE CONTAINER-->
+    <jsp:include page="/WEB-INF/views/manager/layout/notify.jsp"></jsp:include>
+    <!-- START NOTIFI MODAL -->
+    <!-- END PAGE CONTAINER-->
     <!-- JS-->
     <jsp:include page="/WEB-INF/views/manager/layout/script.jsp"></jsp:include>
     <script type="text/javascript">
-    $(document).ready(function () {
-       setActiveMenu();
-    });
-    function setActiveMenu() {
-     	console.log("call");
-     	$( ".navbar__list li" ).each(function() {
-     		$(this).removeClass("active");
-     	});
-     	$( ".list-unstyled li" ).each(function() {
-     		$(this).removeClass("active");
-     	});
-     	$('.list-unstyled #menu--dashboard').addClass("active");
-     	$('.navbar__list #menu--dashboard').addClass("active");
- }
+        $(document).ready(function () {
+            setActiveMenu("#menu--dashboard");
+        });
     </script>
 </body>
 

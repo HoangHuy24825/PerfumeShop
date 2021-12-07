@@ -3,7 +3,7 @@
  */
 
 $(document).ready(function () {
-    setActiveMenu();
+    setActiveMenu("#menu--account");
 
     $("#onloadImage").hide();
 
@@ -16,17 +16,6 @@ $(document).ready(function () {
         }
     });
 });
-
-function setActiveMenu() {
-    $(".navbar__list li").each(function () {
-        $(this).removeClass("active");
-    });
-    $(".list-unstyled li").each(function () {
-        $(this).removeClass("active");
-    });
-    $('.list-unstyled #menu--account').addClass("active");
-    $('.navbar__list #menu--account').addClass("active");
-}
 
 function setStatus(idUserRole, type, status) {
     if ($("#" + idUserRole + "_Insert").prop("checked") || $("#" + idUserRole + "_Update").prop("checked") || $("#" +

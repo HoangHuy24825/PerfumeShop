@@ -146,21 +146,17 @@ function loadCategory(keySearch, currentPage) {
 							</span>
 						</td>
 			  
-						   <td>
-							<div class="table-data-feature">
-								<button class="item view_category" title="Xem" onclick="detail(${value.id})">
-									<input type="hidden" id="view_${value.id}" name="custId" value="${value.seo}">
-									   <i class="fas fa-eye"></i>
-								   </button>
-								<button class="item update_category" title="Sửa" hide="${!update_role}">
-									<i class="fas fa-pencil-alt" onclick="edit(${value.id})"></i>
-									<input type="hidden" id="edit_${value.id}" name="custId" value="${value.seo}">
-								</button>
-								<button class="item delete_category" hide="${!delete_role}" title="Xóa" onclick="deleteCategory(${value.id})">
-									<i class="fas fa-trash-alt"></i>
-								</button>
+						<td>
+							<div class="table-data-feature pr-4">
+								<input type="hidden" id="view_${value.id}" name="custId" value="${value.seo}">
+								<input type="hidden" id="edit_${value.id}" name="custId" value="${value.seo}">
+								<input type="button" class="btn btn-outline-info mx-1" value="Xem" onclick="detail(${value.id})">
+								<input type="button" class="btn btn-outline-success mx-1" value="Sửa" ${update_role == '    true'?"":"hide"}
+									onclick="edit(${value.id})">
+								<input type="button" class="btn btn-outline-danger mx-1" value="Xóa" ${delete_role == 'true'?"":"hide"} 
+									onclick="deleteCategory(${value.id})">
 							</div>
-						   </td>
+						</td>
 					</tr>
 					<tr class="spacer"></tr>`;
 			});

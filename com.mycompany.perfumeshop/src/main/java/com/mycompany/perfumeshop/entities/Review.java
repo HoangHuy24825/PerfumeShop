@@ -37,9 +37,12 @@ public class Review extends BaseEntity {
 	@Column(name = "content", length = 1000, nullable = false)
 	private String content;
 
+	@Column(name = "is_hide", nullable = true)
+	private Boolean isHide = Boolean.FALSE;
+
 	@Column(name = "number_star", nullable = false)
 	private Integer numberStar;
-	
+
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "product_id")

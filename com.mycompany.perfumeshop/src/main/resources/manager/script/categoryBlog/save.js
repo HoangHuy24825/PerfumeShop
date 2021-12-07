@@ -46,16 +46,6 @@ function loadDetailForEdit(idCategory) {
             $('#id').val(result.id);
             $('#name').val(result.name);
             $('.img--avatar').css("background-image", "url(/upload/" + result.avatar + ")");
-            if (result.status == true) {
-                $('#status1').attr("checked", true);
-            } else {
-                $('#status2').attr("checked", true);
-            }
-            if (result.isHot == true) {
-                $('#isHot1').attr("checked", true);
-            } else {
-                $('#isHot2').attr("checked", true);
-            }
         },
         error: function (jqXhr, textStatus, errorMessage) {
             //show error

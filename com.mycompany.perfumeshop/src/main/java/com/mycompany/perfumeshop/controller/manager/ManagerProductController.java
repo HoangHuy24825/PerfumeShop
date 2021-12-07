@@ -165,16 +165,10 @@ public class ManagerProductController extends BaseController {
 			return ResponseEntity.ok(Boolean.FALSE);
 		}
 		if (type != null && type == 0) {
-			boolean status = request.getParameter("status").equals("1");
-			product.setStatus(status);
+			product.setStatus(request.getParameter("status").equals("1"));
 		} else if (type != null && type == 1) {
-			boolean isHot = request.getParameter("isHot").equals("1");
-			product.setIsHot(isHot);
+			product.setIsHot(request.getParameter("isHot").equals("1"));
 		}
-		if (isLogined()) {
-			product.setUpdatedBy(getUserLogined().getId());
-		}
-		product.setUpdatedDate(Calendar.getInstance().getTime());
 		productService.saveOrUpdate(product, getUserLogined());
 		return ResponseEntity.ok(Boolean.TRUE);
 	}

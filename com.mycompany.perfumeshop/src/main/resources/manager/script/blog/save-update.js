@@ -71,16 +71,6 @@ function loadDetailForEdit(idBlog) {
             $('.img--avatar').css("background-image", "url(/upload/" + result.avatar + ")");
             $('#seo').val(result.seo);
             $('#description').val(result.description);
-            if (result.status == true) {
-                $('#status1').attr("checked", true);
-            } else {
-                $('#status2').attr("checked", true);
-            }
-            if (result.isHot == true) {
-                $('#isHot1').attr("checked", true);
-            } else {
-                $('#isHot2').attr("checked", true);
-            }
             editor.setData(result.detail);
         },
         error: function (jqXhr, textStatus, errorMessage) {

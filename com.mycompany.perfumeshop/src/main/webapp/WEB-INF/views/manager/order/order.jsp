@@ -89,7 +89,6 @@
 													<th>Địa chỉ</th>
 													<th>Tổng tiền</th>
 													<th>Ngày đặt</th>
-													<th>Hành động</th>
 												</tr>
 											</thead>
 											<tbody id="newBill">
@@ -123,7 +122,6 @@
 													<c:if test="${orderRole.update ==true}">
 														<th>Cập nhật trạng thái</th>
 													</c:if>
-													<th>Hành động</th>
 												</tr>
 											</thead>
 											<tbody id="billProcess">
@@ -154,7 +152,6 @@
 													<th>Tổng tiền</th>
 													<th>Ngày đặt</th>
 													<th>Ngày cập nhật</th>
-													<th>Hành động</th>
 												</tr>
 											</thead>
 											<tbody id="billReceived">
@@ -185,7 +182,6 @@
 													<th>Tổng tiền</th>
 													<th>Ngày đặt</th>
 													<th>Ngày cập nhật</th>
-													<th>Hành động</th>
 												</tr>
 											</thead>
 											<tbody id="billDeleted">

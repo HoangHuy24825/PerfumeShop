@@ -249,7 +249,7 @@ function loadData() {
             var listReviewHtml = '';
             var numberReview = 0;
             $.each(jsonResult.product.reviews, function (index, review) {
-                if (review.status == true) {
+                if (review.status && !review.isHide) {
                     if (numberReview == 31) {
                         return false;
                     }

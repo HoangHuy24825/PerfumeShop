@@ -2,6 +2,8 @@ package com.mycompany.perfumeshop.controller.manager;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import com.mycompany.perfumeshop.controller.BaseController;
 import com.mycompany.perfumeshop.dto.CategoryBlogDTO;
 import com.mycompany.perfumeshop.dto.MappingModel;
 import com.mycompany.perfumeshop.entities.CategoryBlog;
+import com.mycompany.perfumeshop.exceptions.EntityNotFoundCustomException;
 import com.mycompany.perfumeshop.service.CategoryBlogService;
 import com.mycompany.perfumeshop.service.UserService;
 import com.mycompany.perfumeshop.valueObjects.BaseVo;
@@ -100,6 +103,18 @@ public class ManagerCategoryBlogController extends BaseController {
 	@PostMapping("admin/delete-category-blog")
 	public ResponseEntity<Boolean> delete(@RequestParam("idCategory") Integer idCategory) throws Exception {
 		return ResponseEntity.ok(categoryBlogService.deleteById(idCategory));
+	}
+
+	@PostMapping("/admin/change-detail-category-blog")
+	public ResponseEntity<Boolean> changeDetail(HttpServletRequest request) throws Exception {
+		CategoryBlog categoryBlog = categoryBlogService.findById(request.getParameter("id"))
+				.orElseThrow(() -> new EntityNotFoundCustomException("Not found category blog"));
+		if (categoryBlog == null) {
+			return ResponseEntity.ok(Boolean.FALSE);
+		}
+		categoryBlog.setStatus(request.getParameter("status").equals("1"));
+		categoryBlogService.saveOrUpdate(categoryBlog, null, getUserLogined());
+		return ResponseEntity.ok(Boolean.TRUE);
 	}
 
 }

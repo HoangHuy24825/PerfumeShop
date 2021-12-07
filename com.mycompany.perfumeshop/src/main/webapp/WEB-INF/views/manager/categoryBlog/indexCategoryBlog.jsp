@@ -75,7 +75,6 @@
 											<th>Tên</th>
 											<th>Seo</th>
 											<th>Trạng thái</th>
-											<th>Hành động</th>
 										</tr>
 									</thead>
 									<tbody id="table_data">

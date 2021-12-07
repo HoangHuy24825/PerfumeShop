@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,7 @@ import com.mycompany.perfumeshop.entities.Blog;
 import com.mycompany.perfumeshop.service.BlogService;
 import com.mycompany.perfumeshop.service.CategoryBlogService;
 import com.mycompany.perfumeshop.service.UserService;
+import com.mycompany.perfumeshop.utils.ConvertUtils;
 import com.mycompany.perfumeshop.valueObjects.UserRequest;
 
 @Controller
@@ -98,19 +101,35 @@ public class ManagerBlogController extends BaseController {
 				null);
 		Page<Blog> page = blogService.getListBlogByFilter(userRequest);
 		result.put("listBlog", page.getContent());
-		result.put("currentPage", page.getNumber());
+		result.put("currentPage", page.getNumber() + 1);
 		result.put("totalPage", page.getTotalPages());
 		return ResponseEntity.ok(result);
 	}
 
 	@GetMapping("admin/detail-blog")
-	public ResponseEntity<JSONObject> detailBlog(@RequestParam("idBlog") Integer idBlog) throws Exception {
+	public ResponseEntity<JSONObject> detailBlog(@RequestParam("idBlog") String idBlog) throws Exception {
 		return ResponseEntity.ok(mappingModel.mappingModel(blogService.findById(idBlog)));
 	}
 
 	@PostMapping("admin/delete-blog")
 	public ResponseEntity<Boolean> delete(@RequestParam("idBlog") Integer idBlog) throws Exception {
 		return blogService.deleteById(idBlog) ? ResponseEntity.ok(Boolean.TRUE) : ResponseEntity.ok(Boolean.FALSE);
+	}
+
+	@PostMapping("/admin/change-detail-blog")
+	public ResponseEntity<Boolean> changeDetail(HttpServletRequest request) throws Exception {
+		Integer type = ConvertUtils.convertStringToInt(request.getParameter("type"), null);
+		Blog blog = blogService.findById(request.getParameter("id"));
+		if (blog == null) {
+			return ResponseEntity.ok(Boolean.FALSE);
+		}
+		if (type != null && type == 0) {
+			blog.setStatus(request.getParameter("status").equals("1"));
+		} else if (type != null && type == 1) {
+			blog.setIsHot(request.getParameter("isHot").equals("1"));
+		}
+		blogService.saveOrUpdate(blog, null, getUserLogined());
+		return ResponseEntity.ok(Boolean.TRUE);
 	}
 
 }

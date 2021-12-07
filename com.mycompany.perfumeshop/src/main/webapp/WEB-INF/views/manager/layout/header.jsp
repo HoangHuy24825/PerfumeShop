@@ -67,7 +67,7 @@
                                 <div class="account-dropdown__body">
                                     <div class="account-dropdown__item">
                                         <a href="${base}/perfume-shop/admin/my-account.html">
-                                            <i class="zmdi zmdi-account"></i>Tài Khoản</a>
+                                            <i class="fas fa-id-card"></i>Tài Khoản</a>
                                     </div>
                                 </div>
                                 <div class="account-dropdown__body">

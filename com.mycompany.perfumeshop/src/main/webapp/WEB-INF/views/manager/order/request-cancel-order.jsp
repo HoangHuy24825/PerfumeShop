@@ -71,7 +71,6 @@
                                             <th>Mã đơn hàng</th>
                                             <th>Lý do</th>
                                             <th>Trạng thái</th>
-                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody id="table_data">

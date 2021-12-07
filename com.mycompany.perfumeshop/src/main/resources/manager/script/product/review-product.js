@@ -1,15 +1,14 @@
 $(document).ready(function () {
-    loadProduct(null, 1, null, null); //load page 1
-    loadCategory(); //load category to filter
-    setActiveMenu("#menu--product");
+    setActiveMenu("#menu--review-product");
+    loadData(null, 1, null);
 
-    $("body").on("change", ".btnChangeStatus", function (e) {
+    $("body").on("change", ".btnChangeApprove", function (e) {
         e.preventDefault();
         var status = $(this).prop("checked") == true ? 1 : 0;
         var type = 0;
         var id = $(this).data("id-item");
         $.post({
-            url: "/perfume-shop/admin/change-detail-product",
+            url: "/perfume-shop/admin/change-detail-review",
             data: {
                 status: status,
                 id: id,
@@ -26,24 +25,24 @@ $(document).ready(function () {
         });
     });
 
-    $("body").on("change", ".btnChangeHot", function (e) {
+    $("body").on("change", ".btnChangeHide", function (e) {
         e.preventDefault();
-        var isHot = $(this).prop("checked") == true ? 1 : 0;
+        var isHide = $(this).prop("checked") == true ? 0 : 1;
         var id = $(this).data("id-item");
         var type = 1;
         $.post({
-            url: "/perfume-shop/admin/change-detail-product",
+            url: "/perfume-shop/admin/change-detail-review",
             data: {
-                isHot: isHot,
+                isHide: isHide,
                 id: id,
                 type: type
             },
             dataType: "json",
             success: function (response) {
                 if (response == true) {
-                    showAlertMessage("Cập nhật sản phẩm thành công!", true);
+                    showAlertMessage("Cập nhật review thành công!", true);
                 } else {
-                    showAlertMessage("Cập nhật sản phẩm thất bại!", false);
+                    showAlertMessage("Cập nhật review thất bại!", false);
                 }
             }
         });
@@ -51,36 +50,23 @@ $(document).ready(function () {
 
     $("body").on("click", "#btn_search_header", function () {
         $("#filter-status").val("0");
-        $("#select-category").val("0");
         var txtSearch = $("#input-search-header").val();
         if (txtSearch != "") {
-            loadProduct(txtSearch, 1, null, null);
+            loadData(txtSearch, 1, null);
         } else {
-            loadProduct(null, 1, null, null);
+            loadData(null, 1, null);
         }
     });
-
-
-    $("body").on("change", "#select-category", function () {
-        var filterType = $("#filter-status").val();
-        var id_category = $("#select-category").val();
-        if (filterType != 0) {
-            loadProduct(null, 1, id_category, filterType);
-        } else {
-            loadProduct(null, 1, id_category, null);
-        }
-    });
-    /* SELECT CATEGORY END */
 
     /* SELECT STATUS START */
     $("body").on("change", "#filter-status", function () {
         var txtSearch = $("#input-search-header").val();
-        var filterType = $("#filter-status").val();
-        var id_category = $("#select-category").val();
-        if (filterType != 0) {
-            loadProduct(txtSearch, 1, id_category, filterType);
+        var status = $("#filter-status").val();
+        console.log(status);
+        if (status != null) {
+            loadData(txtSearch, 1, status);
         } else {
-            loadProduct(txtSearch, 1, id_category, null);
+            loadData(txtSearch, 1, null);
         }
     });
     /* SELECT STATUS END */
@@ -91,9 +77,8 @@ $(document).ready(function () {
         var currentPage = $(this).attr('data-page');
         var txtSearch = $("#input-search-header").val();
         var status = $("#filter-status").val();
-        var id_category = $("#select-category").val();
         //load event pagination
-        loadProduct(txtSearch, currentPage, id_category, status);
+        loadData(txtSearch, currentPage, status);
     });
     /* PAGING CLICK END */
 
@@ -106,92 +91,76 @@ $(document).ready(function () {
 
 });
 
-function loadCategory() {
-    $.get({
-        url: "/perfume-shop/admin/all-category-active",
-        contentType: "application/json",
-        dataType: "json", // kieu du lieu tra ve tu controller la json
-        success: function (result) {
-            var html = '';
-            html += '<option value="' + 0 + '">Danh mục sản phẩm</option>';
-            $.each(result, function (index, value) {
-                html += '<option value="' + value.id + '">' + value.name + '</option>';
-            });
-            $('#select-category').html(html);
-        },
-        error: function (jqXhr, textStatus, errorMessage) { // error callback 
 
-        }
-    });
-}
 
 /* LOAD PRODUCT START */
-function loadProduct(keySearch, currentPage, idCategory, status) {
+function loadData(keySearch, currentPage, status) {
     var update_role = $("#update_role").val();
     var delete_role = $("#delete_role").val();
     $.get({
-        url: "/perfume-shop/admin/all-product",
+        url: "/perfume-shop/admin/reviews",
         data: {
             currentPage: currentPage,
-            idCategory: idCategory,
             status: status,
             keySearch: keySearch
         },
         dataType: "json", // kieu du lieu tra ve tu controller la json
         success: function (result) {
             var html = '';
-            if (result.products.length == 0) {
+            if (result.listReviews.length == 0) {
                 $('#table_data').html(
                     `
                     <tr class="tr-shadow">
-                        <td colspan="7"><h4 class="text-primary">Danh sách sản phẩm trống!</h4></td>
+                        <td colspan="7"><h4 class="text-primary">Danh sách đánh giá trống!</h4></td>
                     </tr>
 
                     `
                 );
                 $("#paged--list").html("");
             } else {
-                $.each(result.products, function (index, value) {
+                $.each(result.listReviews, function (index, review) {
                     html += `<tr class="tr-shadow">
-                                <td class="block-image">
-                                    <img src="/upload/${value.avatar}" alt="Hình Ảnh Sản Phẩm" />
+                                <td>
+                                    <span>${review.customerName}</span>
                                 </td>
                                 <td>
-                                     <span>${value.title}</span>
+                                     <span>${review.product.title}</span>
                                 </td>
                                 <td>
-                                    <span class="text-primary font-weight-bold">${value.trademark}</span>
+                                    <span class="fa fa-star ${review.numberStar>=1?"checked-rating":""}"></span>
+                                    <span class="fa fa-star ${review.numberStar>=2?"checked-rating":""}"></span>
+                                    <span class="fa fa-star ${review.numberStar>=3?"checked-rating":""}"></span>
+                                    <span class="fa fa-star ${review.numberStar>=4?"checked-rating":""}"></span>
+                                    <span class="fa fa-star ${review.numberStar==5?"checked-rating":""}"></span>
                                 </td>
                                 <td>
-                                     <span class="text-primary font-weight-bold">${value.fragrant}</span>
+                                     <span>${review.content}</span>
+                                </td>
+                                <td>
+                                    <span>${formatDate(review.createdDate)}</span>
                                 </td>
                                 <td>
                                     <span>
-                                        <!-- Rounded switch -->
+                                    <!-- Rounded switch -->
                                         <label class="switch">
-                                            <input type="checkbox" class="btnChangeStatus" data-id-item="${value.id}" ${value.status==true? "checked" : ""}>
+                                            <input type="checkbox" class="btnChangeHide" data-id-item="${review.id}" ${!review.isHide? "checked" : ""}>
                                             <span class="slider round"></span>
                                         </label>    
                                     </span>
                                 </td>
                                 <td>
                                     <span>
-                                        <!-- Rounded switch -->
+                                    <!-- Rounded switch -->
                                         <label class="switch">
-                                            <input type="checkbox" class="btnChangeHot" data-id-item="${value.id}" ${value.isHot==true? "checked" : ""}>
+                                            <input type="checkbox" class="btnChangeApprove" data-id-item="${review.id}" ${review.status? "checked" : ""}>
                                             <span class="slider round"></span>
                                         </label>    
                                     </span>
                                 </td>
                                 <td>
                                     <div class="table-data-feature pr-4">
-                                        <input type="hidden" id="view_${value.id}" name="custId" value="${value.seo}">
-                                        <input type="hidden" id="edit_${value.id}" name="custId" value="${value.seo}">
-                                        <input type="button" class="btn btn-outline-info mx-1" value="Xem" onclick="detail(${value.id})">
-                                        <input type="button" class="btn btn-outline-success mx-1" value="Sửa" ${update_role == '    true'?"":"hide"}
-                                            onclick="edit(${value.id})">
                                         <input type="button" class="btn btn-outline-danger mx-1" value="Xóa" ${update_role == 'true'?"":"hide"} 
-                                            onclick="deleteProduct(${value.id})">
+                                            onclick="deleteReview(${review.id})">
                                     </div>
                                 </td>
                             </tr>
@@ -240,38 +209,26 @@ function loadProduct(keySearch, currentPage, idCategory, status) {
     });
 }
 
-/* LOAD PRODUCT END */
-
-
-function detail(id) {
-    window.location.href = '/perfume-shop/admin/product-detail/' + $('#view_' + id).val();
-}
-
-function edit(id) {
-    window.location.href = '/perfume-shop/admin/edit-product/' + $('#edit_' + id).val();
-}
-
-
-function deleteProduct(idProduct) {
-    $('#btnAgree').attr("onclick", "deleteConfirmed(" + idProduct + ")");
-    showConfirm("Bạn có chắc chắn muốn xóa sản phẩm này?", "Có", "Không", true);
+function deleteReview(idReview) {
+    $('#btnAgree').attr("onclick", "deleteConfirmed(" + idReview + ")");
+    showConfirm("Bạn có chắc chắn muốn xóa đánh giá này?", "Có", "Không", true);
 };
 
-function deleteConfirmed(idProduct) {
+function deleteConfirmed(idReview) {
     $('#modalCustomerConfirm').modal('hide');
     $.ajax({
-        url: '/perfume-shop/product/' + idProduct,
+        url: '/perfume-shop/review/' + idReview,
         type: "DELETE",
         success: function (result) {
             if (result == true) {
-                showAlertMessage("Xóa sản phẩm thành công!", true);
-                loadProduct(null, 1, null, null);
+                showAlertMessage("Xóa đánh giá thành công!", true);
+                loadData(null, 1, null);
             } else {
-                showAlertMessage("Không thể xóa sản phẩm này!", false);
+                showAlertMessage("Không thể xóa đánh giá này!", false);
             }
         },
         error: function (jqXhr, textStatus, errorMessage) { // error callback 
-            showAlertMessage("Không thể xóa sản phẩm này!", false);
+            showAlertMessage("Không thể xóa đánh giá này!", false);
         }
     });
 }

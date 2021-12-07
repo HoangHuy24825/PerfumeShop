@@ -65,22 +65,23 @@
                                                 <form enctype="multipart/form-data" id="form--upload">
 
                                                     <input id="id" name="id" value="${id_blog}" hidden="true" />
+                                                    <div class="form-row">
+                                                        <div class="form-group col-6">
+                                                            <label for="category">Danh mục blog<span
+                                                                    class="required_field">*</span></label>
+                                                            <select class="form-control " id="select-category"
+                                                                name="id_category_blog">
 
-                                                    <div class="form-group">
-                                                        <label for="category">Danh mục blog<span
-                                                                class="required_field">*</span></label>
-                                                        <select class="form-control " id="select-category"
-                                                            name="id_category_blog">
+                                                            </select>
+                                                        </div>
 
-                                                        </select>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label for="name">Tên blog <span
-                                                                class="required_field">*</span></label>
-                                                        <input name="name" autocomplete="off" type="text"
-                                                            class="form-control" id="name" placeholder="Tên danh mục"
-                                                            required="required" />
+                                                        <div class="form-group col-6">
+                                                            <label for="name">Tên blog <span
+                                                                    class="required_field">*</span></label>
+                                                            <input name="name" autocomplete="off" type="text"
+                                                                class="form-control" id="name"
+                                                                placeholder="Tên danh mục" required="required" />
+                                                        </div>
                                                     </div>
 
                                                     <div class="form-group">
@@ -107,28 +108,6 @@
                                                             class="form-control" placeholder="Mô tả" id="description"
                                                             required="required" />
                                                     </div>
-
-                                                    <div class="form-group">
-                                                        <label>Blog hot</label>&nbsp;&nbsp;&nbsp;
-                                                        <input type="radio" name="isHot" id="hot1" value="true"
-                                                            class="radio-button-form" />
-                                                        <label for="hot1"
-                                                            class="label-radio-button">Hot</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                        <input type="radio" name="isHot" id="hot2" value="false"
-                                                            class="radio-button-form" />
-                                                        <label for="hot2" class="label-radio-button">Bình thường</label>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Trạng thái <span
-                                                                class="required_field">*</span></label>&nbsp;&nbsp;&nbsp;
-                                                        <input type="radio" name="status" id="status1" value="true"
-                                                            class="radio-button-form" />
-                                                        <label for="status1" class="label-radio-button">Hiển
-                                                            thị</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                        <input type="radio" name="status" id="status2" value="false"
-                                                            class="radio-button-form" />
-                                                        <label for="status2" class="label-radio-button">Ẩn</label>
-                                                    </div>
                                                     <div class="form-group">
                                                         <label for="detail">Chi tiết <span
                                                                 class="required_field">*</span></label>
@@ -138,7 +117,8 @@
                                                         </textarea>
                                                     </div>
                                                     <div class="form-group">
-                                                        <a class="btn btn-secondary" href="${base}/perfume-shop/admin/blog.html">Hủy</a>
+                                                        <a class="btn btn-secondary"
+                                                            href="${base}/perfume-shop/admin/blog.html">Hủy</a>
                                                         <button type="button" class="btn btn-primary"
                                                             onclick="clickSaveBlog()">Lưu</button>
                                                     </div>

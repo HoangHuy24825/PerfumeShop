@@ -183,7 +183,7 @@ function LoadOrderProcess(page) {
                     html += '			<div class="rs-select2--light rs-select2--md">';
                     html += '				<select id="' + item.id + '"  onchange="changeSelect(' + item
                         .id +
-                        ');" style="font-size: 14px;color: #808080;width: 177px" class="form-control " name="status">';
+                        ');" style="font-size: 14px;color: #808080;width: 177px" class="custom-select" name="status">';
 
                     switch (item.processingStatus) {
                         case 1:
@@ -211,11 +211,10 @@ function LoadOrderProcess(page) {
                     html += '		</td>';
                 }
                 html += '     <td>';
-                html += '         <div class="table-data-feature">';
-                html += '            <button class="item" title="Xem" onclick="viewOrder(' + item
-                    .id + ')">';
-                html += '               <i class="fas fa-eye"></i>';
-                html += '            </button>';
+                html += `         <div class="table-data-feature pr-4">
+                                   <input type="button" class="btn btn-outline-info mx-1" 
+                                            value="Xem" onclick="viewOrder(${item.id})">
+                                   </div> `;
                 html += '     </td>';
                 html += '</tr>';
                 html += '<tr class="spacer"></tr>';
@@ -298,21 +297,18 @@ function LoadOrderSuccessOrDeleted(status, page) {
                     '</span>';
                 html += '     </td>';
                 html += '     <td>';
-                html += '         <div class="table-data-feature">';
-                html += '            <button class="item" title="Xem" onclick="viewOrder(' + item
-                    .id + ')">';
-                html += '               <i class="fas fa-eye"></i>';
-                html += '            </button>';
+                html += `           <div class="table-data-feature pr-4">
+                                      <input type="button" class="btn btn-outline-info mx-1" 
+                                            value="Xem" onclick="viewOrder(${item.id})">`;
+
                 if (status == 4 && update_role == 'true') {
-                    html +=
-                        '            <button class="item" title="Xem" onclick="rollBackOrder(' +
-                        item.id + ',0,4)">';
-                    html += '               <i class="fas fa-undo"></i>';
-                    html += '            </button>';
+                    html += ` <input type="button" class="btn btn-outline-success mx-1" value="Quay lại" ${update_role == '    true'?"":"hide"}
+                                onclick="rollBackOrder(${item.id},0,4)">`
                 }
-                html += '     </td>';
-                html += '</tr>';
-                html += '<tr class="spacer"></tr>';
+                html += `   </div>
+                         </td>
+                    </tr>
+                <tr class="spacer"></tr>`;
             });
 
             var totalPage = result.totalPage;

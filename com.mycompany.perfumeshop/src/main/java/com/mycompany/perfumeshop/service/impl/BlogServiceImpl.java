@@ -108,9 +108,12 @@ public class BlogServiceImpl implements BlogService {
 	}
 
 	@Override
-	public Blog findById(Integer idBlog) throws Exception {
-		return blogRepository.findById(idBlog)
-				.orElseThrow(() -> new EntityNotFoundCustomException("Not found blog has id: " + idBlog));
+	public Blog findById(String idBlog) throws Exception {
+		if (!Validate.isNumber(idBlog)) {
+			return null;
+		}
+		return blogRepository.findById(Integer.parseInt(idBlog))
+				.orElseThrow(() -> new EntityNotFoundCustomException("Not found blog"));
 	}
 
 }

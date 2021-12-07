@@ -17,7 +17,7 @@ public interface BlogService {
 
 	List<Blog> findByStatus(Boolean status) throws Exception;
 
-	Blog findById(Integer idBlog) throws Exception;
+	Blog findById(String idBlog) throws Exception;
 
 	Blog saveOrUpdate(Blog blog, MultipartFile avatar, User userLogin) throws Exception;
 

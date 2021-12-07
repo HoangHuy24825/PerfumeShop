@@ -77,7 +77,6 @@
                                             <th>Seo</th>
                                             <th>Trạng thái</th>
                                             <th>Thịnh hành</th>
-                                            <th>Hành động</th>
                                         </tr>
                                     </thead>
                                     <tbody id="table_data">
@@ -88,11 +87,10 @@
                                 <div class="my-3">
                                     <nav aria-label="Page navigation example">
                                         <ul class="pagination justify-content-center" id="paged--list">
-                                            <!-- paging category -->
+                                            <!-- paging blog -->
                                         </ul>
                                     </nav>
                                 </div>
-
                                 <!-- END CONTENT PAGE -->
                             </div>
                         </div>
@@ -104,29 +102,6 @@
         <!-- END PAGE CONTAINER-->
 
     </div>
-
-
-    <!-- START MODAL CONFIRM -->
-    <div class="modal fade" id="modalConfirmOder" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body " id="modalConfirmOderContent" style="font-size:22px ">
-                    <!--content-->
-                </div>
-                <div class="modal-footer mx-auto" style="border:unset">
-                    <button type="button" id="btn_close" onclick="hideModal()" class="btn btn-secondary"
-                        data-dismiss="modal" aria-label="Close">
-                        Không
-                    </button>
-                    <button type="button" id="btn_save" onclick="" class="btn btn-primary">
-                        <!--Button Save-->
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- END MODAL CONFIRM -->
 
     <!-- START NOTIFY MODAL -->
     <jsp:include page="/WEB-INF/views/manager/layout/notify.jsp"></jsp:include>

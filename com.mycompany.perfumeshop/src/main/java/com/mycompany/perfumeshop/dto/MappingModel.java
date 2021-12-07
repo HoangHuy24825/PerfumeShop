@@ -1,7 +1,6 @@
 package com.mycompany.perfumeshop.dto;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -364,7 +363,9 @@ public class MappingModel {
 		reviewJson.put("customerEmail", review.getCustomerEmail());
 		reviewJson.put("content", review.getContent());
 		reviewJson.put("numberStar", review.getNumberStar());
+		reviewJson.put("isHide", review.getIsHide());
 		reviewJson.put("user", review.getUser() != null ? mappingModel(review.getUser()) : null);
+		reviewJson.put("product", review.getProduct());
 		return reviewJson;
 	}
 

@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
 <!-- SPRING FORM -->
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 
@@ -8,8 +7,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +17,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Title Page-->
-    <title>Danh mục | ${tileWebsite}</title>
+    <title>Sản phẩm | ${tileWebsite}</title>
     <link rel="icon" href="${base}/manager/images/logo-asp.net.png">
 
     <jsp:include page="/WEB-INF/views/common/variable.jsp"></jsp:include>
@@ -49,60 +46,62 @@
                 <div class="section__content section__content--p30">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12" id="content_page">
                                 <!-- CONTENT PAGE -->
-                                <!-- DATA TABLE -->
-                                <h3 class="title-5">danh mục sản phẩm</h3>
+                                <h3 class="title-5">Danh sách đánh giá</h3>
                                 <div class="table-data__tool">
                                     <div class="table-data__tool-left">
+                                        <div class="rs-select2--light rs-select2--md">
+                                            <select class="js-select2" name="status" id="filter-status">
+                                                <option selected="selected" value="null">Trạng Thái</option>
+                                                <option value="0">Chưa phê duyệt</option>
+                                                <option value="1">Phê duyệt</option>
+                                                <option value="2">Đã ẩn</option>
+                                            </select>
+                                            <div class="dropDownSelect2"></div>
+                                        </div>
                                     </div>
                                     <div class="table-data__tool-right">
-                                        <c:if test="${categoryRole.insert ==true}">
-                                            <button class="au-btn au-btn-icon au-btn--green au-btn--small"
-                                                onclick="location.href='${base}/perfume-shop/admin/add-category'">
-                                                <i class="fas fa-plus"></i>Thêm mới
-                                            </button>
-                                        </c:if>
-                                        <input id="update_role" value="${categoryRole.update}" type="text"
+                                        <input id="update_role" value="${productRole.update}" type="text"
                                             style="display: none" />
-                                        <input id="delete_role" value="${categoryRole.delete}" type="text"
+                                        <input id="delete_role" value="${productRole.delete}" type="text"
                                             style="display: none" />
                                     </div>
                                 </div>
                                 <table class="table table-data2">
                                     <thead>
                                         <tr>
-                                            <th>Ảnh</th>
-                                            <th>Tên</th>
-                                            <th>Mô tả</th>
-                                            <th>Seo</th>
+                                            <th>Họ và tên</th>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Số sao</th>
+                                            <th>Nội dung</th>
+                                            <th>Ngày đánh giá</th>
                                             <th>Trạng thái</th>
+                                            <th>Phê duyệt</th>
                                         </tr>
                                     </thead>
                                     <tbody id="table_data">
-                                        <!--List of category-->
+
+
                                     </tbody>
                                 </table>
-                                <!-- END DATA TABLE -->
                                 <div class="my-3">
                                     <nav aria-label="Page navigation example">
-                                        <ul class="pagination justify-content-center" id="paged--list">
-                                            <!-- paging category -->
+                                        <ul class="pagination justify-content-center " id="paged--list">
+
                                         </ul>
                                     </nav>
                                 </div>
-
-                                <!-- END CONTENT PAGE -->
                             </div>
+                            <!-- END CONTENT PAGE -->
                         </div>
-                        <jsp:include page="/WEB-INF/views/manager/layout/footer.jsp"></jsp:include>
                     </div>
+                    <jsp:include page="/WEB-INF/views/manager/layout/footer.jsp"></jsp:include>
                 </div>
             </div>
         </div>
-        <!-- END PAGE CONTAINER-->
-
     </div>
+    <!-- END PAGE CONTAINER-->
 
     <!-- START NOTIFY MODAL -->
     <jsp:include page="/WEB-INF/views/manager/layout/notify.jsp"></jsp:include>
@@ -114,7 +113,7 @@
 
     <!-- JS-->
     <jsp:include page="/WEB-INF/views/manager/layout/script.jsp"></jsp:include>
-    <script type="text/javascript" src="${base }/manager/script/category/listCategory.js"></script>
+    <script src="${base }/manager/script/product/review-product.js"></script>
 </body>
 
 </html>

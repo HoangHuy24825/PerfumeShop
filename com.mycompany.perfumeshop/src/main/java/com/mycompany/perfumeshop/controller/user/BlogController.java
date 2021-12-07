@@ -61,7 +61,7 @@ public class BlogController extends BaseController {
 	}
 
 	@GetMapping("detail-blog")
-	public ResponseEntity<Blog> detail(@RequestParam("idBlog") Integer idBlog) throws Exception {
+	public ResponseEntity<Blog> detail(@RequestParam("idBlog") String idBlog) throws Exception {
 		return ResponseEntity.ok(blogService.findById(idBlog));
 	}
 }

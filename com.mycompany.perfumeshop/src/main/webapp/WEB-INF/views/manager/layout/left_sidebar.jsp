@@ -13,10 +13,9 @@
 	<div class="menu-sidebar__content js-scrollbar1">
 		<nav class="navbar-sidebar">
 			<ul class="list-unstyled navbar__list">
-				<%-- <li id="menu--dashboard" class=""><a
-					href="${base}/perfume-shop/admin/dashboard.html"> <i
-						class="fas fa-tachometer-alt"></i>Dashboard
-				</a></li> --%>
+				<li id="menu--dashboard" class=""><a href="${base}/perfume-shop/admin/dashboard.html"> <i
+							class="fas fa-tachometer-alt"></i>Dashboard
+					</a></li>
 				<c:if test="${categoryRole.view==true}">
 					<li id="menu--category" class="">
 						<a href="${base}/perfume-shop/admin/category.html">
@@ -26,9 +25,19 @@
 				</c:if>
 
 				<c:if test="${productRole.view==true}">
-					<li id="menu--product" class=""><a href="${base}/perfume-shop/admin/product.html">
-							<i class="fas fa-sitemap"></i>Sản Phẩm
-						</a></li>
+					<li class="has-sub">
+						<a class="js-arrow" href="#">
+							<i class="fas fa-wine-bottle"></i>Sản phẩm</a>
+						<ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+							<li id="menu--product" class=""><a href="${base}/perfume-shop/admin/product.html">
+									<i class="fas fa-clipboard-list"></i></i>Danh sách
+								</a></li>
+							<li id="menu--review-product" class=""><a
+									href="${base}/perfume-shop/admin/review-product.html">
+									<i class="fas fa-tasks"></i></i>Đánh giá
+								</a></li>
+						</ul>
+					</li>
 				</c:if>
 
 				<c:if test="${orderRole.view==true}">
@@ -37,9 +46,10 @@
 							<i class="fas fa-money-check"></i>Đơn hàng</a>
 						<ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
 							<li id="menu--order" class=""><a href="${base}/perfume-shop/admin/order.html">
-									<i class="far fa-list-alt"></i>Danh sách
+									<i class="far fa-list-alt"></i>Danh sách đơn
 								</a></li>
-							<li id="menu--cancel-order" class=""><a href="${base}/perfume-shop/admin/request-cancel-order.html">
+							<li id="menu--cancel-order" class=""><a
+									href="${base}/perfume-shop/admin/request-cancel-order.html">
 									<i class="fas fa-ban"></i>Yêu cầu hủy đơn
 								</a></li>
 						</ul>
@@ -47,21 +57,35 @@
 				</c:if>
 
 				<c:if test="${categoryBlogRole.view==true}">
-					<li id="menu--category--blog" class=""><a href="${base}/perfume-shop/admin/category-blog.html">
-							<i class="fas fa-th-list"></i>Danh mục blog
-						</a></li>
-				</c:if>
-
-				<c:if test="${blogRole.view==true}">
-					<li id="menu--blog" class=""><a href="${base}/perfume-shop/admin/blog.html">
-							<i class="fab fa-blogger"></i>Blog
-						</a></li>
+					<li class="has-sub">
+						<a class="js-arrow" href="#">
+							<i class="fas fa-blog"></i>Blog</a>
+						<ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+							<li id="menu--category--blog" class=""><a
+									href="${base}/perfume-shop/admin/category-blog.html">
+									<i class="fas fa-th"></i>Danh mục blog
+								</a></li>
+							<li id="menu--blog" class=""><a href="${base}/perfume-shop/admin/blog.html">
+									<i class="fab fa-blogger"></i>Blog
+								</a></li>
+						</ul>
+					</li>
 				</c:if>
 
 				<c:if test="${accountRole.view==true}">
-					<li id="menu--account" class=""><a href="${base}/perfume-shop/admin/account.html">
-							<i class="fas fa-user-circle"></i>Tài Khoản
-						</a></li>
+					<li class="has-sub">
+						<a class="js-arrow" href="#">
+							<i class="fas fa-users-cog"></i>Tài khoản</a>
+						<ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+							<li id="menu--account" class=""><a href="${base}/perfume-shop/admin/account.html">
+									<i class="fas fa-user-cog"></i>Quản lý tài khoản
+								</a></li>
+							<li id="menu--my-account" class=""> <a href="${base}/perfume-shop/admin/my-account.html">
+									<i class="fas fa-id-card"></i>Tài khoản của tôi
+								</a></li>
+						</ul>
+					</li>
+
 				</c:if>
 
 				<c:if test="${introduceRole.view==true}">
