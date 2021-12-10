@@ -53,13 +53,13 @@
                                 <div class="table-data__tool">
                                     <div class="table-data__tool-left">
                                         <div class="rs-select2--light rs-select2--md first--select--filter">
-                                            <select class="js-select2" name="property" id="select-category">
+                                            <select class="custom-select" name="property" id="select-category">
                                                 <!-- select category to filter -->
                                             </select>
                                             <div class="dropDownSelect2"></div>
                                         </div>
                                         <div class="rs-select2--light rs-select2--md">
-                                            <select class="js-select2" name="status" id="filter-status">
+                                            <select class="custom-select" name="status" id="filter-status">
                                                 <option selected="selected" value="null">Trạng Thái</option>
                                                 <option value="1">Hiển Thị</option>
                                                 <option value="0">Ẩn</option>

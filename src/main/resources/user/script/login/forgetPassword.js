@@ -144,7 +144,7 @@ function changePassword() {
                 timeout: 600000,
                 success: function (jsonResult) {
                     showAlertMessage("Đổi mật khẩu thành công!", true);
-                    window.location.href = '/login';
+                    window.location.href = '/perfume-shop/login.html';
                 },
                 error: function (e) {
                     console.log("ERROR : ", e);

@@ -7,9 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.mycompany.perfumeshop.entities.Product;
+import com.mycompany.perfumeshop.valueObjects.CategoryQuantityProduct;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer>, JpaSpecificationExecutor<Product> {
@@ -24,4 +26,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, JpaS
 
 	Page<Product> findAll(Specification<Product> spec, Pageable pageable);
 
+	@Query("SELECT new com.mycompany.perfumeshop.valueObjects.CategoryQuantityProduct(c.name, COUNT(p.id)) FROM Category c LEFT JOIN c.products p GROUP BY c.name")
+	List<CategoryQuantityProduct> getQuantityByCategory();
 }

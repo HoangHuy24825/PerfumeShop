@@ -114,4 +114,9 @@ public class CategoryServiceImpl implements CategoryService {
 				.orElseThrow(() -> new EntityNotFoundCustomException("Not found category"));
 	}
 
+	@Override
+	public List<Category> findAllByStatus(Boolean status) throws Exception {
+		return categoryRepository.findAllByStatus(status);
+	}
+
 }

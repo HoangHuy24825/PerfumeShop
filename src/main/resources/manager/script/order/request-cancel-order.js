@@ -70,7 +70,6 @@ function rejectCancelOrderRequest(idOrder, idRequest) {
 
 function rejectCancelOrderRequestConfirmed(idOrder, idRequest) {
     $("#" + idRequest).html('Đã xử lý');
-    $('#modal-reason-reject').find('form').reset();
     $('#modal-reason-reject').modal('hide');
     showAlertMessage("Email từ chối đề nghị hủy đơn đã được gửi!", true);
     sentEmailConfirm(idOrder, 0, $('#input-reason-reject').val(), idRequest);

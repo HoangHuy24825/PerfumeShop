@@ -44,7 +44,7 @@
                             <img src="${base }/user/myImages/shopping_cart.png" alt="Chưa có sản phẩm nào trong giỏ!"
                                 style="width:200px;height:auto" />
                             <p style="margin: 15px 0px 30px; ">Không có sản phẩm nào trong giỏ hàng của bạn.</p>
-                            <a class="btn_1" href="${base }/product.html">Tiếp tục mua hàng</a>
+                            <a class="btn_1" href="${base }/perfume-shop/product.html">Tiếp tục mua hàng</a>
                         </div>
                     </c:if>
                     <c:if test="${cart!=null}">
@@ -132,7 +132,7 @@
                         </table>
 
                         <div class="checkout_btn_inner float-right">
-                            <a class="btn_1" href="${base }/product.html">Tiếp tục mua hàng</a>
+                            <a class="btn_1" href="${base }/perfume-shop/product.html">Tiếp tục mua hàng</a>
                             <div class="btn_1 checkout_btn_1" id="btn_pay" onclick="payNow()">Mua hàng</div>
                         </div>
                     </c:if>

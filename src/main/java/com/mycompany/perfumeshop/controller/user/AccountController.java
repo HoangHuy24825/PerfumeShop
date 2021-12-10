@@ -44,8 +44,8 @@ public class AccountController extends BaseController {
 	}
 
 	@PostMapping("update-password")
-	public ResponseEntity<Boolean> changePassword(@RequestParam("newPassword") String newPassword,
-			@RequestParam("oldPassword") String oldPassword) throws Exception {
+	public ResponseEntity<Boolean> changePassword(@RequestParam String newPassword, @RequestParam String oldPassword)
+			throws Exception {
 		User currentUser = getUserLogined();
 		Boolean result = userService.changePassword(newPassword, oldPassword, currentUser);
 		getAccountRole();
@@ -128,15 +128,15 @@ public class AccountController extends BaseController {
 		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
 		String htmlMsg = "<div>Dear " + fullname + " !</div> <br/><br/>";
-		htmlMsg += "<div>Cảm ơn bạn đã đăng sử dụng dịch vụ tại <b>Electronic Device Shop</b>!</div> <br/>";
-		htmlMsg += "<div>Mã xác nhận của bạn là: <b>" + code + "</b>!</div><br/>";
-		htmlMsg += "<div>Vui lòng không cung cấp mã này cho bất kỳ ai để tránh việc bị mất thông tin cá nhân.</div><br/>";
+		htmlMsg += "<div>Thank you for using service at the <b>Perfume Shop Shop</b>!</div> <br/>";
+		htmlMsg += "<div>Your verification code: <b>" + code + "</b>!</div><br/>";
+		htmlMsg += "<div>Please do not give this code to anyone to avoid loss of personal information.</div><br/>";
 		htmlMsg += "<div>Thanks & regards,</div><br/>";
 		htmlMsg += "<div style=\"color: chartreuse;\"><b>Electronic Device</b></div><br/>";
 
 		message.setContent(htmlMsg, "text/html");
 		helper.setTo(emailReceiver);
-		helper.setSubject("[Electronic Device Shop] Mã xác nhận lấy lại mật khẩu.");
+		helper.setSubject("[Electronic Device Shop] Forget Password.");
 
 		emailSender.send(message);
 

@@ -157,31 +157,26 @@ function loadProduct(keySearch, currentPage, idCategory, status) {
                                     <img src="/upload/${value.avatar}" alt="Hình Ảnh Sản Phẩm" />
                                 </td>
                                 <td>
-                                     <span>${value.title}</span>
+                                     ${value.title}
+                                </td>
+                                <td class="text-primary font-weight-bold">
+                                    ${value.trademark}
+                                </td>
+                                <td class="text-primary font-weight-bold">
+                                    ${value.fragrant}
                                 </td>
                                 <td>
-                                    <span class="text-primary font-weight-bold">${value.trademark}</span>
+                                    <label class="switch">
+                                        <input type="checkbox" class="btnChangeStatus" data-id-item="${value.id}" ${value.status==true? "checked" : ""}>
+                                        <span class="slider round"></span>
+                                    </label>    
+                                 
                                 </td>
                                 <td>
-                                     <span class="text-primary font-weight-bold">${value.fragrant}</span>
-                                </td>
-                                <td>
-                                    <span>
-                                        <!-- Rounded switch -->
-                                        <label class="switch">
-                                            <input type="checkbox" class="btnChangeStatus" data-id-item="${value.id}" ${value.status==true? "checked" : ""}>
-                                            <span class="slider round"></span>
-                                        </label>    
-                                    </span>
-                                </td>
-                                <td>
-                                    <span>
-                                        <!-- Rounded switch -->
-                                        <label class="switch">
-                                            <input type="checkbox" class="btnChangeHot" data-id-item="${value.id}" ${value.isHot==true? "checked" : ""}>
-                                            <span class="slider round"></span>
-                                        </label>    
-                                    </span>
+                                    <label class="switch">
+                                        <input type="checkbox" class="btnChangeHot" data-id-item="${value.id}" ${value.isHot==true? "checked" : ""}>
+                                        <span class="slider round"></span>
+                                    </label>    
                                 </td>
                                 <td>
                                     <div class="table-data-feature pr-4">

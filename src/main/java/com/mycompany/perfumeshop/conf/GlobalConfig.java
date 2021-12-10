@@ -35,4 +35,14 @@ public class GlobalConfig {
 
 	@Value("${title.page}")
 	private String titleWebsite;
+
+	@Value("${success.status.order}")
+	private Integer orderSuccessStatus;
+
+	@Value("${cancel.status.order}")
+	private Integer orderCancelStatus;
+
+	@Value("${not.approve.status.order}")
+	private Integer orderNotProveStatus;
+
 }

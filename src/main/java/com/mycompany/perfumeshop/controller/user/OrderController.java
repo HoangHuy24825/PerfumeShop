@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.mycompany.perfumeshop.controller.BaseController;
 import com.mycompany.perfumeshop.dto.MappingModel;
 import com.mycompany.perfumeshop.entities.Order;
-import com.mycompany.perfumeshop.entities.OrderDetail;
 import com.mycompany.perfumeshop.service.OrderService;
 import com.mycompany.perfumeshop.valueObjects.CustomerOrder;
 

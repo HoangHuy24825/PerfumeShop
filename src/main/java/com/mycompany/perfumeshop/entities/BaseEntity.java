@@ -36,7 +36,6 @@ public abstract class BaseEntity {
 	private Integer updatedBy;
 
 	@Column(name = "created_date", nullable = true)
-	@CreationTimestamp
 	private Date createdDate;
 
 	@Column(name = "updated_date", nullable = true)

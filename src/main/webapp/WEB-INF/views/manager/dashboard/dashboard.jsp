@@ -51,7 +51,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="overview-wrap">
-                                    <h2 class="title-1">Tổng Quan</h2>
+                                    <h2 class="title-2">Tổng Quan</h2>
                                 </div>
                             </div>
                         </div>
@@ -64,8 +64,8 @@
                                                 <i class="zmdi zmdi-account-o"></i>
                                             </div>
                                             <div class="text">
-                                                <h2>10368</h2>
-                                                <span>Trực Tuyến</span>
+                                                <h2>${totalOrderRecentMonth} đơn hàng</h2>
+                                                <span>Đơn hàng tháng gần đây</span>
                                             </div>
                                         </div>
                                         <div class="overview-chart">
@@ -82,12 +82,15 @@
                                                 <i class="zmdi zmdi-shopping-cart"></i>
                                             </div>
                                             <div class="text">
-                                                <h2>388,688</h2>
-                                                <span>Tổng Số Lượng</span>
+                                                <h2>
+                                                    <fmt:formatNumber type="number" maxFractionDigits="0"
+                                                        value="${productQuantity}" /> sản phẩm
+                                                </h2>
+                                                <span>Số sản phẩm</span>
                                             </div>
                                         </div>
                                         <div class="overview-chart">
-                                            <canvas id="widgetChart2"></canvas>
+                                            <canvas id="widgetChart4"></canvas>
                                         </div>
                                     </div>
                                 </div>
@@ -100,8 +103,11 @@
                                                 <i class="zmdi zmdi-calendar-note"></i>
                                             </div>
                                             <div class="text">
-                                                <h2>1,086</h2>
-                                                <span>Tuần Gần Đây</span>
+                                                <h2>
+                                                    <fmt:formatNumber value="${revenueRecentWeek}" type="number"
+                                                        minFractionDigits="0" />₫
+                                                </h2>
+                                                <span>Doanh thu tuần gần Đây</span>
                                             </div>
                                         </div>
                                         <div class="overview-chart">
@@ -118,49 +124,26 @@
                                                 <i class="zmdi zmdi-money"></i>
                                             </div>
                                             <div class="text">
-                                                <h2>985.562.000&#8363;</h2>
-                                                <span>Tổng</span>
+                                                <h2>
+                                                    <fmt:formatNumber value="${revenueRecentMonth}" type="number"
+                                                        minFractionDigits="0" />₫
+                                                </h2>
+                                                <span>Doanh thu tháng gần đây</span>
                                             </div>
                                         </div>
                                         <div class="overview-chart">
-                                            <canvas id="widgetChart4"></canvas>
+                                            <canvas id="widgetChart2"></canvas>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-6">
+                            <div class="col-lg-6    ">
                                 <div class="au-card recent-report">
                                     <div class="au-card-inner">
-                                        <h3 class="title-2">Báo Cáo Gần Đây</h3>
-                                        <div class="chart-info">
-                                            <div class="chart-info__left">
-                                                <div class="chart-note">
-                                                    <span class="dot dot--blue"></span>
-                                                    <span>Sản Phẩm</span>
-                                                </div>
-                                                <div class="chart-note mr-0">
-                                                    <span class="dot dot--green"></span>
-                                                    <span>Dịch Vụ</span>
-                                                </div>
-                                            </div>
-                                            <div class="chart-info__right">
-                                                <div class="chart-statis">
-                                                    <span class="index incre">
-                                                        <i class="zmdi zmdi-long-arrow-up"></i>25%</span>
-                                                    <span class="label">Sản Phẩm</span>
-                                                </div>
-                                                <div class="chart-statis mr-0">
-                                                    <span class="index decre">
-                                                        <i class="zmdi zmdi-long-arrow-down"></i>10%</span>
-                                                    <span class="label">Dịch Vụ</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="recent-report__chart">
-                                            <canvas id="recent-rep-chart"></canvas>
-                                        </div>
+                                        <h3 class="title-2 m-b-40">Doanh thu</h3>
+                                        <canvas id="sales-chart"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -193,318 +176,77 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-12">
-                                <h2 class="title-1 m-b-25">Doanh Thu</h2>
+                                <h2 class="title-2 m-b-25">Doanh Thu</h2>
+                                <form action="" method="post" class="px-5" id="formStatistical">
+                                    <span class="px-5 py-5" style="color:red" id="errMsgDate"></span>
+                                    <div class="form-row px-5">
+                                        <div class="form-group col-md-6">
+                                            <label for="startDate">Ngày bắt đầu</label>
+                                            <input type="date" class="form-control rounded date-picker" id="startDate"
+                                                placeholder="Ngày bắt đầu">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="endDate">Ngày kết thúc</label>
+                                            <input type="date" class="form-control rounded date-picker" id="endDate"
+                                                placeholder="Ngày kết thúc">
+                                        </div>
+                                    </div>
+                                </form>
                                 <div class="table-responsive table--no-card m-b-40">
                                     <table class="table table-borderless table-striped table-earning">
                                         <thead>
                                             <tr>
                                                 <th>Ngày</th>
-                                                <th>ID Thành Viên</th>
-                                                <th>Tên Sản Phẩm</th>
-                                                <th class="text-right">Giá</th>
-                                                <th class="text-right">Số Lượng</th>
-                                                <th class="text-right">Tổng Tiền</th>
+                                                <th class="text-right">Số lượng đơn hàng</th>
+                                                <th class="text-right">Số Lượng đơn hàng hủy</th>
+                                                <th class="text-right">Số lượng sản phẩm</th>
+                                                <th class="text-right">Doanh thu</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>20/05/2021</td>
-                                                <td>100398</td>
-                                                <td>iPhone X 64Gb Grey</td>
-                                                <td class="text-right">14.000.000&#8363;</td>
-                                                <td class="text-right">1</td>
-                                                <td class="text-right">14.000.000&#8363;</td>
-                                            </tr>
-                                            <tr>
-                                                <td>03/05/2021</td>
-                                                <td>100397</td>
-                                                <td>Samsung S8 Black</td>
-                                                <td class="text-right">7.000.000&#8363;</td>
-                                                <td class="text-right">1</td>
-                                                <td class="text-right">7.000.000&#8363;</td>
-                                            </tr>
-                                            <tr>
-                                                <td>15/05/2021</td>
-                                                <td>100396</td>
-                                                <td>Game Console Controller</td>
-                                                <td class="text-right">2.000.000&#8363;</td>
-                                                <td class="text-right">2</td>
-                                                <td class="text-right">4.000.000&#8363;</td>
-                                            </tr>
-                                            <tr>
-                                                <td>16/05/2021</td>
-                                                <td>100395</td>
-                                                <td>iPhone X 256Gb Black</td>
-                                                <td class="text-right">15.000.000&#8363;</td>
-                                                <td class="text-right">1</td>
-                                                <td class="text-right">15.000.000&#8363;</td>
-                                            </tr>
-                                            <tr>
-                                                <td>16/05/2021</td>
-                                                <td>100393</td>
-                                                <td>USB 3.0 Cable</td>
-                                                <td class="text-right">300.000&#8363;</td>
-                                                <td class="text-right">3</td>
-                                                <td class="text-right">900.000&#8363;</td>
-                                            </tr>
-                                            <tr>
-                                                <td>16/05/2021</td>
-                                                <td>100392</td>
-                                                <td>Smartwatch 4.0 LTE Wifi</td>
-                                                <td class="text-right">800.000&#8363;</td>
-                                                <td class="text-right">6</td>
-                                                <td class="text-right">4.800.000&#8363;</td>
-                                            </tr>
-                                            <tr>
-                                                <td>16/05/2021</td>
-                                                <td>100391</td>
-                                                <td>Camera C430W 4k</td>
-                                                <td class="text-right">5.000.000&#8363;</td>
-                                                <td class="text-right">1</td>
-                                                <td class="text-right">5.000.000&#8363;</td>
-                                            </tr>
-                                            <tr>
-                                                <td>16/05/2021</td>
-                                                <td>100393</td>
-                                                <td>USB 3.0 Cable</td>
-                                                <td class="text-right">250.000&#8363;</td>
-                                                <td class="text-right">3</td>
-                                                <td class="text-right">750.000&#8363;</td>
-                                            </tr>
+                                        <tbody id="tableRevenueByDate">
+
+
                                         </tbody>
                                     </table>
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <h2 class="title-1 m-b-25">Top Các Tỉnh Thành</h2>
-                                <div class="au-card au-card--bg-blue au-card-top-countries m-b-40">
-                                    <div class="au-card-inner">
-                                        <div class="table-responsive">
-                                            <table class="table table-top-countries">
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Hà Nội</td>
-                                                        <td class="text-right">200.000.000&#8363;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Tp.HCM</td>
-                                                        <td class="text-right">180.000.000&#8363;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Đà Nẵng</td>
-                                                        <td class="text-right">160.000.000&#8363;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Huế</td>
-                                                        <td class="text-right">140.000.000&#8363;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Bắc Ninh</td>
-                                                        <td class="text-right">120.000.000&#8363;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Bình Dương</td>
-                                                        <td class="text-right">100.000.000&#8363;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Nam Định</td>
-                                                        <td class="text-right">80.000.000&#8363;</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Bình Định</td>
-                                                        <td class="text-right">60.000.000&#8363;</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                    <div class="my-3">
+                                        <nav aria-label="Page navigation example page-revenue">
+                                            <ul class="pagination justify-content-center " id="pagedListRevenueByDate">
+
+                                            </ul>
+                                        </nav>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col-lg-12">
-                                <div class="au-card au-card--no-shadow au-card--no-pad m-b-40">
-                                    <div class="au-card-title" style="background-image:url('images/bg-title-02.jpg');">
-                                        <div class="bg-overlay bg-overlay--blue"></div>
-                                        <h3>
-                                            <i class="zmdi zmdi-comment-text"></i>Thông Báo Mới</h3>
-                                    </div>
-                                    <div class="au-inbox-wrap js-inbox-wrap">
-                                        <div class="au-message js-list-load">
-                                            <div class="au-message__noti">
-                                                <p>Bạn Có
-                                                    <span>2</span> Thông Báo Mới
-                                                </p>
-                                            </div>
-                                            <div class="au-message-list">
-                                                <div class="au-message__item unread">
-                                                    <div class="au-message__item-inner">
-                                                        <div class="au-message__item-text">
-                                                            <div class="avatar-wrap">
-                                                                <div class="avatar">
-                                                                    <img src="images/icon/avatar-02.jpg"
-                                                                        alt="John Smith">
-                                                                </div>
-                                                            </div>
-                                                            <div class="text">
-                                                                <h5 class="name">TranNgoc112</h5>
-                                                                <p>Đã Đánh Giá Sản Phẩm Quạt Trần Điều Khiển Model 1112
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="au-message__item-time">
-                                                            <span>12 phút trước</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="au-message__item unread">
-                                                    <div class="au-message__item-inner">
-                                                        <div class="au-message__item-text">
-                                                            <div class="avatar-wrap online">
-                                                                <div class="avatar">
-                                                                    <img src="images/icon/avatar-03.jpg"
-                                                                        alt="Nicholas Martinez">
-                                                                </div>
-                                                            </div>
-                                                            <div class="text">
-                                                                <h5 class="name">LeQuang455</h5>
-                                                                <p>Đã Đánh Giá Sản Phẩm ABC</p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="au-message__item-time">
-                                                            <span>11:00 PM</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="au-message__item">
-                                                    <div class="au-message__item-inner">
-                                                        <div class="au-message__item-text">
-                                                            <div class="avatar-wrap online">
-                                                                <div class="avatar">
-                                                                    <img src="images/icon/avatar-04.jpg"
-                                                                        alt="Michelle Sims">
-                                                                </div>
-                                                            </div>
-                                                            <div class="text">
-                                                                <h5 class="name">HoangNam0215</h5>
-                                                                <p>Đã Đánh Giá Sản Phẩm Bcd</p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="au-message__item-time">
-                                                            <span>Hôm qua</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="au-message__item">
-                                                    <div class="au-message__item-inner">
-                                                        <div class="au-message__item-text">
-                                                            <div class="avatar-wrap">
-                                                                <div class="avatar">
-                                                                    <img src="images/icon/avatar-05.jpg"
-                                                                        alt="Michelle Sims">
-                                                                </div>
-                                                            </div>
-                                                            <div class="text">
-                                                                <h5 class="name">TrungNam789</h5>
-                                                                <p>Đã Đánh Giá Sản Phẩm</p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="au-message__item-time">
-                                                            <span>Chủ Nhật</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="au-message__item js-load-item">
-                                                    <div class="au-message__item-inner">
-                                                        <div class="au-message__item-text">
-                                                            <div class="avatar-wrap online">
-                                                                <div class="avatar">
-                                                                    <img src="images/icon/avatar-04.jpg"
-                                                                        alt="Michelle Sims">
-                                                                </div>
-                                                            </div>
-                                                            <div class="text">
-                                                                <h5 class="name">Michelle Sims</h5>
-                                                                <p>Lorem ipsum dolor sit amet</p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="au-message__item-time">
-                                                            <span>Yesterday</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="au-message__item js-load-item">
-                                                    <div class="au-message__item-inner">
-                                                        <div class="au-message__item-text">
-                                                            <div class="avatar-wrap">
-                                                                <div class="avatar">
-                                                                    <img src="images/icon/avatar-05.jpg"
-                                                                        alt="Michelle Sims">
-                                                                </div>
-                                                            </div>
-                                                            <div class="text">
-                                                                <h5 class="name">Michelle Sims</h5>
-                                                                <p>Purus feugiat finibus</p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="au-message__item-time">
-                                                            <span>Sunday</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="au-message__footer">
-                                                <button class="au-btn au-btn-load js-load-btn">Xem Thêm</button>
-                                            </div>
-                                        </div>
-                                        <div class="au-chat">
-                                            <div class="au-chat__title">
-                                                <div class="au-chat-info">
-                                                    <div class="avatar-wrap online">
-                                                        <div class="avatar avatar--small">
-                                                            <img src="images/icon/avatar-02.jpg" alt="John Smith">
-                                                        </div>
-                                                    </div>
-                                                    <span class="nick">
-                                                        <a href="#">John Smith</a>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="au-chat__content">
-                                                <div class="recei-mess-wrap">
-                                                    <span class="mess-time">12 phút trước</span>
-                                                    <div class="recei-mess__inner">
-                                                        <div class="avatar avatar--tiny">
-                                                            <img src="images/icon/avatar-02.jpg" alt="John Smith">
-                                                        </div>
-                                                        <div class="recei-mess-list">
-                                                            <div class="recei-mess">Lorem ipsum dolor sit amet,
-                                                                consectetur adipiscing elit non iaculis</div>
-                                                            <div class="recei-mess">Donec tempor, sapien ac viverra
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="send-mess-wrap">
-                                                    <span class="mess-time">30 giây trước</span>
-                                                    <div class="send-mess__inner">
-                                                        <div class="send-mess-list">
-                                                            <div class="send-mess">Lorem ipsum dolor sit amet,
-                                                                consectetur adipiscing elit non iaculis</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="au-chat-textfield">
-                                                <form class="au-form-icon">
-                                                    <input class="au-input au-input--full au-input--h65" type="text"
-                                                        placeholder="Type a message">
-                                                    <button class="au-input-icon">
-                                                        <i class="zmdi zmdi-camera"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
+                                <h2 class="title-2 m-b-25">Sản phẩm bán chạy</h2>
+                                <div class="col-4 my-3">
+                                    <select class="custom-select" name="property" id="selectCategory">
+                                        <option value="not value">Danh mục sản phẩm</option>
+                                        <c:forEach var="category" items="${listCategory}">
+                                            <option value="${category.id}">${category.name }</option>';
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="table-responsive table--no-card m-b-40">
+                                    <table class="table table-borderless table-striped table-earning">
+                                        <thead>
+                                            <tr>
+                                                <th>Ảnh</th>
+                                                <th>Tên sản phẩm</th>
+                                                <th class="text-right">Số lượng bán</th>
+                                                <th class="text-right">Tổng tiền</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tableBestSale">
+
+                                        </tbody>
+                                    </table>
+                                    <div class="my-3">
+                                        <nav aria-label="Page navigation example page-best-sale">
+                                            <ul class="pagination justify-content-center " id="pagedListBestSale">
+
+                                            </ul>
+                                        </nav>
                                     </div>
                                 </div>
                             </div>
@@ -529,11 +271,7 @@
     <!-- END PAGE CONTAINER-->
     <!-- JS-->
     <jsp:include page="/WEB-INF/views/manager/layout/script.jsp"></jsp:include>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            setActiveMenu("#menu--dashboard");
-        });
-    </script>
+    <script src="${base }/manager/script/dashboard/dashboard.js"></script>
 </body>
 
 </html>

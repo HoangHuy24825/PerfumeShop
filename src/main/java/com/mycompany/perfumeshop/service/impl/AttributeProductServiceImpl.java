@@ -15,6 +15,8 @@ import com.mycompany.perfumeshop.entities.User;
 import com.mycompany.perfumeshop.exceptions.EntityNotFoundCustomException;
 import com.mycompany.perfumeshop.repository.AttributeProductRepository;
 import com.mycompany.perfumeshop.service.AttributeProductService;
+import com.mycompany.perfumeshop.utils.Log4jUtils;
+import com.mycompany.perfumeshop.valueObjects.CategoryQuantityProduct;
 
 @Service
 @Transactional

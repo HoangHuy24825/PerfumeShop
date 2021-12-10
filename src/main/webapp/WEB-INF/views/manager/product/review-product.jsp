@@ -52,7 +52,7 @@
                                 <div class="table-data__tool">
                                     <div class="table-data__tool-left">
                                         <div class="rs-select2--light rs-select2--md">
-                                            <select class="js-select2" name="status" id="filter-status">
+                                            <select class="custom-select" name="status" id="filter-status">
                                                 <option selected="selected" value="null">Trạng Thái</option>
                                                 <option value="0">Chưa phê duyệt</option>
                                                 <option value="1">Phê duyệt</option>

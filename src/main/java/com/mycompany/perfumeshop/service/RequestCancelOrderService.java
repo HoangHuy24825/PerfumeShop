@@ -2,9 +2,12 @@ package com.mycompany.perfumeshop.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.mycompany.perfumeshop.entities.Order;
 import com.mycompany.perfumeshop.entities.RequestCancelOrder;
 import com.mycompany.perfumeshop.entities.User;
+import com.mycompany.perfumeshop.valueObjects.UserRequest;
 
 public interface RequestCancelOrderService {
 
@@ -27,5 +30,7 @@ public interface RequestCancelOrderService {
 	RequestCancelOrder findByOrder(Order order) throws Exception;
 
 	Boolean deleteById(String idRequest) throws Exception;
+
+	Page<RequestCancelOrder> findByUserRequest(UserRequest userRequest) throws Exception;
 
 }

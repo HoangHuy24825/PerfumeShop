@@ -1,7 +1,6 @@
 package com.mycompany.perfumeshop.controller.manager;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;

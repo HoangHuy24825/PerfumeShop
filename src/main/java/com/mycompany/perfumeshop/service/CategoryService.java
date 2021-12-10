@@ -25,4 +25,6 @@ public interface CategoryService {
 
 	Category findById(Integer id) throws Exception;
 
+	List<Category> findAllByStatus(Boolean status) throws Exception;
+
 }

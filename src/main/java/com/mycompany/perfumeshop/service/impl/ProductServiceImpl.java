@@ -27,7 +27,9 @@ import com.mycompany.perfumeshop.repository.OrderDetailRepository;
 import com.mycompany.perfumeshop.repository.ProductRepository;
 import com.mycompany.perfumeshop.service.ProductService;
 import com.mycompany.perfumeshop.specification.ProductSpecification;
+import com.mycompany.perfumeshop.utils.Log4jUtils;
 import com.mycompany.perfumeshop.utils.Validate;
+import com.mycompany.perfumeshop.valueObjects.CategoryQuantityProduct;
 import com.mycompany.perfumeshop.valueObjects.UserRequestToProduct;
 
 @Service
@@ -191,8 +193,8 @@ public class ProductServiceImpl implements ProductService {
 		if (!Validate.isNumber(id)) {
 			return null;
 		}
-		return productRepository.findById(
-				Integer.parseInt(id)).orElseThrow(() -> new EntityNotFoundCustomException("Not found product"));
+		return productRepository.findById(Integer.parseInt(id))
+				.orElseThrow(() -> new EntityNotFoundCustomException("Not found product"));
 	}
 
 	@Override
@@ -210,6 +212,18 @@ public class ProductServiceImpl implements ProductService {
 		product.setUpdatedBy(idUserLogin);
 		product.setUpdatedDate(Calendar.getInstance().getTime());
 		return productRepository.save(product);
+	}
+
+	@Override
+	public Long getTotalProduct() throws Exception {
+		return productRepository.count();
+	}
+
+	@Override
+	public List<CategoryQuantityProduct> getTotalByCategory() throws Exception {
+		List<CategoryQuantityProduct> categoryQuantityProducts = productRepository.getQuantityByCategory();
+		categoryQuantityProducts.forEach(c -> Log4jUtils.getLogger().info(c));
+		return categoryQuantityProducts;
 	}
 
 }

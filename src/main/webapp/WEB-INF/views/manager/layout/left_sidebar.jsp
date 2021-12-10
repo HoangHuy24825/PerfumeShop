@@ -13,9 +13,12 @@
 	<div class="menu-sidebar__content js-scrollbar1">
 		<nav class="navbar-sidebar">
 			<ul class="list-unstyled navbar__list">
-				<li id="menu--dashboard" class=""><a href="${base}/perfume-shop/admin/dashboard.html"> <i
-							class="fas fa-tachometer-alt"></i>Dashboard
-					</a></li>
+				<li id="menu--dashboard" class="">
+					<a href="${base}/perfume-shop/admin/dashboard.html">
+						<i class="fas fa-tachometer-alt"></i>Dashboard
+					</a>
+				</li>
+
 				<c:if test="${categoryRole.view==true}">
 					<li id="menu--category" class="">
 						<a href="${base}/perfume-shop/admin/category.html">

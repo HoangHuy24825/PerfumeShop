@@ -75,7 +75,7 @@
                                                         <div class="form-group col-6">
                                                             <label for="category" class="font-weight-bold">Danh mục
                                                                 <span class="required">*</span></label>
-                                                            <select class="form-control " id="select-category"
+                                                            <select class="custom-select" id="select-category"
                                                                 name="id_category">
 
                                                             </select>

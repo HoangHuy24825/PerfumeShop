@@ -22,4 +22,6 @@ public interface CategoryRepository extends JpaRepository<Category, Integer>, Jp
 
 	Page<Category> findAll(Specification<Category> spec, Pageable pageable);
 
+	List<Category> findAllByStatus(Boolean status);
+
 }

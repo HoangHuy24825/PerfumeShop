@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.mycompany.perfumeshop.entities.Product;
 import com.mycompany.perfumeshop.entities.User;
+import com.mycompany.perfumeshop.valueObjects.CategoryQuantityProduct;
 import com.mycompany.perfumeshop.valueObjects.UserRequestToProduct;
 
 public interface ProductService {
@@ -29,4 +30,8 @@ public interface ProductService {
 	List<Product> findByStatus(Boolean status) throws Exception;
 
 	Product findById(String id) throws Exception;
+
+	Long getTotalProduct() throws Exception;
+
+	List<CategoryQuantityProduct> getTotalByCategory() throws Exception;
 }

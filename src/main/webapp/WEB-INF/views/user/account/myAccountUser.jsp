@@ -244,10 +244,8 @@
 														<label class="col-sm-3 control-label no-padding-right"
 															for="oldPassword">Mật khẩu hiện tại</label>
 														<div class="col-sm-9">
-															<div class="input-group">
-																<input class="form-control" type="password"
-																	id="OldPassword" name="OldPassword" />
-															</div>
+															<input class="form-control" type="password" id="oldPassword"
+																name="oldPassword" />
 															<span style="color:red" id="errMsg"></span>
 														</div>
 													</div>
@@ -256,20 +254,16 @@
 															for="password">Mật khẩu mới</label>
 
 														<div class="col-sm-9">
-															<div class="input-group">
-																<input class="form-control" type="password"
-																	id="NewPassword" name="NewPassword" />
-															</div>
+															<input class="form-control" type="password" id="newPassword"
+																name="newPassword" />
 														</div>
 													</div>
 													<div class="form-group">
 														<label class="col-sm-3 control-label no-padding-right"
 															for="confirmPassword">Nhập lại mật khẩu</label>
 														<div class="col-sm-9">
-															<div class="input-group">
-																<input class="form-control" type="password"
-																	id="ConfirmPassword" name="ConfirmPassword" />
-															</div>
+															<input class="form-control" type="password"
+																id="confirmPassword" name="confirmPassword" />
 														</div>
 													</div>
 													<div class="clearfix form-actions">

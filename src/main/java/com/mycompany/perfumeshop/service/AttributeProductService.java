@@ -15,4 +15,5 @@ public interface AttributeProductService {
 	AttributeProduct findById(Integer id) throws Exception;
 
 	AttributeProduct saveOrUpdate(AttributeProduct attributeProduct, User userLogin) throws Exception;
+
 }

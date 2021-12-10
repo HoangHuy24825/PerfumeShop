@@ -1,8 +1,14 @@
 package com.mycompany.perfumeshop.service.impl;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -13,14 +19,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.mycompany.perfumeshop.conf.GlobalConfig;
 import com.mycompany.perfumeshop.entities.Order;
+import com.mycompany.perfumeshop.entities.OrderDetail;
 import com.mycompany.perfumeshop.entities.User;
 import com.mycompany.perfumeshop.exceptions.EntityNotFoundCustomException;
 import com.mycompany.perfumeshop.repository.OrderRepository;
 import com.mycompany.perfumeshop.service.OrderService;
 import com.mycompany.perfumeshop.specification.OrderSpecification;
+import com.mycompany.perfumeshop.utils.Constants;
 import com.mycompany.perfumeshop.utils.Validate;
+import com.mycompany.perfumeshop.valueObjects.BestSaleProductVo;
 import com.mycompany.perfumeshop.valueObjects.CustomerOrder;
+import com.mycompany.perfumeshop.valueObjects.PageVo;
+import com.mycompany.perfumeshop.valueObjects.RevenueDate;
+import com.mycompany.perfumeshop.valueObjects.RevenueMonth;
+import com.mycompany.perfumeshop.valueObjects.RevenueVo;
 
 @Service
 @Transactional
@@ -31,6 +45,9 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	private OrderSpecification orderSpecification;
+
+	@Autowired
+	private GlobalConfig globalConfig;
 
 	public Order getNewestOrderByCustomer(CustomerOrder customerOrder) {
 		Pageable pageable = PageRequest.of(0, 1, Sort.by("createdDate", "updatedDate").descending());
@@ -87,6 +104,11 @@ public class OrderServiceImpl implements OrderService {
 			Order oldOrder = orderRepository.findById(order.getId())
 					.orElseThrow(() -> new EntityNotFoundCustomException("Not found order"));
 			order.setCreatedBy(oldOrder.getCreatedBy());
+			if (order.getOrderDetails() != null && order.getOrderDetails().size() != 0) {
+				for (OrderDetail detail : order.getOrderDetails()) {
+					detail.setCreatedDate(Calendar.getInstance().getTime());
+				}
+			}
 			order.setCreatedDate(oldOrder.getCreatedDate());
 		} else {
 			order.setCreatedBy(idUserChange);
@@ -95,6 +117,157 @@ public class OrderServiceImpl implements OrderService {
 		order.setUpdatedBy(idUserChange);
 		order.setUpdatedDate(Calendar.getInstance().getTime());
 		return orderRepository.save(order);
+	}
+
+	@Override
+	public Double getTotalRevenueRecentWeek() throws Exception {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_YEAR, -7);
+		return orderRepository.getRevenueOneWeek(cal.getTime(), globalConfig.getOrderSuccessStatus());
+	}
+
+	@Override
+	public Double getTotalRevenueRecentMonth() throws Exception {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.MONTH, -1);
+		return orderRepository.getRevenueOneWeek(cal.getTime(), globalConfig.getOrderSuccessStatus());
+	}
+
+	@Override
+	public List<RevenueDate> getRevenueByDate() throws Exception {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_YEAR, -7);
+		List<RevenueDate> revenueDates = orderRepository.getRevenuePerDate(cal.getTime(),
+				globalConfig.getOrderSuccessStatus());
+		List<Date> listDate = new ArrayList<Date>();
+		for (int i = 1; i <= 7; i++) {
+			cal.add(Calendar.DAY_OF_YEAR, 1);
+			listDate.add(cal.getTime());
+		}
+		List<Date> listDateFromDb = new ArrayList<Date>();
+		revenueDates.forEach(r -> listDateFromDb.add(r.getDate()));
+		listDate.forEach(d -> {
+			if (!listDateFromDb.contains(d)) {
+				revenueDates.add(new RevenueDate(d, BigDecimal.valueOf(0.0)));
+			}
+		});
+		revenueDates.sort((revenueDate1, revenueDate2) -> revenueDate1.getDate().compareTo(revenueDate2.getDate()));
+		/*
+		 * revenueDates = revenueDates.stream() .sorted((revenueDate1, revenueDate2) ->
+		 * revenueDate1.getDate().compareTo(revenueDate2.getDate()))
+		 * .collect(Collectors.toList());
+		 */
+		return revenueDates;
+	}
+
+	@Override
+	public List<Double> getRevenueByWeek() throws Exception {
+		int i = 4;
+		Calendar cal = Calendar.getInstance();
+		Date endDate = cal.getTime();
+		cal.add(Calendar.DAY_OF_YEAR, -7);
+		List<Double> revenueWeeks = new ArrayList<Double>();
+		Double revenue = null;
+		do {
+			revenue = orderRepository.getRevenueBetweenDate(cal.getTime(), endDate,
+					globalConfig.getOrderSuccessStatus());
+			revenueWeeks.add(revenue == null ? 0 : revenue);
+			i--;
+			endDate = cal.getTime();
+			cal.add(Calendar.DAY_OF_YEAR, -(7 * (4 - i)));
+		} while (i > 0);
+		Collections.reverse(revenueWeeks);
+		return revenueWeeks;
+	}
+
+	@Override
+	public Long totalOrderRecentMonth() throws Exception {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.MONTH, -1);
+		return orderRepository.getTotalOrderRecentMonth(cal.getTime(), globalConfig.getOrderSuccessStatus());
+	}
+
+	@Override
+	public List<Long> getTotalOrderPerWeekRecentMonth() throws Exception {
+		int i = 4;
+		Calendar cal = Calendar.getInstance();
+		Date endDate = cal.getTime();
+		cal.add(Calendar.DAY_OF_YEAR, -7);
+		List<Long> revenueWeeks = new ArrayList<>();
+		Long revenue = null;
+		do {
+			revenue = orderRepository.getTotalOrderBetweenDate(cal.getTime(), endDate,
+					globalConfig.getOrderSuccessStatus());
+			revenueWeeks.add(revenue == null ? 0 : revenue);
+			i--;
+			endDate = cal.getTime();
+			cal.add(Calendar.DAY_OF_YEAR, -(7 * (4 - i)));
+		} while (i > 0);
+		Collections.reverse(revenueWeeks);
+		return revenueWeeks;
+	}
+
+	@Override
+	public List<RevenueMonth> getRevenueFromJanuary() throws Exception {
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.DATE, 1);
+		Date startDate = cal.getTime();
+		cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		Date lastDate = cal.getTime();
+
+		List<RevenueMonth> revenueMonths = new ArrayList<>();
+
+		LocalDate localDate = LocalDate.now();
+		Month currentMonth = localDate.getMonth();
+		BigDecimal revenuePerMonth = null;
+		for (int i = 1; i <= currentMonth.getValue(); i++) {
+			revenuePerMonth = orderRepository.getRevenueDate(startDate, lastDate, globalConfig.getOrderSuccessStatus());
+			revenueMonths.add(new RevenueMonth(Constants.MONTH_NAME[currentMonth.getValue() - i],
+					revenuePerMonth == null ? BigDecimal.valueOf(0.0) : revenuePerMonth));
+			cal.add(Calendar.MONTH, -1);
+			cal.set(Calendar.DATE, 1);
+			startDate = cal.getTime();
+			cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+			lastDate = cal.getTime();
+		}
+		Collections.reverse(revenueMonths);
+		return revenueMonths;
+	}
+
+	@Override
+	public PageVo<RevenueVo> statisticRevenue(Date startDate, Date endDate, Integer currentPage, Integer sizeOfPage)
+			throws Exception {
+		PageVo<RevenueVo> pageOfRevenue = new PageVo<RevenueVo>();
+		List<RevenueVo> listRevenueVos = orderRepository.getRevenue(startDate, endDate);
+		pageOfRevenue.setTotalPage(listRevenueVos.size() % sizeOfPage == 0 ? (listRevenueVos.size() / sizeOfPage)
+				: (listRevenueVos.size() / sizeOfPage + 1));
+		pageOfRevenue.setCurrentPage(currentPage);
+		listRevenueVos = listRevenueVos.stream().skip((currentPage - 1) * sizeOfPage).limit(sizeOfPage)
+				.sorted((revenueVo1, revenueVo2) -> revenueVo1.getDate().compareTo(revenueVo2.getDate()))
+				.collect(Collectors.toList());
+		pageOfRevenue.setContent(listRevenueVos);
+		return pageOfRevenue;
+	}
+
+	@Override
+	public PageVo<BestSaleProductVo> getListBestSaleOfProduct(String idCategory, String currentPage,
+			Integer sizeOfPage) {
+		Integer currentPageVal = !Validate.isNumber(currentPage) ? globalConfig.getInitPage()
+				: Integer.parseInt(currentPage);
+		PageVo<BestSaleProductVo> pageVo = new PageVo<BestSaleProductVo>();
+		if (!Validate.isNumber(idCategory)) {
+			pageVo.setContent(orderRepository.getAllBestSaleProduct());
+		} else {
+			pageVo.setContent(orderRepository.getBestSaleProductByCategory(Integer.parseInt(idCategory)));
+		}
+		pageVo.setTotalPage(pageVo.getContent().size() % sizeOfPage == 0 ? (pageVo.getContent().size() / sizeOfPage)
+				: (pageVo.getContent().size() / sizeOfPage + 1));
+		pageVo.setCurrentPage(currentPageVal);
+		pageVo.setContent(pageVo.getContent().stream().skip((currentPageVal - 1) * sizeOfPage).limit(sizeOfPage)
+				.sorted((bestSaleProduct1, bestSaleProduct2) -> bestSaleProduct2.getTotalSale()
+						.compareTo(bestSaleProduct1.getTotalSale()))
+				.collect(Collectors.toList()));
+		return pageVo;
 	}
 
 }

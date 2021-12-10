@@ -395,3 +395,20 @@ input.error {
 .fa-star {
     font-size: 14px !important;
 }
+
+#formStatistical label {
+    font-size: 16px !important;
+}
+
+#formStatistical input {
+    line-height: 2;
+}
+
+#endDate,
+#startDate {
+    font-size: 14px !important;
+}
+
+.chart-custom {
+    max-height: 500px !important;
+}
