@@ -13,11 +13,13 @@
 	<div class="menu-sidebar__content js-scrollbar1">
 		<nav class="navbar-sidebar">
 			<ul class="list-unstyled navbar__list">
-				<li id="menu--dashboard" class="">
-					<a href="${base}/perfume-shop/admin/dashboard.html">
-						<i class="fas fa-tachometer-alt"></i>Dashboard
-					</a>
-				</li>
+				<c:if test="${statiscalRole.view==true}">
+					<li id="menu--dashboard" class="">
+						<a href="${base}/perfume-shop/admin/dashboard.html">
+							<i class="fas fa-tachometer-alt"></i>Dashboard
+						</a>
+					</li>
+				</c:if>
 
 				<c:if test="${categoryRole.view==true}">
 					<li id="menu--category" class="">
@@ -59,36 +61,46 @@
 					</li>
 				</c:if>
 
-				<c:if test="${categoryBlogRole.view==true}">
-					<li class="has-sub">
-						<a class="js-arrow" href="#">
-							<i class="fas fa-blog"></i>Blog</a>
-						<ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+
+				<li class="has-sub">
+					<a class="js-arrow" href="#">
+						<i class="fas fa-blog"></i>Blog</a>
+					<ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+						<c:if test="${categoryBlogRole.view==true}">
 							<li id="menu--category--blog" class=""><a
 									href="${base}/perfume-shop/admin/category-blog.html">
 									<i class="fas fa-th"></i>Danh mục blog
 								</a></li>
-							<li id="menu--blog" class=""><a href="${base}/perfume-shop/admin/blog.html">
+						</c:if>
+						<c:if test="${blogRole.view==true}">
+							<li id="menu--blog"><a href="${base}/perfume-shop/admin/blog.html">
 									<i class="fab fa-blogger"></i>Blog
 								</a></li>
-						</ul>
-					</li>
-				</c:if>
+						</c:if>
+					</ul>
+				</li>
 
-				<c:if test="${accountRole.view==true}">
-					<li class="has-sub">
-						<a class="js-arrow" href="#">
-							<i class="fas fa-users-cog"></i>Tài khoản</a>
-						<ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+
+
+				<li class="has-sub">
+					<a class="js-arrow" href="#">
+						<i class="fas fa-users-cog"></i>Tài khoản</a>
+					<ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+						<c:if test="${accountRole.view==true}">
 							<li id="menu--account" class=""><a href="${base}/perfume-shop/admin/account.html">
 									<i class="fas fa-user-cog"></i>Quản lý tài khoản
 								</a></li>
-							<li id="menu--my-account" class=""> <a href="${base}/perfume-shop/admin/my-account.html">
-									<i class="fas fa-id-card"></i>Tài khoản của tôi
-								</a></li>
-						</ul>
-					</li>
+						</c:if>
+						<li id="menu--my-account" class=""> <a href="${base}/perfume-shop/admin/my-account.html">
+								<i class="fas fa-id-card"></i>Tài khoản của tôi
+							</a></li>
+					</ul>
+				</li>
 
+				<c:if test="${contactRole.view==true}">
+					<li id="menu--introduce" class=""><a href="${base}/perfume-shop/admin/contact.html">
+							<i class="fas fa-id-card-alt"></i>Liên hệ
+						</a></li>
 				</c:if>
 
 				<c:if test="${introduceRole.view==true}">

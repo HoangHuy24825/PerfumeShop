@@ -47,14 +47,14 @@
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-body " id="modalCustomerOrderContent" style="font-size:22px ">
+            <div class="modal-body " id="modalCustomerOrderContent" style="font-size: 16px; ">
                 <div class="row px-3">Vui lòng chọn dung tích bạn muốn mua:</div>
                 <hr />
                 <div class="row px-3" id="currentCapacityModal">
                     Sản phẩm bạn đang chọn:
                 </div>
                 <hr />
-                <div class="row px-3" id="modal-capacity-list">
+                <div class="row px-3 justify-content-around" id="modal-capacity-list">
                     <button class="col-4 text-center p-2 m-1 border rounded bg-white btnChoseCapacity"
                         data-price="${item.price}" data-price-sale="${item.priceSale}" data-id="${item.id}"
                         data-min-price="${jsonResult.product.minPrice}" data-amount="${item.amount}"
@@ -64,9 +64,10 @@
                     </button>
                 </div>
                 <hr />
-                <div class="row px-3">
-                    <input type="number" style="width:150px" class="col align-self-center" id="numberOrderInModal"
-                        min="1" max="">
+                <div class="row px-3 justify-content-center">
+                    <div>
+                        <input type="number" id="numberOrderInModal" class="form-control text-center" placeholder="Số lượng đặt" min="1" max="">
+                    </div>
                 </div>
             </div>
             <div class="modal-footer mx-auto" style="border:unset">

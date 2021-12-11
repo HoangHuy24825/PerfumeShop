@@ -30,5 +30,4 @@ public class Contact extends BaseEntity {
 
 	@Column(name = "customer_phone", length = 20, nullable = false)
 	private String customerPhone;
-
 }

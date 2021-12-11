@@ -1,5 +1,14 @@
 package com.mycompany.perfumeshop.valueObjects;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ModelSearch {
 	private String keySearch;
 	/**
@@ -7,21 +16,5 @@ public class ModelSearch {
 	 */
 
 	private Boolean byStatus;
-
-	public String getKeySearch() {
-		return keySearch;
-	}
-
-	public void setKeySearch(String keySearch) {
-		this.keySearch = keySearch;
-	}
-
-	public Boolean getByStatus() {
-		return byStatus;
-	}
-
-	public void setByStatus(Boolean byStatus) {
-		this.byStatus = byStatus;
-	}
 
 }

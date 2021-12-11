@@ -89,8 +89,14 @@ public class ReviewServiceImpl implements ReviewService {
 				review.setCreatedDate(oldReview.getCreatedDate());
 			}
 			review.setUpdatedBy(userLogin.getId());
-			review.setUser(userLogin);
+			if (!userLogin.getUserRoles().get(0).getRoleName().equals("ADMIN_S")) {
+				review.setUser(userLogin);
+			} else {
+				review.setUser(userRepository.findByEmail(review.getCustomerEmail()));
+			}
+
 		} else {
+			review.setCreatedDate(Calendar.getInstance().getTime());
 			customerOrder = new CustomerOrder(review.getCustomerName(), review.getCustomerAddress(),
 					review.getCustomerPhone(), review.getCustomerEmail());
 		}

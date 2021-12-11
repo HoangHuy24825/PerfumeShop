@@ -106,13 +106,26 @@ public class OrderServiceImpl implements OrderService {
 			order.setCreatedBy(oldOrder.getCreatedBy());
 			if (order.getOrderDetails() != null && order.getOrderDetails().size() != 0) {
 				for (OrderDetail detail : order.getOrderDetails()) {
-					detail.setCreatedDate(Calendar.getInstance().getTime());
+					detail.setCreatedDate(oldOrder.getCreatedDate());
+					detail.setCreatedBy(oldOrder.getCreatedBy());
 				}
 			}
 			order.setCreatedDate(oldOrder.getCreatedDate());
 		} else {
 			order.setCreatedBy(idUserChange);
 			order.setCreatedDate(Calendar.getInstance().getTime());
+			if (order.getOrderDetails() != null && order.getOrderDetails().size() != 0) {
+				for (OrderDetail detail : order.getOrderDetails()) {
+					detail.setCreatedDate(Calendar.getInstance().getTime());
+					detail.setCreatedBy(idUserChange);
+				}
+			}
+		}
+		if (order.getOrderDetails() != null && order.getOrderDetails().size() != 0) {
+			for (OrderDetail detail : order.getOrderDetails()) {
+				detail.setUpdatedBy(idUserChange);
+				detail.setUpdatedDate(Calendar.getInstance().getTime());
+			}
 		}
 		order.setUpdatedBy(idUserChange);
 		order.setUpdatedDate(Calendar.getInstance().getTime());

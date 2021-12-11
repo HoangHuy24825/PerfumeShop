@@ -144,7 +144,7 @@ function loadProduct(keySearch, currentPage, idCategory, status) {
                 $('#table_data').html(
                     `
                     <tr class="tr-shadow">
-                        <td colspan="7"><h4 class="text-primary">Danh sách sản phẩm trống!</h4></td>
+                        <td colspan="7"><h4 class="text-primary font-weight-bold">Danh sách sản phẩm trống!</h4></td>
                     </tr>
 
                     `

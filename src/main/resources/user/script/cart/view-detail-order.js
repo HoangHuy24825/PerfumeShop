@@ -21,23 +21,23 @@ function viewOrder(idOrder) {
             $('#id-order').text(result.order.id);
             switch (result.order.processingStatus) {
                 case 0:
-                    $('#status-orders').addClass("text-dark");
+                    $('#statusOrderDetail').addClass("text-dark");
                     changeStyleStatus(0);
                     break;
                 case 1:
-                    $('#status-orders').text('Đã tiếp nhận');
+                    $('#statusOrderDetail').html('Đã tiếp nhận');
                     changeStyleStatus(1);
                     break;
                 case 2:
-                    $('#status-orders').text('Đang giao');
+                    $('#statusOrderDetail').html('Đang giao');
                     changeStyleStatus(2);
                     break;
                 case 3:
-                    $('#status-orders').text('Giao thành công');
+                    $('#statusOrderDetail').html('Giao thành công');
                     changeStyleStatus(3);
                     break;
                 case 4:
-                    $('#status-orders').text('Đã hủy');
+                    $('#statusOrderDetail').html('Đã hủy');
                     changeStyleStatus(4);
                     break;
                 default:

@@ -73,7 +73,7 @@ $(document).ready(function () {
                             html += '<li>';
                             html += '<a href="#" class="text-success">';
                             html += '<i class="fas fa-shipping-fast"></i>';
-                            html += '<span>' + status + '</span?';
+                            html += '<span>' + status + '</span>';
                             html += '</a>';
                             html += '</li>';
                             html += '</ul>';

@@ -145,12 +145,25 @@ public abstract class BaseController {
 		return null;
 	}
 
-	@ModelAttribute("notifyRole")
-	public UserRole getNotifyRole() throws Exception {
+	@ModelAttribute("contactRole")
+	public UserRole getContactRole() throws Exception {
 		User user = getUserLogined();
 		if (user != null) {
 			for (UserRole userRole : user.getUserRoles()) {
-				if (userRole.getRole().getCode().equalsIgnoreCase("MN")) {
+				if (userRole.getRole().getCode().equalsIgnoreCase("MC")) {
+					return userRole;
+				}
+			}
+		}
+		return null;
+	}
+
+	@ModelAttribute("statiscalRole")
+	public UserRole getStatiscalRole() throws Exception {
+		User user = getUserLogined();
+		if (user != null) {
+			for (UserRole userRole : user.getUserRoles()) {
+				if (userRole.getRole().getCode().equalsIgnoreCase("VS")) {
 					return userRole;
 				}
 			}

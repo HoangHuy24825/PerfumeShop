@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
 			if (typeAccount) {
 				List<Role> roles = roleRepository.findAll();
 				for (Role role : roles) {
-					if (!role.getCode().equalsIgnoreCase("G")) {
+					if (!role.getCode().equalsIgnoreCase("G") && !role.getCode().equalsIgnoreCase("VS")) {
 						userRole = new UserRole("ADMIN_S", false, false, true, false, role, user);
 						userRole.setStatus(true);
 						user.addUserRole(userRole);
