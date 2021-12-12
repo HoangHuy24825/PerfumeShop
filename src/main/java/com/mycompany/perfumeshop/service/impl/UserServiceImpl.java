@@ -144,4 +144,10 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findByUsernameAndEmail(userName, email);
 	}
 
+	@Override
+	public User findUserByUserNameAndStatus(String username, Boolean status) throws Exception {
+		User user = userRepository.findByUsernameAndStatus(username, status);
+		return user == null ? new User() : user;
+	}
+
 }

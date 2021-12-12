@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import com.mycompany.perfumeshop.entities.Order;
 import com.mycompany.perfumeshop.valueObjects.BestSaleProductVo;
+import com.mycompany.perfumeshop.valueObjects.OrderStatistical;
 import com.mycompany.perfumeshop.valueObjects.RevenueDate;
 import com.mycompany.perfumeshop.valueObjects.RevenueVo;
 
@@ -51,7 +52,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer>, JpaSpeci
 	BigDecimal getRevenueDate(Date startDate, Date endDate, Integer processStatus);
 
 	@Query("SELECT new com.mycompany.perfumeshop.valueObjects.RevenueVo(o.createdDate, COUNT(o.id), "
-			+ "COUNT(CASE WHEN o.processingStatus = 4 THEN o.id ELSE 0 END), SUM(d.quantity), "
+			+ "COUNT(CASE WHEN o.processingStatus = 4 THEN o.id ELSE null END), SUM(d.quantity), "
 			+ "SUM(CASE WHEN o.processingStatus = 3 THEN o.total ELSE 0 END) )"
 			+ "FROM Order o JOIN o.orderDetails d JOIN d.attributeProduct a JOIN a.product "
 			+ "WHERE o.createdDate BETWEEN ?1  AND ?2 GROUP BY o.createdDate")
@@ -59,11 +60,15 @@ public interface OrderRepository extends JpaRepository<Order, Integer>, JpaSpeci
 
 	@Query("SELECT new com.mycompany.perfumeshop.valueObjects.BestSaleProductVo(p.avatar, p.title, SUM(d.quantity), SUM(d.price)) "
 			+ "FROM Order o JOIN o.orderDetails d JOIN d.attributeProduct a JOIN a.product p JOIN p.category c "
-			+ "WHERE c.id=?1 GROUP BY p.avatar, p.title")
+			+ "WHERE c.id=?1 AND o.processingStatus=3 GROUP BY p.avatar, p.title")
 	List<BestSaleProductVo> getBestSaleProductByCategory(Integer idCategory);
 
 	@Query("SELECT new com.mycompany.perfumeshop.valueObjects.BestSaleProductVo(p.avatar, p.title, SUM(d.quantity), SUM(d.price)) "
-			+ "FROM Order o JOIN o.orderDetails d JOIN d.attributeProduct a JOIN a.product p JOIN p.category c "
+			+ "FROM Order o JOIN o.orderDetails d JOIN d.attributeProduct a JOIN a.product p JOIN p.category c WHERE o.processingStatus=3"
 			+ "GROUP BY p.avatar, p.title")
 	List<BestSaleProductVo> getAllBestSaleProduct();
+
+	@Query("SELECT new com.mycompany.perfumeshop.valueObjects.OrderStatistical(COUNT(CASE WHEN o.processingStatus = 3 THEN o.id ELSE null END),"
+			+ "COUNT(CASE WHEN o.processingStatus = 4 THEN o.id ELSE null END)) FROM Order o")
+	OrderStatistical getOrderStatistical();
 }

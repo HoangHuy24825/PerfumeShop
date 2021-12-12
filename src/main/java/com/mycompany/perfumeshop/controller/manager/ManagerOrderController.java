@@ -93,8 +93,8 @@ public class ManagerOrderController extends BaseController {
 			AttributeProduct attributeProduct = null;
 			for (OrderDetail orderDetail : orderDetails) {
 				attributeProduct = orderDetail.getAttributeProduct();
-				attributeProduct.setAmount(status == 4 ? attributeProduct.getAmount() - orderDetail.getQuantity()
-						: attributeProduct.getAmount() + orderDetail.getQuantity());
+				attributeProduct.setAmount(status == 4 ? attributeProduct.getAmount() + orderDetail.getQuantity()
+						: attributeProduct.getAmount() - orderDetail.getQuantity());
 				attrService.saveOrUpdate(attributeProduct, getUserLogined());
 			}
 		}

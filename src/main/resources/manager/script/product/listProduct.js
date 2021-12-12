@@ -166,15 +166,17 @@ function loadProduct(keySearch, currentPage, idCategory, status) {
                                     ${value.fragrant}
                                 </td>
                                 <td>
-                                    <label class="switch">
-                                        <input type="checkbox" class="btnChangeStatus" data-id-item="${value.id}" ${value.status==true? "checked" : ""}>
+                                    <label class="switch" ${update_role=='false'?'data-toggle="tooltip" data-placement="top" title="Bạn không có quyền truy cập chức năng này"':''}>
+                                        <input type="checkbox" class="btnChangeStatus" data-id-item="${value.id}"
+                                             ${value.status==true? "checked" : ""} ${update_role=='true'?"":"disabled"}>
                                         <span class="slider round"></span>
                                     </label>    
                                  
                                 </td>
                                 <td>
-                                    <label class="switch">
-                                        <input type="checkbox" class="btnChangeHot" data-id-item="${value.id}" ${value.isHot==true? "checked" : ""}>
+                                    <label class="switch" ${update_role=='false'?'data-toggle="tooltip" data-placement="top" title="Bạn không có quyền truy cập chức năng này"':''}>
+                                        <input type="checkbox" class="btnChangeHot" data-id-item="${value.id}" 
+                                            ${value.isHot==true? "checked" : ""} ${update_role=='true'?"":"disabled"}>
                                         <span class="slider round"></span>
                                     </label>    
                                 </td>
@@ -183,10 +185,12 @@ function loadProduct(keySearch, currentPage, idCategory, status) {
                                         <input type="hidden" id="view_${value.id}" name="custId" value="${value.seo}">
                                         <input type="hidden" id="edit_${value.id}" name="custId" value="${value.seo}">
                                         <input type="button" class="btn btn-outline-info mx-1" value="Xem" onclick="detail(${value.id})">
-                                        <input type="button" class="btn btn-outline-success mx-1" value="Sửa" ${update_role == '    true'?"":"hide"}
-                                            onclick="edit(${value.id})">
-                                        <input type="button" class="btn btn-outline-danger mx-1" value="Xóa" ${update_role == 'true'?"":"hide"} 
-                                            onclick="deleteProduct(${value.id})">
+                                        <input type="button" class="btn btn-outline-success mx-1" value="Sửa" onclick="edit(${value.id})" 
+                                            ${update_role=='true'?"":"disabled"} 
+                                            ${update_role=='false'?'data-toggle="tooltip" data-placement="top" title="Bạn không có quyền truy cập chức năng này"':''}>
+                                        <input type="button" class="btn btn-outline-danger mx-1" value="Xóa" onclick="deleteProduct(${value.id})"
+                                            ${delete_role=='true'?"":"disabled"} 
+                                            ${delete_role=='false'?'data-toggle="tooltip" data-placement="top" title="Bạn không có quyền truy cập chức năng này"':''}>
                                     </div>
                                 </td>
                             </tr>

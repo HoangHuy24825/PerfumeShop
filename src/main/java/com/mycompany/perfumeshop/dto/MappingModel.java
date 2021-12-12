@@ -454,6 +454,7 @@ public class MappingModel {
 		orderDetailJSON.put("avatar", orderDetail.getAttributeProduct().getProduct().getAvatar());
 		orderDetailJSON.put("productName", orderDetail.getAttributeProduct().getProduct().getTitle());
 		orderDetailJSON.put("quantity", orderDetail.getQuantity());
+		orderDetailJSON.put("capacity", orderDetail.getAttributeProduct().getCapacity());
 		orderDetailJSON.put("price", orderDetail.getPrice());
 		orderDetailJSON.put("id", orderDetail.getId());
 		orderDetailJSON.put("status", orderDetail.getStatus());

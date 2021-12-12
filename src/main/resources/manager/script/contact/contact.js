@@ -49,8 +49,9 @@ function showListContact(keySearch, currentPage) {
                         <td>
                             <div class="table-data-feature pr-4">
                                 <input type="button" class="btn btn-outline-info mx-1" value="Xem" onclick="detail(${value.id})">
-                                <input type="button" class="btn btn-outline-danger mx-1" value="Xóa" ${update_role == 'true'?"":"hide"} 
-                                    onclick="deleteContact(${value.id})">
+                                <input type="button" class="btn btn-outline-danger mx-1" value="Xóa" onclick="deleteContact(${value.id})"
+                                    ${delete_role=='true'?"":"disabled"}
+                                    ${delete_role=='false'?'data-toggle="tooltip" data-placement="top" title="Bạn không có quyền truy cập chức năng này"':''}>
                             </div>
                         </td>
                     </tr>

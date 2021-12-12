@@ -52,7 +52,7 @@
 							<div class="col-md-12">
 								<!-- CONTENT PAGE -->
 								<!-- DATA TABLE -->
-								<h3 class="title-5">danh mục sản phẩm</h3>
+								<h3 class="title-5">Danh sách danh mục blog</h3>
 								<div class="table-data__tool">
 									<div class="table-data__tool-left">
 									</div>

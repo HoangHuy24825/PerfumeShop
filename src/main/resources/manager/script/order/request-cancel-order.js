@@ -4,6 +4,8 @@ $(document).ready(function () {
 });
 
 function loadData() {
+    var update_role = $("#update_role").val();
+    var delete_role = $("#delete_role").val();
     $.get({
         url: "/perfume-shop/admin/list-request-cancel-order",
         dataType: "json",
@@ -27,12 +29,15 @@ function loadData() {
                     </td>
                     <td>
                         <input type="button" class="btn btn-outline-info" value="Xem" onclick="viewOrder(${request.id_order})">
-                        <input type="button" class="btn btn-outline-success" value="Không hủy đơn" ${update_role == '    true'?"":"hide"}
-                            onclick="rejectCancelOrderRequest(${request.id_order},${request.id})">
-                        <input type="button" class="btn btn-outline-danger" value="Hủy đơn" ${update_role == 'true'?"":"hide"} 
-                            onclick="cancelOrderFromRequest(${request.id_order},${request.id})">
-                        <input type="button" class="btn btn-outline-danger" value="Xóa" ${update_role == 'true'?"":"hide"} 
-                            onclick="deleteRequest(${request.id})">
+                        <input type="button" class="btn btn-outline-success" value="Không hủy đơn" onclick="rejectCancelOrderRequest(${request.id_order},${request.id})"
+                            ${update_role=='true'?"":"disabled"} 
+                            ${update_role=='false'?'data-toggle="tooltip" data-placement="top" title="Bạn không có quyền truy cập chức năng này"':''}>
+                        <input type="button" class="btn btn-outline-danger" value="Hủy đơn" onclick="cancelOrderFromRequest(${request.id_order},${request.id})"
+                            ${update_role=='true'?"":"disabled"} 
+                            ${update_role=='false'?'data-toggle="tooltip" data-placement="top" title="Bạn không có quyền truy cập chức năng này"':''}>
+                        <input type="button" class="btn btn-outline-danger" value="Xóa" onclick="deleteRequest(${request.id})"
+                            ${delete_role=='true'?"":"disabled"} 
+                            ${delete_role=='false'?'data-toggle="tooltip" data-placement="top" title="Bạn không có quyền truy cập chức năng này"':''}>
                     </td>
                 </tr>
                 <tr class="spacer"></tr>`;

@@ -28,9 +28,12 @@ import com.mycompany.perfumeshop.repository.OrderRepository;
 import com.mycompany.perfumeshop.service.OrderService;
 import com.mycompany.perfumeshop.specification.OrderSpecification;
 import com.mycompany.perfumeshop.utils.Constants;
+import com.mycompany.perfumeshop.utils.DateUtils;
+import com.mycompany.perfumeshop.utils.Log4jUtils;
 import com.mycompany.perfumeshop.utils.Validate;
 import com.mycompany.perfumeshop.valueObjects.BestSaleProductVo;
 import com.mycompany.perfumeshop.valueObjects.CustomerOrder;
+import com.mycompany.perfumeshop.valueObjects.OrderStatistical;
 import com.mycompany.perfumeshop.valueObjects.PageVo;
 import com.mycompany.perfumeshop.valueObjects.RevenueDate;
 import com.mycompany.perfumeshop.valueObjects.RevenueMonth;
@@ -152,18 +155,18 @@ public class OrderServiceImpl implements OrderService {
 		cal.add(Calendar.DAY_OF_YEAR, -7);
 		List<RevenueDate> revenueDates = orderRepository.getRevenuePerDate(cal.getTime(),
 				globalConfig.getOrderSuccessStatus());
-		List<Date> listDate = new ArrayList<Date>();
+		List<String> listDate = new ArrayList<String>();
 		for (int i = 1; i <= 7; i++) {
 			cal.add(Calendar.DAY_OF_YEAR, 1);
-			listDate.add(cal.getTime());
+			listDate.add(DateUtils.sdf.format(cal.getTime()));
 		}
-		List<Date> listDateFromDb = new ArrayList<Date>();
-		revenueDates.forEach(r -> listDateFromDb.add(r.getDate()));
-		listDate.forEach(d -> {
-			if (!listDateFromDb.contains(d)) {
-				revenueDates.add(new RevenueDate(d, BigDecimal.valueOf(0.0)));
+		List<String> listDateFromDb = new ArrayList<String>();
+		revenueDates.forEach(r -> listDateFromDb.add(DateUtils.sdf.format(r.getDate())));
+		for (String date : listDate) {
+			if (!listDateFromDb.contains(date)) {
+				revenueDates.add(new RevenueDate(DateUtils.parseToDate(date), BigDecimal.valueOf(0.0)));
 			}
-		});
+		}
 		revenueDates.sort((revenueDate1, revenueDate2) -> revenueDate1.getDate().compareTo(revenueDate2.getDate()));
 		/*
 		 * revenueDates = revenueDates.stream() .sorted((revenueDate1, revenueDate2) ->
@@ -281,6 +284,13 @@ public class OrderServiceImpl implements OrderService {
 						.compareTo(bestSaleProduct1.getTotalSale()))
 				.collect(Collectors.toList()));
 		return pageVo;
+	}
+
+	@Override
+	public OrderStatistical getOrderStatistical() throws Exception {
+		OrderStatistical orderStatistical = orderRepository.getOrderStatistical();
+		Log4jUtils.getLogger().info(orderStatistical);
+		return orderStatistical;
 	}
 
 }

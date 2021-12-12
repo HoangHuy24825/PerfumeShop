@@ -11,6 +11,8 @@ import com.mycompany.perfumeshop.valueObjects.AdminRequest;
 public interface UserService {
 
 	User findUserByUserName(String username) throws Exception;
+	
+	User findUserByUserNameAndStatus(String username,Boolean status) throws Exception;
 
 	User findUserByEmail(String email) throws Exception;
 

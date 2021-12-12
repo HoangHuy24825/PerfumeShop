@@ -82,25 +82,22 @@
 									<!--START TAB LIST NEW ORDER -->
 									<div class="tab-pane fade show active" id="pills-home" role="tabpanel"
 										aria-labelledby="new-orders-tab">
-										<div class="table-responsive table-data">
-											<table class="table table-data2">
-												<thead>
-													<tr>
-														<th>Tên đăng nhập</th>
-														<th>Ảnh đại diện</th>
-														<th>Họ tên</th>
-														<th>Email</th>
-														<th>Số điện thoại</th>
-														<th>Địa chỉ</th>
-														<th>Trạng thái</th>
-													</tr>
-												</thead>
-												<tbody id="staff-list">
-													<!-- List new order -->
-												</tbody>
-											</table>
-
-										</div>
+										<table class="table table-data2">
+											<thead>
+												<tr>
+													<th>Tên đăng nhập</th>
+													<th>Ảnh đại diện</th>
+													<th>Họ tên</th>
+													<th>Email</th>
+													<th>Số điện thoại</th>
+													<th>Địa chỉ</th>
+													<th>Trạng thái</th>
+												</tr>
+											</thead>
+											<tbody id="staff-list">
+												<!-- List new order -->
+											</tbody>
+										</table>
 										<div class="my-3">
 											<nav aria-label="Page navigation example">
 												<ul class="pagination justify-content-center " id="paged--list--staff">

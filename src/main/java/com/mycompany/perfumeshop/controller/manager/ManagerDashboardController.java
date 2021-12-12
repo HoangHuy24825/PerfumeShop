@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.mycompany.perfumeshop.conf.GlobalConfig;
 import com.mycompany.perfumeshop.controller.BaseController;
-import com.mycompany.perfumeshop.service.AttributeProductService;
 import com.mycompany.perfumeshop.service.CategoryService;
 import com.mycompany.perfumeshop.service.OrderService;
 import com.mycompany.perfumeshop.service.ProductService;
@@ -29,9 +28,6 @@ public class ManagerDashboardController extends BaseController {
 
 	@Autowired
 	private ProductService productService;
-
-	@Autowired
-	private AttributeProductService attributeProductService;
 
 	@Autowired
 	private OrderService orderService;
@@ -60,6 +56,7 @@ public class ManagerDashboardController extends BaseController {
 		result.put("revenuePerWeek", orderService.getRevenueByWeek().toArray(new Double[] {}));
 		result.put("totalOrderPerWeek", orderService.getTotalOrderPerWeekRecentMonth().toArray(new Long[] {}));
 		result.put("revenuePerMonth", orderService.getRevenueFromJanuary());
+		result.put("orderStatistical", orderService.getOrderStatistical());
 		return ResponseEntity.ok(result);
 	}
 

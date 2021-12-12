@@ -42,6 +42,7 @@ function setActiveMenu() {
 
 function loadStaff(page) {
     var update_role = $("#update_role").val();
+    console.log(update_role);
     var type = 0;
     $.ajax({
         url: '/perfume-shop/admin/list-account',
@@ -70,30 +71,25 @@ function loadStaff(page) {
                                     <span>${ item.phone }</span>
                                 </td>
                                 <td>
-                                    <span>${ item.address }</span>
+                                    <span>${ item.address == null?"":item.address}</span>
                                 </td>
                                 <td>
                                     <span>
                                         <!-- Rounded switch -->
-                                        <label class="switch">
-                                            <input type="checkbox" data-id-item="${item.id}" ${update_role==true?"":"disabled"} class="btnChangeStatus" 
-                                            ${item.status==true? "checked" : ""} >
+                                        <label class="switch" ${update_role=='false'?'data-toggle="tooltip" data-placement="top" title="Bạn không có quyền truy cập chức năng này"':''}>
+                                            <input type="checkbox" data-id-item="${item.id}" ${update_role=='true'?"":"disabled"} 
+                                                class="btnChangeStatus" ${item.status==true? "checked" : ""} >
                                             <span class="slider round"></span>
                                         </label>
-                                    </span>
-                                    <span>
-                                        <!-- Rounded switch -->
-                                        <label class="switch">
-                                            <input type="checkbox" class="btnChangeStatus" data-id-item="${item.id}" ${item.status==true? "checked" : ""}>
-                                            <span class="slider round"></span>
-                                        </label>    
                                     </span>
                		            </td>
                 		        <td>
                                     <div class="table-data-feature">
-                                        <button class="item" title="Phân quyền" onclick="decentralization(${ item.id })" hide="${!update_role}">
-                                            <i class="fas fa-user-tag"></i>
-                                        </button>
+                                        <button type="button" class="btn btn-outline-primary mx-1" ${update_role=='true'?"":"disabled"} 
+                                         onclick="decentralization(${ item.id })" 
+                                            ${update_role=='false'?'data-toggle="tooltip" data-placement="top" title="Bạn không có quyền truy cập chức năng này"':''}>
+                                            Phân quyền
+                                         </button>
                                     </div>
                     		    </td>'
                             </tr>
@@ -162,8 +158,8 @@ function loadCustomer(page) {
                             <td>
                                 <span>
                                 <!-- Rounded switch -->
-                                    <label class="switch">
-                                        <input type="checkbox" data-id-item="${item.id}" ${update_role==true?"":"disabled"} class="btnChangeStatus" 
+                                    <label class="switch" data-toggle="${update_role=='false'?'tooltip':''}" data-placement="top" title="Bạn không có quyền truy cập chức năng này">
+                                        <input type="checkbox" data-id-item="${item.id}" ${update_role=='true'?"":"disabled"} class="btnChangeStatus" 
                                         ${item.status==true? "checked" : ""}>
                                         <span class="slider round"></span>
                                     </label>    

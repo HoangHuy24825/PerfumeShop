@@ -55,7 +55,7 @@ function viewOrder(idOrder) {
                 html += '    <img class="" src="/upload/' + item.avatar + '" alt="' + item.productName + '"';
                 html += '        width="100" height="100">';
                 html += '    <div class="ml-4">';
-                html += '        <h5>' + item.productName + '</h5>';
+                html += '        <h5>' + item.productName +' '+item.capacity +'ml</h5>';
                 html += '        <p>Giá: ' + item.price.toLocaleString('it-IT', {
                     style: 'currency',
                     currency: 'VND'

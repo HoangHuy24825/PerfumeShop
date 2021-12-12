@@ -142,8 +142,9 @@ function loadData(keySearch, currentPage, status) {
                                 <td>
                                     <span>
                                     <!-- Rounded switch -->
-                                        <label class="switch">
-                                            <input type="checkbox" class="btnChangeHide" data-id-item="${review.id}" ${!review.isHide? "checked" : ""}>
+                                        <label class="switch" ${update_role=='false'?'data-toggle="tooltip" data-placement="top" title="Bạn không có quyền truy cập chức năng này"':''} >
+                                            <input type="checkbox" class="btnChangeHide" data-id-item="${review.id}" ${update_role=='true'?"":"disabled"}
+                                                ${review.isHide==false? "checked" : ""} >
                                             <span class="slider round"></span>
                                         </label>    
                                     </span>
@@ -151,16 +152,18 @@ function loadData(keySearch, currentPage, status) {
                                 <td>
                                     <span>
                                     <!-- Rounded switch -->
-                                        <label class="switch">
-                                            <input type="checkbox" class="btnChangeApprove" data-id-item="${review.id}" ${review.status? "checked" : ""}>
+                                        <label class="switch" ${update_role=='false'?'data-toggle="tooltip" data-placement="top" title="Bạn không có quyền truy cập chức năng này"':''}>
+                                            <input type="checkbox" class="btnChangeApprove" data-id-item="${review.id}" ${update_role=='true'?"":"disabled"}
+                                                ${review.status==true? "checked" : ""}>
                                             <span class="slider round"></span>
                                         </label>    
                                     </span>
                                 </td>
                                 <td>
                                     <div class="table-data-feature pr-4">
-                                        <input type="button" class="btn btn-outline-danger mx-1" value="Xóa" ${update_role == 'true'?"":"hide"} 
-                                            onclick="deleteReview(${review.id})">
+                                        <input type="button" class="btn btn-outline-danger mx-1" value="Xóa" onclick="deleteReview(${review.id})"
+                                            ${delete_role=='true'?"":"disabled"} 
+                                            ${delete_role=='false'?'data-toggle="tooltip" data-placement="top" title="Bạn không có quyền truy cập chức năng này"':''}>
                                     </div>
                                 </td>
                             </tr>

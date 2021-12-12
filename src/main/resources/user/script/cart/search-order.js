@@ -140,7 +140,7 @@ $(document).ready(function () {
                             $.each(order.orderDetails, function (indexInArray, detail) {
                                 html2 +=
                                     `
-                                    <span>${detail.productName}</span>
+                                    <span>${detail.productName} ${detail.capacity} ml</span>
                                 
                                 `
                             });

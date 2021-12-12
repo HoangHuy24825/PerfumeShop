@@ -81,6 +81,7 @@ function getData() {
             showRevenueRecentMonth(response.revenuePerWeek);
             showTotalOrderPerWeek(response.totalOrderPerWeek);
             showRevenuePerMonth(listNameOfMonth, listRevenuePerMonth);
+            showOrderPercent(response.orderStatistical.successOrder, response.orderStatistical.cancelOrder);
         }
     });
 }
@@ -534,6 +535,65 @@ function showRevenuePerMonth(listNameOfMonth, listRevenuePerMonth) {
     }
 }
 
+function showOrderPercent(successOrder, cancelOrder) {
+    var successOrderVal = parseInt(successOrder);
+    var cancelOrderVal = parseInt(cancelOrder);
+    var successOrderPercent = (successOrderVal / (successOrderVal + cancelOrderVal)*100).toFixed(2);
+    var cancelOrderPercent = (cancelOrderVal / (successOrderVal + cancelOrderVal)*100).toFixed(2);
+    // Percent Chart
+    var ctx = document.getElementById("percent-chart");
+    if (ctx) {
+        ctx.height = 280;
+        var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    label: "Đơn hàng",
+                    data: [successOrderPercent, cancelOrderPercent],
+                    backgroundColor: [
+                        '#00b5e9',
+                        '#fa4251'
+                    ],
+                    hoverBackgroundColor: [
+                        '#00b5e9',
+                        '#fa4251'
+                    ],
+                    borderWidth: [
+                        0, 0
+                    ],
+                    hoverBorderColor: [
+                        'transparent',
+                        'transparent'
+                    ]
+                }],
+                labels: [
+                    'Đơn hàng thành công',
+                    'Đơn hàng bị hủy'
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                cutoutPercentage: 55,
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                },
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    titleFontFamily: "Poppins",
+                    xPadding: 15,
+                    yPadding: 10,
+                    caretPadding: 0,
+                    bodyFontSize: 16
+                }
+            }
+        });
+    }
+}
+
 (function ($) {
     // USE STRICT
     "use strict";
@@ -619,58 +679,7 @@ function showRevenuePerMonth(listNameOfMonth, listRevenuePerMonth) {
             });
         }
 
-        // Percent Chart
-        var ctx = document.getElementById("percent-chart");
-        if (ctx) {
-            ctx.height = 280;
-            var myChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    datasets: [{
-                        label: "My First dataset",
-                        data: [60, 40],
-                        backgroundColor: [
-                            '#00b5e9',
-                            '#fa4251'
-                        ],
-                        hoverBackgroundColor: [
-                            '#00b5e9',
-                            '#fa4251'
-                        ],
-                        borderWidth: [
-                            0, 0
-                        ],
-                        hoverBorderColor: [
-                            'transparent',
-                            'transparent'
-                        ]
-                    }],
-                    labels: [
-                        'Products',
-                        'Services'
-                    ]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    responsive: true,
-                    cutoutPercentage: 55,
-                    animation: {
-                        animateScale: true,
-                        animateRotate: true
-                    },
-                    legend: {
-                        display: false
-                    },
-                    tooltips: {
-                        titleFontFamily: "Poppins",
-                        xPadding: 15,
-                        yPadding: 10,
-                        caretPadding: 0,
-                        bodyFontSize: 16
-                    }
-                }
-            });
-        }
+
 
     } catch (error) {
         console.log(error);

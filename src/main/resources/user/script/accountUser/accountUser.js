@@ -162,7 +162,7 @@ function loadSaleOrder(idAccount) {
                                 <div class="d-flex flex-row">
                                     <img class="border" src="/upload/${detail.avatar}" alt="" width="100" height="100">
                                     <div class="ml-3">
-                                    <h5>${detail.productName}</h5>
+                                    <h5>${detail.productName} </h5>
                                     <p>
                                         Giá: ${detail.price.toLocaleString('it-IT', {style: 'currency',currency: 'VND'})}
                                     </p>
@@ -214,7 +214,7 @@ function loadSaleOrder(idAccount) {
                     $.each(order.orderDetails, function (indexInArray, detail) {
                         html2 +=
                             `
-                            <span>${detail.productName}</span>
+                            <span>${detail.productName} ${detail.capacity} ml</span>
                         
                         `
                     });

@@ -9,6 +9,7 @@ import com.mycompany.perfumeshop.entities.Order;
 import com.mycompany.perfumeshop.entities.User;
 import com.mycompany.perfumeshop.valueObjects.BestSaleProductVo;
 import com.mycompany.perfumeshop.valueObjects.CustomerOrder;
+import com.mycompany.perfumeshop.valueObjects.OrderStatistical;
 import com.mycompany.perfumeshop.valueObjects.PageVo;
 import com.mycompany.perfumeshop.valueObjects.RevenueDate;
 import com.mycompany.perfumeshop.valueObjects.RevenueMonth;
@@ -48,5 +49,7 @@ public interface OrderService {
 			throws Exception;
 
 	PageVo<BestSaleProductVo> getListBestSaleOfProduct(String idCategory, String currentPage, Integer sizeOfPage);
+
+	OrderStatistical getOrderStatistical() throws Exception;
 
 }

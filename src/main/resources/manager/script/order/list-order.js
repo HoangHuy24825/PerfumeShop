@@ -79,10 +79,12 @@ function LoadNewOrder(page) {
                             </td>
                             <td>
                                 <input type="button" class="btn btn-outline-info" value="Xem" onclick="viewOrder(${item.id})">
-                                <input type="button" class="btn btn-outline-success" value="Nhận đơn" ${update_role == '    true'?"":"hide"}
-                                    onclick="changeStatusOrder(${item.id},1,0)">
-                                <input type="button" class="btn btn-outline-danger" value="Hủy đơn" ${update_role == 'true'?"":"hide"} 
-                                    onclick="cancelBill(${item.id})">
+                                <input type="button" class="btn btn-outline-success" value="Nhận đơn" onclick="changeStatusOrder(${item.id},1,0)"
+                                    ${update_role=='true'?"":"disabled"} 
+                                    ${update_role=='false'?'data-toggle="tooltip" data-placement="top" title="Bạn không có quyền truy cập chức năng này"':''}>
+                                <input type="button" class="btn btn-outline-danger" value="Hủy đơn" onclick="cancelBill(${item.id})"
+                                    ${delete_role=='true'?"":"disabled"} 
+                                    ${delete_role=='false'?'data-toggle="tooltip" data-placement="top" title="Bạn không có quyền truy cập chức năng này"':''}>
                             </td>
                         </tr>
                         <tr class="spacer"></tr>`;
@@ -403,7 +405,7 @@ function viewOrder(idOrder) {
                 html += '    <img class="" src="/upload/' + item.avatar + '" alt="' + item.productName + '"';
                 html += '        width="100" height="100">';
                 html += '    <div class="ml-4">';
-                html += '        <h5>' + item.productName + '</h5>';
+                html += '        <h5>' + item.productName + ' ' + item.capacity + 'ml </h5>';
                 html += '        <p>Giá: ' + item.price.toLocaleString('it-IT', {
                     style: 'currency',
                     currency: 'VND'

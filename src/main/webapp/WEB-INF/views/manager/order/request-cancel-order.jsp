@@ -52,6 +52,8 @@
                             <div class="col-md-12" id="content_page">
                                 <!-- CONTENT PAGE -->
                                 <h3 class="title-5">Danh sách yêu cầu</h3>
+                                <input id="update_role" value="${orderRole.update}" type="text" style="display: none" />
+                                <input id="delete_role" value="${orderRole.delete}" type="text" style="display: none" />
                                 <div class="table-data__tool">
                                     <div class="table-data__tool-left">
 
