@@ -226,9 +226,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public List<RevenueMonth> getRevenueFrom12PreviousMonth() throws Exception {
-
 		List<RevenueMonth> revenueMonths = new ArrayList<>();
-
 		LocalDate date = LocalDate.now();
 		LocalDate startDate = date.withDayOfMonth(1);
 		LocalDate lastDate = date.withDayOfMonth(date.lengthOfMonth());
