@@ -567,8 +567,8 @@ function showOrderPercent(successOrder, cancelOrder) {
                     ]
                 }],
                 labels: [
-                    'Đơn hàng thành công',
-                    'Đơn hàng bị hủy'
+                    'Thành công',
+                    'Bị hủy'
                 ]
             },
             options: {

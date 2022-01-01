@@ -3,6 +3,7 @@ package com.mycompany.perfumeshop.service.impl;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -224,27 +225,26 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public List<RevenueMonth> getRevenueFromJanuary() throws Exception {
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.DATE, 1);
-		Date startDate = cal.getTime();
-		cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-		Date lastDate = cal.getTime();
+	public List<RevenueMonth> getRevenueFrom12PreviousMonth() throws Exception {
 
 		List<RevenueMonth> revenueMonths = new ArrayList<>();
 
-		LocalDate localDate = LocalDate.now();
-		Month currentMonth = localDate.getMonth();
+		LocalDate date = LocalDate.now();
+		LocalDate startDate = date.withDayOfMonth(1);
+		LocalDate lastDate = date.withDayOfMonth(date.lengthOfMonth());
+		LocalDate previousDate = date;
 		BigDecimal revenuePerMonth = null;
-		for (int i = 1; i <= currentMonth.getValue(); i++) {
-			revenuePerMonth = orderRepository.getRevenueDate(startDate, lastDate, globalConfig.getOrderSuccessStatus());
-			revenueMonths.add(new RevenueMonth(Constants.MONTH_NAME[currentMonth.getValue() - i],
+		for (int i = 1; i <= 12; i++) {
+			revenuePerMonth = orderRepository.getRevenueDate(
+					Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()),
+					Date.from(lastDate.atStartOfDay(ZoneId.systemDefault()).toInstant()),
+					globalConfig.getOrderSuccessStatus());
+			revenueMonths.add(new RevenueMonth(previousDate.getMonth().getValue() + "/" + previousDate.getYear(),
 					revenuePerMonth == null ? BigDecimal.valueOf(0.0) : revenuePerMonth));
-			cal.add(Calendar.MONTH, -1);
-			cal.set(Calendar.DATE, 1);
-			startDate = cal.getTime();
-			cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-			lastDate = cal.getTime();
+			previousDate = date.minusMonths(i);
+			startDate = previousDate.withDayOfMonth(1);
+			lastDate = previousDate.withDayOfMonth(previousDate.lengthOfMonth());
+
 		}
 		Collections.reverse(revenueMonths);
 		return revenueMonths;

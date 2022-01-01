@@ -91,7 +91,7 @@ function showConfirm(message, btnConfirm, btnClose, danger) {
     $('#modalCustomerConfirm').modal('show');
 }
 
-function showConfirm(message, btnClose) {
+function showConfirm1(message, btnClose) {
     $('#modalCustomerConfirmContent').text(message);
     $('#btnCloseConfirm').text(btnClose);
     $('#btnCloseConfirm').addClass("btn btn-primary");

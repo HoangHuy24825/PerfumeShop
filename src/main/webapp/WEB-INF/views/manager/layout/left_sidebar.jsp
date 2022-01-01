@@ -98,7 +98,7 @@
 				</li>
 
 				<c:if test="${contactRole.view==true}">
-					<li id="menu--introduce" class=""><a href="${base}/perfume-shop/admin/contact.html">
+					<li id="menu--contact" class=""><a href="${base}/perfume-shop/admin/contact.html">
 							<i class="fas fa-id-card-alt"></i>Liên hệ
 						</a></li>
 				</c:if>

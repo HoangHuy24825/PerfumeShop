@@ -100,6 +100,10 @@ public class ProductServiceImpl implements ProductService {
 					attributeProductRepository.delete(attributeProduct);
 				}
 			}
+			product.setCreatedDate(oldProduct.getCreatedDate());
+			product.setCreatedBy(oldProduct.getCreatedBy());
+			product.setStatus(oldProduct.getStatus());
+			product.setIsHot(oldProduct.getIsHot());
 		} else {
 			if (!Validate.isEmptyUploadFile(avatar)) {
 				avatar.transferTo(

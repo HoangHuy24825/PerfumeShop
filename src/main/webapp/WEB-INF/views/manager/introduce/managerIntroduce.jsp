@@ -57,9 +57,9 @@
 
                                     </div>
                                     <div class="table-data__tool-right">
-                                        <c:if test="${notifyRole.update ==true}">
+                                        <c:if test="${introduceRole.update ==true}">
                                             <button class="au-btn au-btn-icon au-btn--green au-btn--small"
-                                                onclick="location.href='${base}/admin/edit-introduce'">
+                                                onclick="location.href='${base}/perfume-shop/admin/edit-introduce'">
                                                 <i class="fas fa-plus"></i>Cập nhật
                                             </button>
                                         </c:if>

@@ -237,7 +237,7 @@ function cancelOrderNotifyConfirmed(idOrder) {
             type: "GET",
             success: function (jsonResult) {
                 if (jsonResult == true) {
-                    showConfirm("Chúng tôi đã nhận được yêu cầu hủy đơn hàng của bạn." +
+                    showConfirm1("Chúng tôi đã nhận được yêu cầu hủy đơn hàng của bạn." +
                         "Vui lòng kiểm tra email thường xuyên để nhận được thông báo về việc hủy đơn hàng!",
                         "Đóng");
                 } else {

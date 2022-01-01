@@ -126,7 +126,7 @@ $(document).ready(function () {
                 data: formData,
                 success: function (responseData) {
                     if (responseData.code == 200 && responseData.success == true) {
-                        showConfirm("Đánh giá của bạn đã được ghi nhận! Vui lòng đợi phê duyệt của shop!", "Đóng");
+                        showConfirm1("Đánh giá của bạn đã được ghi nhận! Vui lòng đợi phê duyệt của shop!", "Đóng");
                         $(form).trigger('reset');
                         // $(form).find("input").val("");
                         // $(form).find("textarea").val("");

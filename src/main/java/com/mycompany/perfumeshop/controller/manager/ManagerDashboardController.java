@@ -55,7 +55,7 @@ public class ManagerDashboardController extends BaseController {
 		result.put("revenuePerDay", orderService.getRevenueByDate());
 		result.put("revenuePerWeek", orderService.getRevenueByWeek().toArray(new Double[] {}));
 		result.put("totalOrderPerWeek", orderService.getTotalOrderPerWeekRecentMonth().toArray(new Long[] {}));
-		result.put("revenuePerMonth", orderService.getRevenueFromJanuary());
+		result.put("revenuePerMonth", orderService.getRevenueFrom12PreviousMonth());
 		result.put("orderStatistical", orderService.getOrderStatistical());
 		return ResponseEntity.ok(result);
 	}

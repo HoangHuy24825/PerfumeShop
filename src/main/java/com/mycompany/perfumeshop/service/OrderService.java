@@ -43,7 +43,7 @@ public interface OrderService {
 
 	Long totalOrderRecentMonth() throws Exception;
 
-	List<RevenueMonth> getRevenueFromJanuary() throws Exception;
+	List<RevenueMonth> getRevenueFrom12PreviousMonth() throws Exception;
 
 	PageVo<RevenueVo> statisticRevenue(Date startDate, Date endDate, Integer currentPage, Integer sizeOfPage)
 			throws Exception;

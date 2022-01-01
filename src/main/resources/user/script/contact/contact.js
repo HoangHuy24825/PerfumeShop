@@ -65,7 +65,7 @@ $(document).ready(function () {
         }
     });
 
-    setMenuBanner();
+    setMenuBanner("#menu--contact");
 });
 
 function setMenuBanner() {
