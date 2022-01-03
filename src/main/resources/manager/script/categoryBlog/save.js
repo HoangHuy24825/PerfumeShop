@@ -11,7 +11,13 @@ $(document).ready(function () {
     $("#form--upload").validate({
         rules: {
             name: "required",
-            avatar: "required",
+            avatar: {
+                required: function () {
+                    if ($('#id').val() != null && $('#id').val() != "")
+                        return false;
+                    return true;
+                }
+            },
         },
 
         messages: {

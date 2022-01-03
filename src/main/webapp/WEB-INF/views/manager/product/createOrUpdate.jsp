@@ -64,7 +64,7 @@
                                     <div class="bg-light p-4">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <form id="formDetailProduct" enctype="multipart/form-data">
+                                                <form id="formDetailProduct" enctype="multipart/form-data" type="post">
 
                                                     <input name="id" id="id" type="number" hidden="true"
                                                         value="${id_product}" />
@@ -233,8 +233,7 @@
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label for="detail" class="font-weight-bold">Chi tiết <span
-                                                                class="required_field">*</span></label>
+                                                        <label for="detail" class="font-weight-bold">Chi tiết</label>
                                                         <textarea row=5 autocomplete="off"
                                                             class="form-control summernote" id="detail" name="detail"
                                                             required="required">
@@ -244,8 +243,9 @@
                                                     <div class="form-group">
                                                         <a class="btn btn-secondary"
                                                             href="${base}/perfume-shop/admin/product.html">Hủy</a>
-                                                        <button type="button" class="btn btn-primary"
-                                                            onclick="saveOrUpdate()">Lưu</button>
+                                                        <!-- <button type="button" class="btn btn-primary"
+                                                            onclick="saveOrUpdate()">Lưu</button> -->
+                                                        <button type="submit" class="btn btn-primary">Lưu</button>
                                                     </div>
                                                 </form>
                                             </div>

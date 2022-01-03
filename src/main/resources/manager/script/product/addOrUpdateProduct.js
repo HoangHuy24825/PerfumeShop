@@ -58,6 +58,72 @@ $(document).ready(function () {
 		}
 	});
 
+	$("#formDetailProduct").validate({
+		rules: {
+			title: "required",
+			avatar: {
+				required: function () {
+					if ($('#id').val() != null && $('#id').val() != "")
+						return false;
+					return true;
+				}
+			},
+			trademark: "required",
+			origin: "required",
+			manufactureYear: "required",
+			fragrant: "required",
+			description: "required",
+			capacity: "required",
+			price: "required",
+			amount: "required",
+		},
+
+		messages: {
+			title: "Vui lòng nhập tên sản phẩm",
+			avatar: "Vui lòng chọn hình ảnh sản phẩm",
+			trademark: "Vui lòng nhập thương hiệu",
+			origin: "Vui lòng nhập xuất sứ",
+			manufactureYear: "Vui lòng nhập năm phát hành",
+			fragrant: "Vui lòng nhập mùi hương",
+			description: "Vui lòng nhập mô tả",
+			capacity: "Vui lòng nhập dung tích",
+			price: "Vui lòng nhập giá",
+			amount: "Vui lòng nhập số lượng",
+		},
+
+		submitHandler: function (form1) {
+			var form = $('#formDetailProduct')[0];
+			var data = new FormData(form);
+			if ($(".price").length == 1) {
+				data.append("priceSale", "");
+			}
+			var detailCkEditor = editor.getData();
+			data.append('detail', detailCkEditor);
+			$.ajax({
+				type: "POST",
+				enctype: 'multipart/form-data',
+				url: "/perfume-shop/admin/add-update-product",
+				data: data,
+				processData: false, //prevent jQuery from automatically transforming the data into a query string
+				contentType: false,
+				cache: false,
+				timeout: 600000,
+				success: function (data) {
+					if ($("#id").val() != null && $("#id").val() != "") {
+						showAlertMessage("Cập nhật sản phẩm thành công!", true);
+					} else {
+						showAlertMessage("Thêm mới sản phẩm thành công!", true);
+					}
+					$(location).attr('href', "/perfume-shop/admin/product.html");
+				},
+				error: function (e) {
+					console.log("ERROR : ", e);
+				}
+			});
+		}
+	});
+
+
 });
 
 function setActiveMenu() {

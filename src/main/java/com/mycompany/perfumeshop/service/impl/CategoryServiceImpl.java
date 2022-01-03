@@ -67,6 +67,7 @@ public class CategoryServiceImpl implements CategoryService {
 						new File(globalConfig.getUploadRootPath() + "category/" + avatar.getOriginalFilename()));
 				category.setAvatar("category/" + avatar.getOriginalFilename());
 			}
+			category.setStatus(true);
 		}
 		return categoryRepository.save(category);
 	}

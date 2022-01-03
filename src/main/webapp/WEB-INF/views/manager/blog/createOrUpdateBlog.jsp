@@ -115,12 +115,14 @@
                                                             class="form-control summernote" id="detail" name="detail"
                                                             required="required">
                                                         </textarea>
+                                                        <label class="text-danger message_error"
+                                                            style="display:none;width:100%" id="detailMsgErr">
+                                                            <span class="col-md-9 message-content"></span>
+                                                        </label>
                                                     </div>
                                                     <div class="form-group">
                                                         <a class="btn btn-secondary"
                                                             href="${base}/perfume-shop/admin/blog.html">Hủy</a>
-                                                        <!-- <button type="button" class="btn btn-primary"
-                                                            onclick="clickSaveBlog()">Lưu</button> -->
                                                         <button type="submit" class="btn btn-primary">Lưu</button>
                                                     </div>
                                                 </form>

@@ -56,6 +56,8 @@ public class BlogServiceImpl implements BlogService {
 			} else {
 				blog.setAvatar(oldBlog.getAvatar());
 			}
+			blog.setStatus(oldBlog.getStatus());
+			blog.setIsHot(oldBlog.getIsHot());
 		} else {
 			blog.setCreatedDate(Calendar.getInstance().getTime());
 			blog.setCreatedBy(idUserLogin);
@@ -63,6 +65,7 @@ public class BlogServiceImpl implements BlogService {
 				avatar.transferTo(new File(globalConfig.getUploadRootPath() + "blog/" + avatar.getOriginalFilename()));
 				blog.setAvatar("blog/" + avatar.getOriginalFilename());
 			}
+			blog.setStatus(true);
 		}
 		return blogRepository.save(blog);
 	}

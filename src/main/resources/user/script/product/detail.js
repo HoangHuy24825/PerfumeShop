@@ -13,7 +13,7 @@ $(document).ready(function () {
         var priceSale = $(this).data("priceSale");
         var htmlPirce = '';
         var idAttr = $(this).data("id");
-        var maxOrder = $(this).data("maxOrder");
+        var maxOrder = $(this).data("amount");
         $('#numberProductOrder').data("id-product", idAttr);
         $('#numberProductOrder').data("max-order", maxOrder);
         if (priceSale != null && priceSale != 0) {
@@ -48,20 +48,27 @@ $(document).ready(function () {
             attrProductId: idAttr,
             quantity: quantity
         }
-        $.ajax({
-            url: "/perfume-shop/cart/add",
-            type: "post",
-            data: JSON.stringify(data),
-            dataType: "json",
-            contentType: "application/json",
-            success: function (jsonResult) {
-                showAlertMessage("Thêm vào giỏ hàng thành công!", true);
-                $('#icon-cart-header').find($('#amount_cart')).text(jsonResult.totalItems);
-            },
-            error: function (jqXhr, textStatus, errorMessage) {
-                showAlertMessage("Không thêm được sản phẩm vào giỏ hàng!", false);
-            }
-        });
+        var maxOrder = parseInt($("#numberProductOrder").data("max-order"));
+        if (maxOrder == 0) {
+            showAlertMessage("Sản phẩm tạm thời hết hàng!", true);
+        } else if (maxOrder < quantity) {
+            showAlertMessage("Số lượng mua vượt quá số lượng hiện có!", false);
+        } else {
+            $.ajax({
+                url: "/perfume-shop/cart/add",
+                type: "post",
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: "application/json",
+                success: function (jsonResult) {
+                    showAlertMessage("Thêm vào giỏ hàng thành công!", true);
+                    $('#icon-cart-header').find($('#amount_cart')).text(jsonResult.totalItems);
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    showAlertMessage("Không thêm được sản phẩm vào giỏ hàng!", false);
+                }
+            });
+        }
     });
 
     $("body").on("click", "#buyNow", function () {
@@ -118,6 +125,7 @@ $(document).ready(function () {
             for (var pair of formData.entries()) {
                 console.log(pair[0], pair[1]);
             }
+            $("#errMsgReview").html('');
             $.post({
                 url: '/perfume-shop/reviews-product',
                 enctype: "multipart/form-data",
