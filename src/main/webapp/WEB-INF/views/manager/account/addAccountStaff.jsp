@@ -74,6 +74,10 @@
                                                             id="username" name="username" placeholder="Tên đăng nhập"
                                                             required="required"></input>
                                                         <p class="text-danger" id="username_error"></p>
+                                                        <label class="text-danger message_error"
+                                                            style="display:none;width:100%" id="usernameMessage">
+                                                            <span class="col-md-9 message-content"></span>
+                                                        </label>
                                                     </div>
 
                                                     <div class="form-group">
@@ -82,14 +86,22 @@
                                                         <input autocomplete="off" type="text" class="form-control"
                                                             id="fullname" name="fullname" placeholder="Họ tên nhân viên"
                                                             required="required"></input>
+                                                        <label class="text-danger message_error"
+                                                            style="display:none;width:100%" id="fullnameMessage">
+                                                            <span class="col-md-9 message-content"></span>
+                                                        </label>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label for="password">Mật khẩu <span
                                                                 class="required_field">*</span></label>
                                                         <input type="password" autocomplete="off" class="form-control"
-                                                            id="pasword" name="password" placeholder="Mật khẩu"
+                                                            id="password" name="password" placeholder="Mật khẩu"
                                                             required="required"></input>
+                                                        <label class="text-danger message_error"
+                                                            style="display:none;width:100%" id="passwordMessage">
+                                                            <span class="col-md-9 message-content"></span>
+                                                        </label>
                                                     </div>
 
                                                     <div class="form-group">
@@ -98,6 +110,10 @@
                                                         <input type="email" autocomplete="off" class="form-control"
                                                             id="email" name="email" placeholder="email"
                                                             required="required"></input>
+                                                        <label class="text-danger message_error"
+                                                            style="display:none;width:100%" id="emailMessage">
+                                                            <span class="col-md-9 message-content"></span>
+                                                        </label>
                                                     </div>
 
                                                     <div class="form-group">
@@ -106,6 +122,10 @@
                                                         <input type="number" autocomplete="off" class="form-control"
                                                             id="phone" name="phone" placeholder="Số điện thoại"
                                                             required="required"></input>
+                                                        <label class="text-danger message_error"
+                                                            style="display:none;width:100%" id="phoneMessage">
+                                                            <span class="col-md-9 message-content"></span>
+                                                        </label>
                                                     </div>
                                                     <div class="form-group">
                                                         <a class="btn btn-secondary"

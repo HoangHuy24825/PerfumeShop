@@ -279,7 +279,7 @@ function showTotalOrderPerWeek(listTotalOrderPerWeek) {
                 type: 'line',
                 datasets: [{
                     data: listTotalOrderPerWeek,
-                    label: 'Dataset',
+                    label: 'Đơn hàng',
                     backgroundColor: 'rgba(255,255,255,.1)',
                     borderColor: 'rgba(255,255,255,.55)',
                 }, ]

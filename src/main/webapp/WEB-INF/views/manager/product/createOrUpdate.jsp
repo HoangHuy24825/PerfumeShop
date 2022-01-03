@@ -204,8 +204,7 @@
 
                                                     <div class="form-group">
                                                         <label for="short_description" class="font-weight-bold">Mô tả
-                                                            ngắn <span class="required">*</span><span
-                                                                class="required_field">*</span></label>
+                                                            ngắn <span class="required">*</span></label>
                                                         <textarea autocomplete="off" class="form-control"
                                                             placeholder="Short Description" id="description"
                                                             name="description" rows="8" required="required"></textarea>

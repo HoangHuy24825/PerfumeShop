@@ -140,6 +140,7 @@ $(document).ready(function () {
             }
         }
     });
+
     $('#address').focusout(function () {
         if ($(this).val() == "" || $(this).val() == null) {
             $('#addressMessage').find('.message-content').text("Vui lòng nhập địa chỉ!");
@@ -163,7 +164,7 @@ function validationForm() {
         console.log(username);
         $.ajax({
             type: "GET",
-            url: "/check-username",
+            url: "/perfume-shop/check-username",
             data: {
                 username: username
             },

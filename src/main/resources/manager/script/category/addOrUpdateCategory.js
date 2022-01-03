@@ -8,6 +8,50 @@ $(document).ready(function () {
 	setActiveMenu();
 
 	showNotifyHeader();
+
+	$("#form--upload").validate({
+		rules: {
+			name: "required",
+			avatar: "required",
+			description: "required",
+		},
+
+		messages: {
+			name: "Vui lòng nhập tên danh mục",
+			avatar: "Vui lòng chọn ảnh danh mục",
+			description: "Vui lòng nhập mô tả"
+		},
+
+		submitHandler: function (form) {
+			var id_category = $('#id').val();
+			var form = $('#form--upload')[0];
+			var data = new FormData(form);
+			$.ajax({
+				type: "POST",
+				enctype: 'multipart/form-data',
+				url: "/perfume-shop/admin/add-update-category",
+				data: data,
+				processData: false, //prevent jQuery from automatically transforming the data into a query string
+				contentType: false,
+				cache: false,
+				timeout: 600000,
+				success: function (data) {
+					if (id_category == null || id_category == "") {
+						showAlertMessage("Thêm mới danh mục thành công", true);
+					} else {
+						showAlertMessage("Cập nhật danh mục thành công", true);
+					}
+					setTimeout(function () {
+						$(location).attr('href', "/perfume-shop/admin/category.html");
+					}, 1600);
+				},
+				error: function (e) {
+					console.log("ERROR : ", e);
+				}
+			});
+		}
+	});
+
 });
 
 function setActiveMenu() {
@@ -20,35 +64,6 @@ function setActiveMenu() {
 	});
 	$('.list-unstyled #menu--category').addClass("active");
 	$('.navbar__list #menu--category').addClass("active");
-}
-
-//function to add new category
-function clickSaveCategory() {
-	var form = $('#form--upload')[0];
-	var data = new FormData(form);
-	$.ajax({
-		type: "POST",
-		enctype: 'multipart/form-data',
-		url: "/perfume-shop/admin/add-update-category",
-		data: data,
-		processData: false, //prevent jQuery from automatically transforming the data into a query string
-		contentType: false,
-		cache: false,
-		timeout: 600000,
-		success: function (data) {
-			if ($("id") == null) {
-				showAlertMessage("Thêm mới danh mục thành công", true);
-			} else {
-				showAlertMessage("Cập nhật danh mục thành công", true);
-			}
-			setTimeout(function () {
-				$(location).attr('href', "/admin/category");
-			}, 1600);
-		},
-		error: function (e) {
-			console.log("ERROR : ", e);
-		}
-	});
 }
 
 function loadDetailForEdit(idCategory) {

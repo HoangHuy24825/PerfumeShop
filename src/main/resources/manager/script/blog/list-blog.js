@@ -188,10 +188,6 @@ function loadBlog(keySearch, currentPage) {
     });
 }
 
-
-
-
-
 function detail(id) {
     window.location.href = '/perfume-shop/admin/blog-detail/' + $('#view_' + id).val();
 }
@@ -206,7 +202,7 @@ function deleteBlog(idBlog) {
 };
 
 function deleteConfirmed(idBlog) {
-    $('#modalCustomerConfirmContent').modal('hide');
+    $('#modalCustomerConfirm').modal('hide');
     $.post({
         url: '/perfume-shop/admin/delete-blog',
         type: "POST",

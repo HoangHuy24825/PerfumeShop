@@ -87,12 +87,10 @@ function deleteCategory(idCategory) {
 
 function deleteConfirmed(idCategory) {
 	$('#modalCustomerConfirm').modal('hide');
-	$.post({
-		url: '/perfume-shop/admin/delete-category',
-		data: {
-			idCategory: idCategory,
-		},
+	$.ajax({
+		url: '/perfume-shop/admin/delete-category/'+idCategory,
 		dataType: "json",
+		type: "DELETE",
 		contentType: "application/json",
 		success: function (result) {
 			if (result == true) {

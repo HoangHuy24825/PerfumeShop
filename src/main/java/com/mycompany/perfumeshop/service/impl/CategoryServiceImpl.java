@@ -49,6 +49,8 @@ public class CategoryServiceImpl implements CategoryService {
 			Category oldCategory = categoryRepository.findById(category.getId()).get();
 			category.setCreatedDate(oldCategory.getCreatedDate());
 			category.setCreatedBy(oldCategory.getCreatedBy());
+			category.setStatus(oldCategory.getStatus());
+			category.setIsHot(oldCategory.getIsHot());
 			if (!Validate.isEmptyUploadFile(avatar)) {
 				new File(globalConfig.getUploadRootPath() + oldCategory.getAvatar()).delete();
 				avatar.transferTo(

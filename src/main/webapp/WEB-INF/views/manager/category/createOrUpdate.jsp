@@ -62,7 +62,7 @@
                                     <div class="bg-light p-4">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <form enctype="multipart/form-data" id="form--upload">
+                                                <form enctype="multipart/form-data" id="form--upload" type="submit">
 
                                                     <input id="id" name="id" value="${id_category}" hidden="true" />
                                                     <input type="checkbox" name="status" id="status" hidden="true" />
@@ -103,8 +103,7 @@
                                                     <div class="form-group">
                                                         <a class="btn btn-secondary"
                                                             href="${base}/perfume-shop/admin/category.html">Hủy</a>
-                                                        <button type="button" class="btn btn-primary"
-                                                            onclick="clickSaveCategory()">Lưu</button>
+                                                        <button type="submit" class="btn btn-primary">Lưu</button>
                                                     </div>
                                                 </form>
                                             </div>

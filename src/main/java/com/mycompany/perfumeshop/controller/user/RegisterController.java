@@ -84,7 +84,7 @@ public class RegisterController extends BaseController {
 	public ResponseEntity<Boolean> checkEmailExisted(HttpServletRequest request) throws Exception {
 		String email = request.getParameter("email");
 		User user = userService.findUserByEmail(email);
-		return ResponseEntity.ok(!Validate.isNullOrEmptyString(user.getUsername()));
+		return ResponseEntity.ok(user == null ? false : !Validate.isNullOrEmptyString(user.getUsername()));
 	}
 
 	@SuppressWarnings("unchecked")

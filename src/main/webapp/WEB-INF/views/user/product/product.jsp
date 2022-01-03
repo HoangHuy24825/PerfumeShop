@@ -76,7 +76,7 @@
 						<div class="col-lg-12">
 							<div class="product_top_bar d-flex justify-content-between align-items-center">
 								<div class="single_product_menu d-flex">
-									<div class="input-group">
+									<!-- <div class="input-group">
 										<h5 class="my-auto" style="color: #495057; text-transform:none">Sắp xếp theo:
 										</h5>
 										<select class="m-1" id="orderBy" style="">
@@ -84,10 +84,10 @@
 											<option value="1">Giá tăng dần</option>
 											<option value="2">Giá giảm dần</option>
 										</select>
-									</div>
+									</div> -->
 								</div>
 								<div class="single_product_menu d-flex">
-									<div class="input-group">
+									<!-- <div class="input-group">
 										<h5 class="my-auto" style="color: #495057; text-transform:none">Giá: </h5>
 										<select class="m-1" id="filterBy" style="">
 											<option value="0">Giá</option>
@@ -97,7 +97,7 @@
 											<option value="4">Từ 7-12 triệu</option>
 											<option value="5">Trên 12 triệu</option>
 										</select>
-									</div>
+									</div> -->
 								</div>
 								<div class="single_product_menu d-flex">
 									<div class="input-group" id="input-group-search">

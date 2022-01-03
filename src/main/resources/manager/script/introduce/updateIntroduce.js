@@ -38,7 +38,7 @@ function clickSave() {
         cache: false,
         timeout: 600000,
         success: function (data) {
-            alert("Cập nhật thành công!");
+            showAlertMessage("Cập nhật thành công!");
             $(location).attr('href', "/perfume-shop/admin/introduce.html");
         },
         error: function (e) {

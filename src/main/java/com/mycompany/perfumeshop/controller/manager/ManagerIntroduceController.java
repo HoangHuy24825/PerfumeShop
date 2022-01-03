@@ -46,7 +46,7 @@ public class ManagerIntroduceController extends BaseController {
 	@GetMapping("/admin/introduce-detail")
 	public ResponseEntity<JSONObject> getDetail() throws Exception {
 		JSONObject result = new JSONObject();
-		result.put("introduce", introduceSevice.findById(1));
+		result.put("introduce", introduceSevice.findAll().get(0));
 		return ResponseEntity.ok(result);
 	}
 

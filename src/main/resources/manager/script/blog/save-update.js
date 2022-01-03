@@ -16,6 +16,51 @@ $(document).ready(function () {
 
     showNotifyHeader();
 
+    $("#form--upload").validate({
+        rules: {
+            name: "required",
+            avatar: "required",
+            description: "required",
+            detail: {
+                required: function () {
+                    CKEDITOR.instances.cktext.updateElement();
+                }
+            },
+        },
+
+        messages: {
+            name: "Vui lòng nhập tiêu đề blog",
+            avatar: "Vui lòng chọn ảnh cho blog",
+            description: "Vui lòng nhập mô tả cho blog",
+            detail: "Vui lòng nhập chi tiết cho blog",
+        },
+
+        submitHandler: function (form1) {
+            
+            var form = $('#form--upload')[0];
+            var data = new FormData(form);
+            var detailCkEditor = editor.getData();
+            data.append('detail', detailCkEditor);
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                url: "/perfume-shop/admin/add-update-blog",
+                data: data,
+                processData: false, //prevent jQuery from automatically transforming the data into a query string
+                contentType: false,
+                cache: false,
+                timeout: 600000,
+                success: function (data) {
+                    showAlertMessage("Thành công", true);
+                    $(location).attr('href', "/perfume-shop/admin/blog.html");
+                },
+                error: function (e) {
+                    console.log("ERROR : ", e);
+                }
+            });
+        }
+    });
+
 });
 
 function setActiveMenu() {
@@ -27,32 +72,6 @@ function setActiveMenu() {
     });
     $('.list-unstyled #menu--blog').addClass("active");
     $('.navbar__list #menu--blog').addClass("active");
-}
-
-
-//function to add new product
-function clickSaveBlog() {
-    var form = $('#form--upload')[0];
-    var data = new FormData(form);
-    var detailCkEditor = editor.getData();
-    data.append('detail', detailCkEditor);
-    $.ajax({
-        type: "POST",
-        enctype: 'multipart/form-data',
-        url: "/perfume-shop/admin/add-update-blog",
-        data: data,
-        processData: false, //prevent jQuery from automatically transforming the data into a query string
-        contentType: false,
-        cache: false,
-        timeout: 600000,
-        success: function (data) {
-            showAlertMessage("Thành công", true);
-            $(location).attr('href', "/perfume-shop/admin/blog.html");
-        },
-        error: function (e) {
-            console.log("ERROR : ", e);
-        }
-    });
 }
 
 function loadDetailForEdit(idBlog) {

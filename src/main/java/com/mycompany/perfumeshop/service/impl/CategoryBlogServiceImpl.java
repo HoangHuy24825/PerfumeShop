@@ -57,6 +57,8 @@ public class CategoryBlogServiceImpl implements CategoryBlogService {
 			} else {
 				category.setAvatar(oldCategory.getAvatar());
 			}
+			category.setStatus(oldCategory.getStatus());
+			category.setIsHot(oldCategory.getIsHot());
 		} else {
 			category.setCreatedDate(Calendar.getInstance().getTime());
 			category.setCreatedBy(idUserLogin);

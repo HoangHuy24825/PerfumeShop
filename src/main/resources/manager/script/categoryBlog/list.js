@@ -160,7 +160,7 @@ function deleteCategory(idCategory) {
 };
 
 function deleteConfirmed(idCategory) {
-    $("#modalCustomerConfirmContent").modal("hide");
+    $("#modalCustomerConfirm").modal("hide");
     $.post({
         url: '/perfume-shop/admin/delete-category-blog',
         data: {

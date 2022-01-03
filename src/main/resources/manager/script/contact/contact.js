@@ -15,6 +15,8 @@ $(document).ready(function () {
 });
 
 function showListContact(keySearch, currentPage) {
+    var update_role = $("#update_role").val();
+    var delete_role = $("#delete_role").val();
     $.get({
         url: "/perfume-shop/admin/contact/" + keySearch + "/" + currentPage,
         success: function (response) {

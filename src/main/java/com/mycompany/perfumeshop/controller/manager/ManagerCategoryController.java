@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -116,8 +117,8 @@ public class ManagerCategoryController extends BaseController {
 		return ResponseEntity.ok(category);
 	}
 
-	@RequestMapping(value = { "admin/delete-category" }, method = RequestMethod.POST)
-	public ResponseEntity<Boolean> delete(@RequestParam("idCategory") Integer id) throws Exception {
+	@DeleteMapping("admin/delete-category/{id}")
+	public ResponseEntity<Boolean> delete(@PathVariable("id") Integer id) throws Exception {
 		return ResponseEntity.ok(categoryService.deleteById(id));
 	}
 

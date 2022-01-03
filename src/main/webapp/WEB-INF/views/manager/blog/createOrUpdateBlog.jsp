@@ -62,7 +62,7 @@
                                     <div class="bg-light p-4">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <form enctype="multipart/form-data" id="form--upload">
+                                                <form enctype="multipart/form-data" id="form--upload" type="post">
 
                                                     <input id="id" name="id" value="${id_blog}" hidden="true" />
                                                     <div class="form-row">
@@ -119,8 +119,9 @@
                                                     <div class="form-group">
                                                         <a class="btn btn-secondary"
                                                             href="${base}/perfume-shop/admin/blog.html">Hủy</a>
-                                                        <button type="button" class="btn btn-primary"
-                                                            onclick="clickSaveBlog()">Lưu</button>
+                                                        <!-- <button type="button" class="btn btn-primary"
+                                                            onclick="clickSaveBlog()">Lưu</button> -->
+                                                        <button type="submit" class="btn btn-primary">Lưu</button>
                                                     </div>
                                                 </form>
                                             </div>

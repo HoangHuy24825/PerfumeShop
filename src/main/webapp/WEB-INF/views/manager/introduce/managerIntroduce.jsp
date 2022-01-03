@@ -60,7 +60,7 @@
                                         <c:if test="${introduceRole.update ==true}">
                                             <button class="au-btn au-btn-icon au-btn--green au-btn--small"
                                                 onclick="location.href='${base}/perfume-shop/admin/edit-introduce'">
-                                                <i class="fas fa-plus"></i>Cập nhật
+                                                <i class="fas fa-pen-square"></i>Cập nhật
                                             </button>
                                         </c:if>
                                     </div>
