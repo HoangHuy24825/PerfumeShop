@@ -56,7 +56,7 @@
 
 									</div>
 									<div class="table-data__tool-right">
-										<c:if test="${productRole.insert ==true}">
+										<c:if test="${accountRole.insert ==true}">
 											<button class="au-btn au-btn-icon au-btn--green au-btn--small"
 												onclick="location.href='${base}/perfume-shop/admin/add-account'">
 												<i class="fas fa-plus"></i>Thêm mới nhân viên
